@@ -191,7 +191,6 @@
   .card.read { opacity: 0.6; }
   .card.read h2 { color: var(--text-dim); }
   .card.saved { border-color: var(--star); }
-  .card.trending-card { border-color: var(--danger); }
   .card-img { width: 100%; height: 180px; object-fit: cover; background: var(--bg-2); display: block; transition: 0.4s; pointer-events: none; }
   .card:hover .card-img { transform: scale(1.04); }
   .card-img-wrap { position: relative; overflow: hidden; background: var(--bg-2); pointer-events: none; }
@@ -210,7 +209,6 @@
   .source-tag { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: 4px 12px; border-radius: 20px; }
   .cat-tag { font-size: 11px; font-weight: 600; color: var(--text-dim); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
   .read-tag { font-size: 10.5px; font-weight: 700; color: var(--success); background: rgba(52,211,153,0.12); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
-  .view-tag { font-size: 10.5px; font-weight: 700; color: var(--warn); background: rgba(251,191,36,0.12); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
   .time-tag { font-size: 10.5px; color: var(--text-dim); padding: 4px 8px; border-radius: 20px; background: var(--bg-2); }
   .card h2 { font-size: 1rem; font-weight: 700; line-height: 1.7; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .card p { font-size: 0.84375rem; color: var(--text-dim); line-height: 1.8; flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -219,6 +217,30 @@
   .trend-badge.hot { color: #fff; background: linear-gradient(135deg, #ef4444, #f97316); }
   .trend-badge.trending { color: #0a0e1a; background: linear-gradient(135deg, #fbbf24, #f59e0b); }
   .trend-badge.new { color: #fff; background: linear-gradient(135deg, #10b981, #34d399); }
+
+  /* ⭐ جدید: badge بازدید */
+  .views-tag {
+    font-size: 10.5px; font-weight: 700;
+    color: var(--text-dim);
+    background: var(--bg-2);
+    padding: 4px 10px; border-radius: 20px;
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    display: inline-flex; align-items: center; gap: 3px;
+    transition: 0.2s;
+  }
+  .views-tag.hot {
+    color: #fff;
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    border-color: transparent;
+    box-shadow: 0 0 12px rgba(239,68,68,0.35);
+    animation: hotPulse 2s infinite;
+  }
+  @keyframes hotPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(239,68,68,0.3); }
+    50%      { box-shadow: 0 0 20px rgba(239,68,68,0.65); }
+  }
+
   .load-more { grid-column: 1 / -1; display: flex; justify-content: center; padding: 20px 0; }
   .load-more button {
     background: var(--card); border: 1px solid var(--border); color: var(--text);
@@ -362,14 +384,6 @@
   .font-controls { display: flex; gap: 8px; align-items: center; }
   .font-controls button { background: var(--card); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px; display: grid; place-items: center; font-family: inherit; transition: 0.2s; touch-action: manipulation; }
   .font-controls .val { font-size: 0.8125rem; color: var(--text-dim); min-width: 40px; text-align: center; }
-  .view-threshold-input {
-    background: var(--bg); border: 1px solid var(--border);
-    color: var(--text); padding: 8px 12px; border-radius: 10px;
-    font-family: inherit; font-size: 0.85rem;
-    width: 100%; outline: none;
-  }
-  .view-threshold-input:focus { border-color: var(--accent); }
-  .settings-hint { font-size: 0.7rem; color: var(--text-dim); margin-top: 6px; line-height: 1.7; }
   .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 0.8125rem; }
   .stat-row:last-child { border-bottom: none; }
   .stat-row .lbl { color: var(--text-dim); }
@@ -524,14 +538,6 @@
       <button id="fontPlus">+</button>
     </div>
   </div>
-  <div class="settings-section">
-    <div class="stitle">🔥 آستانه بازدید برای ترند</div>
-    <input type="number" class="view-threshold-input" id="viewThreshold" min="1" max="100000" value="5000">
-    <div class="settings-hint">
-      خبری که بازدید محلی‌اش از این عدد بیشتر بشه، توی ترند قرار می‌گیره.<br>
-      (بازدید از منبع اصلی قابل دریافت نیست، این شمارش محلیه)
-    </div>
-  </div>
 </div>
 
 <div class="stats-panel" id="statsPanel">
@@ -627,18 +633,23 @@
 </div>
 
 <script>
-const VERSION = '8.0';
-const SUPABASE_URL = 'https://kemwkxuwhgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
+const VERSION = '6.1';
+const SUPABASE_URL = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
+const VIEWS_API = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/views';
 const INITIAL_COUNT = 10;
 const DISPLAY_STEP = 10;
-const DISPLAY_INTERVAL = 5000;
+const DISPLAY_INTERVAL = 30000;
+const TRENDING_VIEW_THRESHOLD = 1000;
+const VIEWS_CACHE_KEY = 'lreporter_views_v1';
 
-const APP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a3a"/><stop offset="1" stop-color="#050a1a"/></linearGradient><linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient><linearGradient id="lGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d0d8e8"/></linearGradient><linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f7fb"/><stop offset="1" stop-color="#c0c8d8"/></linearGradient><radialGradient id="globeShine" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stop-color="#4fb8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#0066cc" stop-opacity="0"/></radialGradient><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="512" height="512" rx="115" fill="url(#bgGrad)"/><rect x="4" y="4" width="504" height="504" rx="112" fill="none" stroke="#1e90ff" stroke-width="3" opacity="0.6"/><circle cx="320" cy="200" r="115" fill="url(#globeGrad)" filter="url(#glow)" opacity="0.95"/><circle cx="320" cy="200" r="115" fill="url(#globeShine)"/><g filter="url(#glow)"><path d="M 100 130 L 175 130 L 175 330 L 260 330 L 260 385 L 100 385 Z" fill="url(#lGrad)"/></g><path d="M 175 330 L 260 330 L 260 385 L 175 385 Z" fill="#e8302a"/></svg>`;
+let newsViews = {};
+
+const APP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a3a"/><stop offset="1" stop-color="#050a1a"/></linearGradient><linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient><linearGradient id="lGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d0d8e8"/></linearGradient><linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f7fb"/><stop offset="1" stop-color="#c0c8d8"/></linearGradient><radialGradient id="globeShine" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stop-color="#4fb8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#0066cc" stop-opacity="0"/></radialGradient><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="512" height="512" rx="115" fill="url(#bgGrad)"/><rect x="4" y="4" width="504" height="504" rx="112" fill="none" stroke="#1e90ff" stroke-width="3" opacity="0.6"/><rect x="8" y="8" width="496" height="496" rx="108" fill="none" stroke="#1e90ff" stroke-width="1" opacity="0.3"/><circle cx="320" cy="200" r="115" fill="url(#globeGrad)" filter="url(#glow)" opacity="0.95"/><circle cx="320" cy="200" r="115" fill="url(#globeShine)"/><g fill="#0a2a5a" opacity="0.85"><path d="M 260 130 Q 280 120 300 130 L 310 145 Q 295 160 275 155 Z"/><path d="M 240 160 Q 260 155 270 175 L 260 200 Q 245 195 240 180 Z"/><path d="M 280 190 Q 310 185 330 200 L 340 230 Q 320 245 295 235 Q 275 220 280 190 Z"/><path d="M 350 160 Q 380 165 395 185 L 385 210 Q 360 210 350 190 Z"/><path d="M 355 230 Q 380 235 385 260 L 370 285 Q 350 275 355 250 Z"/><path d="M 290 260 Q 320 255 335 280 L 325 305 Q 295 305 290 280 Z"/><path d="M 380 130 Q 400 140 405 160 L 395 175 Q 380 170 380 150 Z"/></g><ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="3" opacity="0.55" transform="rotate(-20 320 200)"/><ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="1.5" opacity="0.35" transform="rotate(20 320 200)"/><g transform="translate(230 240) rotate(-8)"><rect x="0" y="0" width="200" height="150" rx="12" fill="#a8b4c8"/></g><g transform="translate(220 230) rotate(-4)"><rect x="0" y="0" width="210" height="160" rx="14" fill="url(#paperGrad)"/><rect x="20" y="25" width="80" height="8" rx="4" fill="#1a3a6a"/><rect x="20" y="45" width="130" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="60" width="120" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="75" width="135" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="90" width="100" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="105" width="125" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="120" width="115" height="6" rx="3" fill="#3a5a8a"/><rect x="130" y="20" width="65" height="50" rx="6" fill="#c8d0e0" stroke="#8a9ab0" stroke-width="2"/><path d="M 135 60 L 150 40 L 165 55 L 180 35 L 190 60 Z" fill="#6a7a90"/><circle cx="175" cy="35" r="5" fill="#6a7a90"/><rect x="130" y="80" width="65" height="5" rx="2" fill="#3a5a8a"/><rect x="130" y="92" width="65" height="5" rx="2" fill="#3a5a8a"/><rect x="130" y="104" width="50" height="5" rx="2" fill="#3a5a8a"/></g><g filter="url(#glow)"><path d="M 100 130 L 175 130 L 175 330 L 260 330 L 260 385 L 100 385 Z" fill="url(#lGrad)"/></g><path d="M 175 330 L 260 330 L 260 385 L 175 385 Z" fill="#e8302a"/><path d="M 175 130 L 185 130 L 185 340 L 175 340 Z" fill="#000000" opacity="0.15"/></svg>`;
+
 const ICON_URL = 'data:image/svg+xml,' + encodeURIComponent(APP_ICON_SVG);
 
 let displayLimit = INITIAL_COUNT;
 let displayTimer = null;
-let viewThreshold = 5000;
 
 const CATEGORIES = {
   'جنگ':    ['جنگ', 'حمله', 'موشک', 'آتش‌بس', 'غزه', 'اوکراین', 'انفجار', 'نظامی', 'پدافند', 'رزمایش'],
@@ -668,62 +679,87 @@ let isLoading = false;
 let countdownTimer = null;
 let clockTimer = null;
 
-const CACHE_KEY = 'lreporter_cache_v8';
+const CACHE_KEY = 'lreporter_cache_v6';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
-const READ_KEY = 'lreporter_read_v8';
-const SAVED_KEY = 'lreporter_saved_v8';
-const VIEWS_KEY = 'lreporter_views_v8';
-const LAST_DAY_KEY = 'lreporter_lastday_v8';
-const FONT_KEY = 'lreporter_font_v8';
-const DISPLAY_LIMIT_KEY = 'lreporter_display_limit_v8';
-const VIEW_THRESHOLD_KEY = 'lreporter_view_threshold_v8';
-
+const READ_KEY = 'lreporter_read_v6';
+const SAVED_KEY = 'lreporter_saved_v6';
+const LAST_DAY_KEY = 'lreporter_lastday_v6';
+const FONT_KEY = 'lreporter_font_v6';
 let readLinks = new Set();
 let savedLinks = new Set();
-let viewCounts = {};
 
 (function loadStorage() {
   try { readLinks = new Set(JSON.parse(localStorage.getItem(READ_KEY) || '[]')); } catch { readLinks = new Set(); }
   try { savedLinks = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch { savedLinks = new Set(); }
-  try { viewCounts = JSON.parse(localStorage.getItem(VIEWS_KEY) || '{}'); } catch { viewCounts = {}; }
   const savedFont = localStorage.getItem(FONT_KEY);
   if (savedFont) document.documentElement.style.setProperty('--base-font-size', savedFont + 'px');
-  const savedThreshold = parseInt(localStorage.getItem(VIEW_THRESHOLD_KEY) || '5000');
-  if (savedThreshold) viewThreshold = savedThreshold;
 })();
-
-// ⭐ بازیابی تعداد نمایش
-(function restoreDisplayLimit() {
-  try {
-    const saved = parseInt(localStorage.getItem(DISPLAY_LIMIT_KEY) || '0');
-    if (saved && saved > INITIAL_COUNT) {
-      displayLimit = saved;
-      console.log(`📦 بازیابی نمایش: ${displayLimit} خبر`);
-    }
-  } catch (e) {}
-})();
-
-function saveDisplayLimit() {
-  try { localStorage.setItem(DISPLAY_LIMIT_KEY, String(displayLimit)); } catch (e) {}
-}
 
 function saveRead() { try { localStorage.setItem(READ_KEY, JSON.stringify([...readLinks].slice(-3000))); } catch {} }
 function saveSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify([...savedLinks].slice(-1000))); } catch {} }
-function saveViews() { try { localStorage.setItem(VIEWS_KEY, JSON.stringify(viewCounts)); } catch {} }
 function markAsRead(link) { if (!link || readLinks.has(link)) return false; readLinks.add(link); saveRead(); return true; }
 function toggleSaved(link) {
   if (!link) return false;
   if (savedLinks.has(link)) { savedLinks.delete(link); saveSaved(); return false; }
   savedLinks.add(link); saveSaved(); return true;
 }
-function incrementView(link) {
-  if (!link) return 0;
-  viewCounts[link] = (viewCounts[link] || 0) + 1;
-  saveViews();
-  return viewCounts[link];
+
+/* ==================== بازدیدها (کلی) ==================== */
+function loadViewsCache() {
+  try { newsViews = JSON.parse(localStorage.getItem(VIEWS_CACHE_KEY) || '{}'); }
+  catch { newsViews = {}; }
 }
-function getViews(link) {
-  return viewCounts[link] || 0;
+function saveViewsCache() {
+  try { localStorage.setItem(VIEWS_CACHE_KEY, JSON.stringify(newsViews)); } catch {}
+}
+
+async function fetchAllViews() {
+  try {
+    const res = await fetchWithTimeout(VIEWS_API, 10000);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      newsViews = { ...newsViews, ...data };
+      saveViewsCache();
+    }
+  } catch (e) {
+    console.warn('fetchAllViews error', e);
+  }
+}
+
+async function incrementView(link) {
+  if (!link) return 0;
+  newsViews[link] = (newsViews[link] || 0) + 1;
+  saveViewsCache();
+
+  try {
+    const res = await fetchWithTimeout(VIEWS_API, 8000, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ link })
+    });
+    if (res.ok) {
+      const { count } = await res.json();
+      if (typeof count === 'number') {
+        newsViews[link] = count;
+        saveViewsCache();
+        return count;
+      }
+    }
+  } catch (e) {
+    console.warn('incrementView error', e);
+  }
+  return newsViews[link] || 0;
+}
+
+function getViewCount(link) { return newsViews[link] || 0; }
+function isHotNews(link) { return getViewCount(link) >= TRENDING_VIEW_THRESHOLD; }
+
+function formatViews(n) {
+  if (!n || n < 1) return '۰';
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0','') + 'M';
+  if (n >= 1000)    return (n / 1000).toFixed(1).replace('.0','') + 'K';
+  return n.toLocaleString('fa-IR');
 }
 
 (function setupPWA() {
@@ -746,13 +782,6 @@ function getViews(link) {
     const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
     document.getElementById('manifestLink').href = URL.createObjectURL(blob);
   } catch (e) {}
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-    const swCode = `self.addEventListener('install', e => self.skipWaiting());self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
-    try {
-      const blob = new Blob([swCode], { type: 'application/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-    } catch (e) {}
-  }
 })();
 
 function updatePersianDateTime() {
@@ -783,7 +812,6 @@ async function loadWeather() {
   }
 }
 
-// TTS
 let ttsSpeaking = false;
 let ttsPaused = false;
 let ttsQueue = [];
@@ -953,29 +981,29 @@ function estimateReadTime(textLength) {
 function calculateTrendScore(news) {
   const now = Date.now();
   const age = (now - new Date(news.date).getTime()) / 1000 / 3600;
+  if (isNaN(age)) return 0;
   const recency = 1 / (1 + age * 0.1);
-  const length = Math.min(1, news.textLength / 1000);
+  const length = Math.min(1, (news.textLength || 0) / 1000);
   const hasImage = news.image ? 1 : 0;
   const isRecent = age < 2 ? 1.5 : 1;
-  const views = getViews(news.link);
-  const viewsBonus = Math.min(views / viewThreshold, 1) * 2; // پاداش بازدید تا ۲ واحد
-  return (recency * 0.5 + length * 0.2 + hasImage * 0.15 + isRecent * 0.15 + viewsBonus) * 100;
+  return (recency * 0.5 + length * 0.2 + hasImage * 0.15 + isRecent * 0.15) * 100;
 }
 
-// ⭐ ترندینگ: خبرایی که بازدید محلی‌شون بالای آستانه است
-function getTrendingNews(limit = 30) {
-  const trendingByViews = allNews.filter(n => getViews(n.link) >= viewThreshold);
-  
-  if (trendingByViews.length > 0) {
-    return trendingByViews
-      .sort((a, b) => getViews(b.link) - getViews(a.link))
-      .slice(0, limit);
-  }
-  
-  // اگه هیچ خبری از آستانه رد نشد، از trend score استفاده کن
-  return [...allNews]
-    .map(n => ({ ...n, trendScore: calculateTrendScore(n) }))
-    .sort((a, b) => b.trendScore - a.trendScore)
+function getTrendingNews(limit = 30, sourceList = null) {
+  const base = sourceList || allNews;
+  return [...base]
+    .map(n => ({
+      ...n,
+      views: getViewCount(n.link),
+      trendScore: calculateTrendScore(n)
+    }))
+    .sort((a, b) => {
+      const aHot = a.views >= TRENDING_VIEW_THRESHOLD ? 1 : 0;
+      const bHot = b.views >= TRENDING_VIEW_THRESHOLD ? 1 : 0;
+      if (aHot !== bHot) return bHot - aHot;
+      if (aHot && bHot) return b.views - a.views;
+      return b.trendScore - a.trendScore;
+    })
     .slice(0, limit);
 }
 
@@ -1036,7 +1064,7 @@ async function loadAll() {
       const cached = loadCache();
       if (cached?.length) {
         allNews = cached;
-        // ⭐ دیگه displayLimit ریست نمی‌شه — مقدار ذخیره‌شده از localStorage میاد
+        displayLimit = INITIAL_COUNT;
         buildFilters(); render();
         document.getElementById('status').textContent = `از حافظه • به‌روزرسانی...`;
         finishLoading(); isLoading = true;
@@ -1062,8 +1090,15 @@ async function loadAll() {
       prevLinks.add(item.link);
     });
 
-    allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+    allNews.sort((a, b) => {
+      const da = new Date(a.date).getTime() || 0;
+      const db = new Date(b.date).getTime() || 0;
+      return db - da;
+    });
     if (allNews.length > 2000) allNews = allNews.slice(0, 2000);
+
+    // ⭐ گرفتن شمارنده بازدیدها
+    await fetchAllViews();
 
     saveCache(allNews);
     buildFilters(); render();
@@ -1090,7 +1125,6 @@ function startProgressiveDisplay() {
     const total = getFilteredList().length;
     if (displayLimit >= total) { clearInterval(displayTimer); displayTimer = null; return; }
     displayLimit += DISPLAY_STEP;
-    saveDisplayLimit();
     buildFilters(); render();
   }, DISPLAY_INTERVAL);
 }
@@ -1115,10 +1149,10 @@ function checkDayChanged() {
 function resetDailyNews(silent = false) {
   allNews = []; activeCategory = 'همه'; activeMode = 'all'; searchQuery = '';
   displayLimit = INITIAL_COUNT;
-  saveDisplayLimit();
   if (displayTimer) { clearInterval(displayTimer); displayTimer = null; }
   document.getElementById('searchInput').value = '';
   try { localStorage.removeItem(CACHE_KEY); } catch {}
+  loadViewsCache();
   document.getElementById('content').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
   document.getElementById('filters').innerHTML = '';
   document.getElementById('status').textContent = '🌅 روز جدید...';
@@ -1179,7 +1213,7 @@ function updateViewModeButtons() {
   document.getElementById('cntAll').textContent = showingCount;
   document.getElementById('cntUnread').textContent = allNews.slice(0, showingCount).filter(n => !readLinks.has(n.link)).length;
   document.getElementById('cntSaved').textContent = allNews.filter(n => savedLinks.has(n.link)).length;
-  document.getElementById('cntTrending').textContent = getTrendingNews(30).length;
+  document.getElementById('cntTrending').textContent = Math.min(showingCount, 30);
   const savedBadge = document.getElementById('savedBadge');
   if (savedLinks.size > 0) { savedBadge.style.display = 'block'; savedBadge.textContent = savedLinks.size; }
   else savedBadge.style.display = 'none';
@@ -1189,12 +1223,22 @@ function getFilteredList() {
   let list = allNews;
   if (activeMode === 'unread') list = list.filter(n => !readLinks.has(n.link));
   else if (activeMode === 'saved') list = list.filter(n => savedLinks.has(n.link));
-  else if (activeMode === 'trending') return getTrendingNews(30);
+
   if (activeCategory !== 'همه') list = list.filter(n => n.category === activeCategory);
+
   if (searchQuery.trim()) {
     const q = searchQuery.trim().toLowerCase();
-    list = list.filter(n => n.title.toLowerCase().includes(q) || (n.plain || '').toLowerCase().includes(q) || n.source.toLowerCase().includes(q));
+    list = list.filter(n =>
+      n.title.toLowerCase().includes(q) ||
+      (n.plain || '').toLowerCase().includes(q) ||
+      n.source.toLowerCase().includes(q)
+    );
   }
+
+  if (activeMode === 'trending') {
+    return getTrendingNews(30, list);
+  }
+
   return list;
 }
 
@@ -1205,7 +1249,6 @@ function render() {
     let msg = '📭 خبری پیدا نشد';
     if (activeMode === 'unread' && allNews.length) msg = '🎉 همه رو خوندی!';
     else if (activeMode === 'saved' && !savedLinks.size) msg = '⭐ هنوز چیزی ذخیره نکردی';
-    else if (activeMode === 'trending') msg = '🔥 هنوز هیچ خبری به آستانه بازدید نرسیده';
     box.innerHTML = `<div class="empty">${msg}</div>`;
     updateViewModeButtons(); updateUnreadCount();
     return;
@@ -1218,17 +1261,23 @@ function render() {
     const time = formatTime(n.date);
     const isRead = readLinks.has(n.link), isSaved = savedLinks.has(n.link);
     const readTime = estimateReadTime(n.textLength || 0);
-    const views = getViews(n.link);
-    const isTrending = views >= viewThreshold;
-    
+    const views = getViewCount(n.link);
+    const hot = views >= TRENDING_VIEW_THRESHOLD;
+    const vBadge = views > 0
+      ? `<span class="views-tag${hot ? ' hot' : ''}">👁 ${formatViews(views)}${hot ? ' 🔥' : ''}</span>`
+      : '';
     const img = n.image ? `<div class="card-img-wrap"><img class="card-img" src="${escapeAttr(n.image)}" loading="lazy" alt="" onerror="this.parentElement.style.display='none'"></div>` : '';
-    
     let trendBadge = '';
-    if (activeMode === 'trending' || isTrending) {
-      trendBadge = '<span class="trend-badge hot">🔥 ترند</span>';
+    if (activeMode === 'trending') {
+      if (hot) trendBadge = '<span class="trend-badge hot">🔥 داغ</span>';
+      else {
+        const ts = calculateTrendScore(n);
+        if (ts > 80) trendBadge = '<span class="trend-badge hot">🔥 داغ</span>';
+        else if (ts > 60) trendBadge = '<span class="trend-badge trending">📈</span>';
+        else trendBadge = '<span class="trend-badge new">✨</span>';
+      }
     }
-    
-    return `<article class="card${isRead ? ' read' : ''}${isSaved ? ' saved' : ''}${isTrending ? ' trending-card' : ''}" data-card-idx="${i}"><button class="star-btn${isSaved ? ' saved' : ''}" data-star="${i}">${isSaved ? '★' : '☆'}</button>${img}<div class="card-body"><div class="card-top"><span class="source-tag">${escapeHtml(n.source)}</span><span class="cat-tag">${escapeHtml(n.category)}</span>${trendBadge}${isRead ? '<span class="read-tag">✓ خوانده</span>' : ''}</div><h2>${escapeHtml(n.title)}</h2><p>${escapeHtml(n.summary || '')}</p><div class="card-footer"><span>🕐 ${time}</span><span class="view-tag">👁️ ${views.toLocaleString('fa-IR')} بازدید</span></div></div></article>`;
+    return `<article class="card${isRead ? ' read' : ''}${isSaved ? ' saved' : ''}" data-card-idx="${i}"><button class="star-btn${isSaved ? ' saved' : ''}" data-star="${i}">${isSaved ? '★' : '☆'}</button>${img}<div class="card-body"><div class="card-top"><span class="source-tag">${escapeHtml(n.source)}</span><span class="cat-tag">${escapeHtml(n.category)}</span>${trendBadge}${vBadge}${isRead ? '<span class="read-tag">✓ خوانده</span>' : ''}</div><h2>${escapeHtml(n.title)}</h2><p>${escapeHtml(n.summary || '')}</p><div class="card-footer"><span>🕐 ${time}</span><span class="time-tag">${readTime}</span></div></div></article>`;
   }).join('');
 
   if (showing < total) {
@@ -1236,12 +1285,7 @@ function render() {
     const nextBatch = Math.min(DISPLAY_STEP, remaining);
     box.innerHTML += `<div class="load-more"><button id="loadMoreBtn" class="pulse">⏳ ${nextBatch} خبر بعدی <span style="font-size:11px;opacity:0.7">(${showing.toLocaleString('fa-IR')}/${total.toLocaleString('fa-IR')})</span></button></div>`;
     const btn = document.getElementById('loadMoreBtn');
-    if (btn) btn.onclick = () => { 
-      displayLimit += 30; 
-      saveDisplayLimit();
-      buildFilters(); 
-      render(); 
-    };
+    if (btn) btn.onclick = () => { displayLimit += DISPLAY_STEP; buildFilters(); render(); };
     if (!displayTimer) startProgressiveDisplay();
   } else {
     if (displayTimer) { clearInterval(displayTimer); displayTimer = null; }
@@ -1328,23 +1372,39 @@ function openModal(index) {
   const news = (window.__currentList || [])[index];
   if (!news) return;
   currentNews = news;
-  
-  // ⭐ افزایش بازدید
   const wasUnread = markAsRead(news.link);
-  const newViews = incrementView(news.link);
-  
   if (wasUnread) { updateCardReadState(news.link); updateUnreadCount(); }
-  
-  // اگه به آستانه رسید، پیام بده
-  if (newViews === viewThreshold) {
-    showToast('🔥 این خبر به ترند اضافه شد!');
-  }
-  
+
+  // ⭐ ثبت بازدید کلی
+  incrementView(news.link).then(newCount => {
+    if (newCount > 0) {
+      const meta = document.getElementById('modalMeta');
+      const old = meta.querySelector('.views-tag');
+      if (old) old.remove();
+      const hot = newCount >= TRENDING_VIEW_THRESHOLD;
+      meta.insertAdjacentHTML('beforeend',
+        `<span class="views-tag${hot ? ' hot' : ''}">👁 ${formatViews(newCount)}${hot ? ' 🔥' : ''}</span>`);
+      render();
+      updateViewModeButtons();
+    }
+  });
+
   const hero = document.getElementById('modalHero');
   if (news.image) { hero.src = news.image; hero.style.display = 'block'; hero.onerror = () => { hero.style.display = 'none'; }; }
   else hero.style.display = 'none';
   document.getElementById('modalTitle').textContent = news.title;
-  document.getElementById('modalMeta').innerHTML = `<span class="source-tag">${escapeHtml(news.source)}</span><span class="cat-tag">${escapeHtml(news.category)}</span><span class="cat-tag">🕐 ${formatTime(news.date)}</span><span class="cat-tag">👁️ ${newViews.toLocaleString('fa-IR')} بازدید</span>`;
+
+  const vNow = getViewCount(news.link);
+  const vHot = vNow >= TRENDING_VIEW_THRESHOLD;
+  const vBadge = vNow > 0
+    ? `<span class="views-tag${vHot ? ' hot' : ''}">👁 ${formatViews(vNow)}${vHot ? ' 🔥' : ''}</span>`
+    : '';
+  document.getElementById('modalMeta').innerHTML =
+    `<span class="source-tag">${escapeHtml(news.source)}</span>` +
+    `<span class="cat-tag">${escapeHtml(news.category)}</span>` +
+    `<span class="cat-tag">🕐 ${formatTime(news.date)}</span>` +
+    vBadge;
+
   document.getElementById('modalBody').innerHTML = cleanContent(news.content || news.plain || '');
   const isShort = (news.textLength || 0) < 400;
   const srcBtn = document.getElementById('modalSourceBtn');
@@ -1370,9 +1430,6 @@ function openModal(index) {
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
   document.getElementById('modalBox').scrollTop = 0;
-  
-  // رفرش کارت‌ها برای نمایش بازدید به‌روز
-  setTimeout(() => render(), 100);
 }
 
 function openRelatedNews(link) {
@@ -1382,11 +1439,13 @@ function openRelatedNews(link) {
   if (!news) return;
   currentNews = news;
   markAsRead(news.link);
-  incrementView(news.link);
   const hero = document.getElementById('modalHero');
   if (news.image) { hero.src = news.image; hero.style.display = 'block'; } else hero.style.display = 'none';
   document.getElementById('modalTitle').textContent = news.title;
-  document.getElementById('modalMeta').innerHTML = `<span class="source-tag">${escapeHtml(news.source)}</span><span class="cat-tag">${escapeHtml(news.category)}</span>`;
+  const vNow = getViewCount(news.link);
+  const vHot = vNow >= TRENDING_VIEW_THRESHOLD;
+  const vBadge = vNow > 0 ? `<span class="views-tag${vHot ? ' hot' : ''}">👁 ${formatViews(vNow)}${vHot ? ' 🔥' : ''}</span>` : '';
+  document.getElementById('modalMeta').innerHTML = `<span class="source-tag">${escapeHtml(news.source)}</span><span class="cat-tag">${escapeHtml(news.category)}</span>${vBadge}`;
   document.getElementById('modalBody').innerHTML = cleanContent(news.content || news.plain || '');
   document.getElementById('relatedSection').style.display = 'none';
 }
@@ -1405,7 +1464,7 @@ function updateModalStar() {
 function cleanContent(html) {
   if (!html) return '<p>محتوایی موجود نیست.</p>';
   let out = String(html);
-  out = out.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<iframe[\s\S]*?<\/iframe>/gi, '').replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '');
+  out = out.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<iframe[\s\S]*?<\/iframe>/gi, '');
   if (!/<[a-z][\s\S]*>/i.test(out)) {
     return out.split(/\n+/).filter(p => p.trim()).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('');
   }
@@ -1458,17 +1517,11 @@ function openStats() {
   const maxSourceCount = Math.max(...Object.values(sourceCounts), 1);
   const totalRead = allNews.filter(n => readLinks.has(n.link)).length;
   const totalSaved = allNews.filter(n => savedLinks.has(n.link)).length;
-  const trendingCount = getTrendingNews(30).length;
-  const totalViews = Object.values(viewCounts).reduce((a, b) => a + b, 0);
-  
-  let html = `
-    <div class="stat-row"><span class="lbl">کل اخبار</span><span class="val">${allNews.length.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">خوانده‌شده</span><span class="val">${totalRead.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">ذخیره‌شده</span><span class="val">${totalSaved.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">ترندینگ</span><span class="val">${trendingCount.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">کل بازدید</span><span class="val">${totalViews.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">آستانه ترند</span><span class="val">${viewThreshold.toLocaleString('fa-IR')}</span></div>
-  `;
+  const totalViews = Object.values(newsViews).reduce((a, b) => a + b, 0);
+  const hotCount = allNews.filter(n => isHotNews(n.link)).length;
+  let html = `<div class="stat-row"><span class="lbl">کل</span><span class="val">${allNews.length.toLocaleString('fa-IR')}</span></div><div class="stat-row"><span class="lbl">خوانده</span><span class="val">${totalRead.toLocaleString('fa-IR')}</span></div><div class="stat-row"><span class="lbl">ذخیره</span><span class="val">${totalSaved.toLocaleString('fa-IR')}</span></div>`;
+  html += `<div class="stat-row"><span class="lbl">👁 مجموع بازدید</span><span class="val">${totalViews.toLocaleString('fa-IR')}</span></div>`;
+  html += `<div class="stat-row"><span class="lbl">🔥 خبرهای داغ (≥۱۰۰۰)</span><span class="val">${hotCount.toLocaleString('fa-IR')}</span></div>`;
   html += `<div style="margin-top:16px;margin-bottom:8px;font-size:0.8125rem;font-weight:700;color:var(--accent)">📡 منابع</div>`;
   Object.entries(sourceCounts).sort((a, b) => b[1] - a[1]).forEach(([src, cnt]) => {
     html += `<div class="stat-row" style="flex-direction:column;align-items:stretch;gap:4px"><div style="display:flex;justify-content:space-between"><span class="lbl">${src}</span><span class="val">${cnt.toLocaleString('fa-IR')}</span></div><div class="stat-bar"><div class="fill" style="width:${(cnt / maxSourceCount * 100).toFixed(1)}%"></div></div></div>`;
@@ -1499,10 +1552,7 @@ document.querySelectorAll('[data-share]').forEach(btn => { btn.onclick = () => s
 document.querySelectorAll('.viewmode-btn').forEach(btn => {
   btn.onclick = () => { 
     activeMode = btn.dataset.mode; 
-    // ⭐ فقط برای ترندینگ، displayLimit رو ریست کن
-    if (activeMode === 'trending') {
-      displayLimit = Math.max(INITIAL_COUNT, 30);
-    }
+    displayLimit = INITIAL_COUNT;
     updateViewModeButtons(); 
     render(); 
   };
@@ -1511,17 +1561,12 @@ document.querySelectorAll('.viewmode-btn').forEach(btn => {
 document.getElementById('savedBtn').onclick = () => { 
   activeMode = 'saved'; 
   displayLimit = INITIAL_COUNT; 
-  saveDisplayLimit();
   updateViewModeButtons(); 
   render(); 
   window.scrollTo({ top: 0, behavior: 'smooth' }); 
 };
 
-document.getElementById('settingsBtn').onclick = () => { 
-  document.getElementById('settingsPanel').classList.add('open'); 
-  updateFontDisplay();
-  document.getElementById('viewThreshold').value = viewThreshold;
-};
+document.getElementById('settingsBtn').onclick = () => { document.getElementById('settingsPanel').classList.add('open'); updateFontDisplay(); };
 document.getElementById('settingsClose').onclick = () => document.getElementById('settingsPanel').classList.remove('open');
 document.getElementById('statsBtn').onclick = openStats;
 document.getElementById('statsClose').onclick = () => document.getElementById('statsPanel').classList.remove('open');
@@ -1539,18 +1584,6 @@ document.getElementById('fontMinus').onclick = () => {
   localStorage.setItem(FONT_KEY, next); updateFontDisplay();
 };
 
-// ⭐ تغییر آستانه بازدید
-document.getElementById('viewThreshold').addEventListener('change', (e) => {
-  let val = parseInt(e.target.value);
-  if (!val || val < 1) val = 1;
-  if (val > 100000) val = 100000;
-  viewThreshold = val;
-  localStorage.setItem(VIEW_THRESHOLD_KEY, String(val));
-  buildFilters();
-  render();
-  showToast(`آستانه ترند: ${val.toLocaleString('fa-IR')}`);
-});
-
 function updateFontDisplay() {
   document.getElementById('fontVal').textContent = Math.round(parseFloat(getComputedStyle(document.documentElement).fontSize)).toLocaleString('fa-IR');
 }
@@ -1558,7 +1591,7 @@ function updateFontDisplay() {
 let searchTimer;
 document.getElementById('searchInput').addEventListener('input', (e) => {
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => { searchQuery = e.target.value; render(); }, 250);
+  searchTimer = setTimeout(() => { searchQuery = e.target.value; displayLimit = INITIAL_COUNT; render(); }, 250);
 });
 
 document.getElementById('themeBtn').onclick = () => {
@@ -1585,10 +1618,9 @@ document.getElementById('refreshBtn').onclick = (e) => {
 };
 
 console.log(`%c📰 Lreporter v${VERSION}`, 'background:#1e90ff;color:#fff;padding:4px 12px;border-radius:20px;font-weight:bold');
-console.log('✅ نمایش تدریجی: هر ۵ ثانیه ۱۰ خبر');
-console.log('✅ تعداد نمایش پس از رفرش حفظ می‌شه');
-console.log('✅ ترند بر اساس بازدید محلی (آستانه: ' + viewThreshold + ')');
 console.log('✅ بدون رادیو و تلویزیون');
+
+loadViewsCache();
 
 startCountdown();
 updatePersianDateTime();
