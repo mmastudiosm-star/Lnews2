@@ -142,33 +142,43 @@
   .info-card .label { font-size: 0.7rem; color: var(--text-dim); font-weight: 600; white-space: nowrap; }
   .info-card .value { font-size: 0.95rem; color: var(--text); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .info-card .sub { font-size: 0.7rem; color: var(--text-dim); }
-  .radio-bar {
-    max-width: 1280px; margin: 12px auto 0; padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px;
+  
+  /* ===== دکمه شبکه خبر ===== */
+  .tv-bar {
+    max-width: 1280px; margin: 12px auto 0;
+    padding: 12px 16px;
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; flex-wrap: wrap;
+    border-radius: 14px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   }
-  .radio-bar .radio-title {
+  .tv-bar .tv-info {
+    display: flex; align-items: center; gap: 8px;
     font-size: 0.85rem; font-weight: 700; color: var(--accent);
-    display: flex; align-items: center; gap: 6px;
   }
-  .radio-bar .radio-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1.6s infinite; }
-  .radio-select {
-    background: var(--bg); border: 1px solid var(--border);
-    color: var(--text); padding: 6px 12px; border-radius: 10px; font-family: inherit;
-    font-size: 0.8rem; outline: none; cursor: pointer;
-    flex: 1; min-width: 150px; max-width: 320px;
+  .tv-bar .tv-dot {
+    width: 8px; height: 8px; background: var(--danger);
+    border-radius: 50%; animation: pulse 1.6s infinite;
   }
-  .radio-select:focus { border-color: var(--accent); }
-  .radio-play {
-    background: var(--accent); color: #fff; border: none; border-radius: 10px;
-    padding: 7px 16px; cursor: pointer; font-family: inherit; font-size: 0.8rem;
-    font-weight: 700; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 5px; touch-action: manipulation;
+  .tv-bar .tv-hint {
+    font-size: 0.72rem; color: var(--text-dim);
+    flex: 1; min-width: 150px;
   }
-  .radio-play:hover { background: var(--accent-2); }
-  .radio-play.playing { background: var(--danger); }
-  .radio-play.loading { background: var(--warn); color: #0a0e1a; }
+  .tv-btn {
+    background: linear-gradient(135deg, #e8302a, #ff4757);
+    color: #fff; border: none; border-radius: 10px;
+    padding: 9px 18px; cursor: pointer; font-family: inherit;
+    font-size: 0.82rem; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: 0.2s; touch-action: manipulation; text-decoration: none;
+    box-shadow: 0 4px 14px rgba(232,48,42,0.3);
+  }
+  .tv-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,48,42,0.5); }
+  .tv-btn.secondary {
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); box-shadow: none;
+  }
+  .tv-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+  
   .viewmodes-wrap {
     max-width: 1280px; margin: 0 auto; padding: 16px 24px 0;
     display: flex; gap: 8px; flex-wrap: wrap;
@@ -402,27 +412,11 @@
     position: relative;
     overflow: hidden;
   }
-  .share-btn svg {
-    width: 28px; height: 28px;
-    flex-shrink: 0;
-    transition: 0.2s;
-  }
-  .share-btn .share-name {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-dim);
-    transition: 0.2s;
-  }
-  .share-btn:hover {
-    transform: translateY(-3px);
-    border-color: transparent;
-  }
-  .share-btn:hover svg {
-    transform: scale(1.15);
-  }
-  .share-btn:hover .share-name {
-    color: #fff;
-  }
+  .share-btn svg { width: 28px; height: 28px; flex-shrink: 0; transition: 0.2s; }
+  .share-btn .share-name { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); transition: 0.2s; }
+  .share-btn:hover { transform: translateY(-3px); border-color: transparent; }
+  .share-btn:hover svg { transform: scale(1.15); }
+  .share-btn:hover .share-name { color: #fff; }
   .share-btn.telegram:hover { background: linear-gradient(135deg, #0088cc, #229ed9); }
   .share-btn.whatsapp:hover { background: linear-gradient(135deg, #25d366, #128c7e); }
   .share-btn.eitaa:hover { background: linear-gradient(135deg, #ef7f1a, #ff9f43); }
@@ -540,10 +534,10 @@
     .info-card { padding: 10px 12px; }
     .info-card .ico { font-size: 18px; }
     .info-card .value { font-size: 0.8rem; }
-    .radio-bar { margin: 8px 16px 0; padding: 10px 12px; }
-    .radio-bar .radio-title { font-size: 0.75rem; }
-    .radio-select { font-size: 0.75rem; padding: 6px 10px; min-width: 100px; }
-    .radio-play { font-size: 0.75rem; padding: 8px 12px; }
+    .tv-bar { margin: 8px 16px 0; padding: 10px 12px; }
+    .tv-bar .tv-info { font-size: 0.78rem; }
+    .tv-bar .tv-hint { display: none; }
+    .tv-btn { font-size: 0.75rem; padding: 8px 14px; }
     .viewmodes-wrap { padding: 12px 16px 0; gap: 6px; }
     .viewmode-btn { padding: 8px 12px; font-size: 0.75rem; }
     .filters-wrap { padding: 10px 16px 0; }
@@ -646,20 +640,11 @@
   </div>
 </div>
 
-<div class="radio-bar">
-  <span class="radio-title"><span class="radio-dot"></span> رادیو و تلویزیون</span>
-  <select class="radio-select" id="radioSelect">
-    <option value="">— انتخاب کنید —</option>
-    <option value="https://ncdn.telewebion.ir/irinn/live/1080p/index.m3u8">📺 شبکه خبر</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-iran/playlist.m3u8">📻 رادیو ایران</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-avar/playlist.m3u8">📻 رادیو آوا</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-eghtesad/playlist.m3u8">📻 رادیو اقتصاد</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-tehran/playlist.m3u8">📻 رادیو تهران</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-javan/playlist.m3u8">📻 رادیو جوان</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-varzesh/playlist.m3u8">📻 رادیو ورزش</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-farhang/playlist.m3u8">📻 رادیو فرهنگ</option>
-  </select>
-  <button class="radio-play" id="radioPlayBtn">▶ پخش</button>
+<div class="tv-bar">
+  <span class="tv-info"><span class="tv-dot"></span> شبکه خبر زنده</span>
+  <span class="tv-hint">پخش زنده شبکه خبر از تلوبیون</span>
+  <a class="tv-btn" href="https://telewebion.com/live/irinn" target="_blank" rel="noopener">📺 تماشا در تلوبیون</a>
+  <button class="tv-btn secondary" id="tvPlayBtn">▶ پخش در مرورگر</button>
 </div>
 
 <div class="viewmodes-wrap">
@@ -788,60 +773,15 @@
 
 <script>
 // ============================================================
-// Lreporter v2.1
+// Lreporter v3.0
 // ============================================================
-const VERSION = '2.1';
+const VERSION = '3.0';
 const SUPABASE_URL = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
 const INITIAL_COUNT = 10;
 const DISPLAY_STEP = 10;
 const DISPLAY_INTERVAL = 30000;
 
-const APP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<defs>
-<linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a3a"/><stop offset="1" stop-color="#050a1a"/></linearGradient>
-<linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient>
-<linearGradient id="lGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d0d8e8"/></linearGradient>
-<linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f7fb"/><stop offset="1" stop-color="#c0c8d8"/></linearGradient>
-<radialGradient id="globeShine" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stop-color="#4fb8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#0066cc" stop-opacity="0"/></radialGradient>
-<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs>
-<rect width="512" height="512" rx="115" fill="url(#bgGrad)"/>
-<rect x="4" y="4" width="504" height="504" rx="112" fill="none" stroke="#1e90ff" stroke-width="3" opacity="0.6"/>
-<rect x="8" y="8" width="496" height="496" rx="108" fill="none" stroke="#1e90ff" stroke-width="1" opacity="0.3"/>
-<circle cx="320" cy="200" r="115" fill="url(#globeGrad)" filter="url(#glow)" opacity="0.95"/>
-<circle cx="320" cy="200" r="115" fill="url(#globeShine)"/>
-<g fill="#0a2a5a" opacity="0.85">
-<path d="M 260 130 Q 280 120 300 130 L 310 145 Q 295 160 275 155 Z"/>
-<path d="M 240 160 Q 260 155 270 175 L 260 200 Q 245 195 240 180 Z"/>
-<path d="M 280 190 Q 310 185 330 200 L 340 230 Q 320 245 295 235 Q 275 220 280 190 Z"/>
-<path d="M 350 160 Q 380 165 395 185 L 385 210 Q 360 210 350 190 Z"/>
-<path d="M 355 230 Q 380 235 385 260 L 370 285 Q 350 275 355 250 Z"/>
-<path d="M 290 260 Q 320 255 335 280 L 325 305 Q 295 305 290 280 Z"/>
-<path d="M 380 130 Q 400 140 405 160 L 395 175 Q 380 170 380 150 Z"/>
-</g>
-<ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="3" opacity="0.55" transform="rotate(-20 320 200)"/>
-<ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="1.5" opacity="0.35" transform="rotate(20 320 200)"/>
-<g transform="translate(230 240) rotate(-8)"><rect x="0" y="0" width="200" height="150" rx="12" fill="#a8b4c8"/></g>
-<g transform="translate(220 230) rotate(-4)">
-<rect x="0" y="0" width="210" height="160" rx="14" fill="url(#paperGrad)"/>
-<rect x="20" y="25" width="80" height="8" rx="4" fill="#1a3a6a"/>
-<rect x="20" y="45" width="130" height="6" rx="3" fill="#3a5a8a"/>
-<rect x="20" y="60" width="120" height="6" rx="3" fill="#3a5a8a"/>
-<rect x="20" y="75" width="135" height="6" rx="3" fill="#3a5a8a"/>
-<rect x="20" y="90" width="100" height="6" rx="3" fill="#3a5a8a"/>
-<rect x="20" y="105" width="125" height="6" rx="3" fill="#3a5a8a"/>
-<rect x="20" y="120" width="115" height="6" rx="3" fill="#3a5a8a"/>
-<rect x="130" y="20" width="65" height="50" rx="6" fill="#c8d0e0" stroke="#8a9ab0" stroke-width="2"/>
-<path d="M 135 60 L 150 40 L 165 55 L 180 35 L 190 60 Z" fill="#6a7a90"/>
-<circle cx="175" cy="35" r="5" fill="#6a7a90"/>
-<rect x="130" y="80" width="65" height="5" rx="2" fill="#3a5a8a"/>
-<rect x="130" y="92" width="65" height="5" rx="2" fill="#3a5a8a"/>
-<rect x="130" y="104" width="50" height="5" rx="2" fill="#3a5a8a"/>
-</g>
-<g filter="url(#glow)"><path d="M 100 130 L 175 130 L 175 330 L 260 330 L 260 385 L 100 385 Z" fill="url(#lGrad)"/></g>
-<path d="M 175 330 L 260 330 L 260 385 L 175 385 Z" fill="#e8302a"/>
-<path d="M 175 130 L 185 130 L 185 340 L 175 340 Z" fill="#000000" opacity="0.15"/>
-</svg>`;
+const APP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a3a"/><stop offset="1" stop-color="#050a1a"/></linearGradient><linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient><linearGradient id="lGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d0d8e8"/></linearGradient><linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f7fb"/><stop offset="1" stop-color="#c0c8d8"/></linearGradient><radialGradient id="globeShine" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stop-color="#4fb8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#0066cc" stop-opacity="0"/></radialGradient><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="512" height="512" rx="115" fill="url(#bgGrad)"/><rect x="4" y="4" width="504" height="504" rx="112" fill="none" stroke="#1e90ff" stroke-width="3" opacity="0.6"/><rect x="8" y="8" width="496" height="496" rx="108" fill="none" stroke="#1e90ff" stroke-width="1" opacity="0.3"/><circle cx="320" cy="200" r="115" fill="url(#globeGrad)" filter="url(#glow)" opacity="0.95"/><circle cx="320" cy="200" r="115" fill="url(#globeShine)"/><g fill="#0a2a5a" opacity="0.85"><path d="M 260 130 Q 280 120 300 130 L 310 145 Q 295 160 275 155 Z"/><path d="M 240 160 Q 260 155 270 175 L 260 200 Q 245 195 240 180 Z"/><path d="M 280 190 Q 310 185 330 200 L 340 230 Q 320 245 295 235 Q 275 220 280 190 Z"/><path d="M 350 160 Q 380 165 395 185 L 385 210 Q 360 210 350 190 Z"/><path d="M 355 230 Q 380 235 385 260 L 370 285 Q 350 275 355 250 Z"/><path d="M 290 260 Q 320 255 335 280 L 325 305 Q 295 305 290 280 Z"/><path d="M 380 130 Q 400 140 405 160 L 395 175 Q 380 170 380 150 Z"/></g><ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="3" opacity="0.55" transform="rotate(-20 320 200)"/><ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="1.5" opacity="0.35" transform="rotate(20 320 200)"/><g transform="translate(230 240) rotate(-8)"><rect x="0" y="0" width="200" height="150" rx="12" fill="#a8b4c8"/></g><g transform="translate(220 230) rotate(-4)"><rect x="0" y="0" width="210" height="160" rx="14" fill="url(#paperGrad)"/><rect x="20" y="25" width="80" height="8" rx="4" fill="#1a3a6a"/><rect x="20" y="45" width="130" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="60" width="120" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="75" width="135" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="90" width="100" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="105" width="125" height="6" rx="3" fill="#3a5a8a"/><rect x="20" y="120" width="115" height="6" rx="3" fill="#3a5a8a"/><rect x="130" y="20" width="65" height="50" rx="6" fill="#c8d0e0" stroke="#8a9ab0" stroke-width="2"/><path d="M 135 60 L 150 40 L 165 55 L 180 35 L 190 60 Z" fill="#6a7a90"/><circle cx="175" cy="35" r="5" fill="#6a7a90"/><rect x="130" y="80" width="65" height="5" rx="2" fill="#3a5a8a"/><rect x="130" y="92" width="65" height="5" rx="2" fill="#3a5a8a"/><rect x="130" y="104" width="50" height="5" rx="2" fill="#3a5a8a"/></g><g filter="url(#glow)"><path d="M 100 130 L 175 130 L 175 330 L 260 330 L 260 385 L 100 385 Z" fill="url(#lGrad)"/></g><path d="M 175 330 L 260 330 L 260 385 L 175 385 Z" fill="#e8302a"/><path d="M 175 130 L 185 130 L 185 340 L 175 340 Z" fill="#000000" opacity="0.15"/></svg>`;
 
 const ICON_URL = 'data:image/svg+xml,' + encodeURIComponent(APP_ICON_SVG);
 
@@ -875,16 +815,16 @@ let currentNews = null;
 let isLoading = false;
 let countdownTimer = null;
 let clockTimer = null;
-let radioAudio = null;
+let tvAudio = null;
 let hlsInstance = null;
-let radioPlaying = false;
+let tvPlaying = false;
 
-const CACHE_KEY = 'lreporter_cache_v21';
+const CACHE_KEY = 'lreporter_cache_v3';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
-const READ_KEY = 'lreporter_read_v21';
-const SAVED_KEY = 'lreporter_saved_v21';
-const LAST_DAY_KEY = 'lreporter_lastday_v21';
-const FONT_KEY = 'lreporter_font_v21';
+const READ_KEY = 'lreporter_read_v3';
+const SAVED_KEY = 'lreporter_saved_v3';
+const LAST_DAY_KEY = 'lreporter_lastday_v3';
+const FONT_KEY = 'lreporter_font_v3';
 let readLinks = new Set();
 let savedLinks = new Set();
 
@@ -907,31 +847,23 @@ function toggleSaved(link) {
 (function setupPWA() {
   document.getElementById('appleIcon').href = ICON_URL;
   document.getElementById('logoImg').src = ICON_URL;
-
   const manifest = {
-    name: 'Lreporter',
-    short_name: 'Lreporter',
+    name: 'Lreporter', short_name: 'Lreporter',
     description: 'پایگاه خبری Lreporter',
-    start_url: location.pathname || '/',
-    scope: location.pathname || '/',
-    display: 'standalone',
-    orientation: 'portrait',
-    background_color: '#0a0e1a',
-    theme_color: '#1e90ff',
-    lang: 'fa',
-    dir: 'rtl',
+    start_url: location.pathname || '/', scope: location.pathname || '/',
+    display: 'standalone', orientation: 'portrait',
+    background_color: '#0a0e1a', theme_color: '#1e90ff',
+    lang: 'fa', dir: 'rtl',
     icons: [
       { src: ICON_URL, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
       { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
       { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
     ]
   };
-
   try {
     const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
     document.getElementById('manifestLink').href = URL.createObjectURL(blob);
   } catch (e) {}
-
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     const swCode = `self.addEventListener('install', e => self.skipWaiting());self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
     try {
@@ -970,70 +902,56 @@ async function loadWeather() {
 }
 
 // ============================================================
-// رادیو — پخش ساده
+// شبکه خبر از تلوبیون
 // ============================================================
-function setupRadio() {
-  const select = document.getElementById('radioSelect');
-  const btn = document.getElementById('radioPlayBtn');
+const TV_STREAM_URL = 'https://ncdn.telewebion.ir/irinn/live/1080p/index.m3u8';
 
+function setupTV() {
+  const btn = document.getElementById('tvPlayBtn');
   btn.onclick = () => {
-    const url = select.value;
-    if (!url) { showToast('اول یه رادیو انتخاب کن'); return; }
-    if (radioPlaying) { stopRadio(); return; }
-    playRadio(url);
+    if (tvPlaying) { stopTV(); return; }
+    playTV();
   };
-
-  select.onchange = () => { if (radioPlaying) stopRadio(); };
 }
 
-function playRadio(url) {
-  const btn = document.getElementById('radioPlayBtn');
+function playTV() {
+  const btn = document.getElementById('tvPlayBtn');
   
   if (hlsInstance) { try { hlsInstance.destroy(); } catch(e){} hlsInstance = null; }
-  if (radioAudio) { 
-    try { radioAudio.pause(); radioAudio.src = ''; radioAudio.load(); } catch(e){}
-    radioAudio = null; 
-  }
+  if (tvAudio) { try { tvAudio.pause(); tvAudio.src=''; tvAudio.load(); } catch(e){} tvAudio = null; }
   
-  const isHls = url.includes('.m3u8');
-  
-  btn.classList.add('loading');
   btn.textContent = '⏳ در حال اتصال';
+  btn.disabled = true;
   
   let done = false;
   const fail = (msg) => {
     if (done) return; done = true;
-    btn.classList.remove('loading'); 
-    btn.textContent = '▶ پخش';
-    showToast(msg || '⚠️ پخش نشد — یه رادیو دیگه امتحان کن');
+    btn.textContent = '▶ پخش در مرورگر';
+    btn.disabled = false;
+    showToast(msg || '⚠️ پخش نشد — از دکمه «تماشا در تلوبیون» استفاده کن');
   };
   const success = () => {
     if (done) return; done = true;
-    radioPlaying = true;
-    btn.classList.remove('loading'); 
-    btn.textContent = '⏸ توقف';
-    btn.classList.add('playing');
-    showToast('▶ پخش شروع شد');
+    tvPlaying = true;
+    btn.textContent = '⏸ توقف پخش';
+    btn.disabled = false;
   };
   
   const timeout = setTimeout(() => fail('⏱ زمان انتظار تموم شد'), 10000);
   
   try {
-    if (isHls && window.Hls && Hls.isSupported()) {
+    if (window.Hls && Hls.isSupported()) {
       const audio = new Audio();
-      radioAudio = audio;
-      
-      const hls = new Hls({ 
+      tvAudio = audio;
+      const hls = new Hls({
         enableWorker: true,
         lowLatencyMode: true,
         manifestLoadingTimeOut: 8000,
         manifestLoadingMaxRetry: 1
       });
-      
       hlsInstance = hls;
-      hls.loadSource(url);
+      hls.loadSource(TV_STREAM_URL);
       hls.attachMedia(audio);
-      
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         audio.play().then(() => {
           clearTimeout(timeout);
@@ -1043,7 +961,6 @@ function playRadio(url) {
           fail();
         });
       });
-      
       hls.on(Hls.Events.ERROR, (event, data) => {
         if (data.fatal) {
           clearTimeout(timeout);
@@ -1051,23 +968,13 @@ function playRadio(url) {
           fail();
         }
       });
-      
-    } else if (isHls && audio?.canPlayType?.('application/vnd.apple.mpegurl')) {
-      const audio = new Audio(url);
-      radioAudio = audio;
-      audio.play().then(() => {
-        clearTimeout(timeout); success();
-      }).catch(() => {
-        clearTimeout(timeout); fail();
-      });
+    } else if (audio?.canPlayType?.('application/vnd.apple.mpegurl')) {
+      const audio = new Audio(TV_STREAM_URL);
+      tvAudio = audio;
+      audio.play().then(() => { clearTimeout(timeout); success(); }).catch(() => { clearTimeout(timeout); fail(); });
     } else {
-      const audio = new Audio(url);
-      radioAudio = audio;
-      audio.play().then(() => {
-        clearTimeout(timeout); success();
-      }).catch(() => {
-        clearTimeout(timeout); fail();
-      });
+      clearTimeout(timeout);
+      fail('مرورگر شما از پخش پشتیبانی نمی‌کند');
     }
   } catch (e) {
     clearTimeout(timeout);
@@ -1075,24 +982,12 @@ function playRadio(url) {
   }
 }
 
-function stopRadio() {
-  const btn = document.getElementById('radioPlayBtn');
-  if (hlsInstance) { 
-    try { hlsInstance.destroy(); } catch(e){}
-    hlsInstance = null; 
-  }
-  if (radioAudio) { 
-    try { 
-      radioAudio.pause(); 
-      radioAudio.src = ''; 
-      radioAudio.load();
-    } catch(e){}
-    radioAudio = null; 
-  }
-  radioPlaying = false;
-  btn.classList.remove('playing'); 
-  btn.classList.remove('loading');
-  btn.textContent = '▶ پخش';
+function stopTV() {
+  const btn = document.getElementById('tvPlayBtn');
+  if (hlsInstance) { try { hlsInstance.destroy(); } catch(e){} hlsInstance = null; }
+  if (tvAudio) { try { tvAudio.pause(); tvAudio.src=''; tvAudio.load(); } catch(e){} tvAudio = null; }
+  tvPlaying = false;
+  btn.textContent = '▶ پخش در مرورگر';
 }
 
 // ============================================================
@@ -1121,11 +1016,9 @@ function splitTextIntoChunks(text, maxLength = 200) {
   const sentences = text.split(/[.!؟?\n]+/).filter(s => s.trim().length > 0);
   const chunks = [];
   let currentChunk = '';
-  
   for (const sentence of sentences) {
     const trimmed = sentence.trim();
     if (!trimmed) continue;
-    
     if ((currentChunk + ' ' + trimmed).length <= maxLength) {
       currentChunk = currentChunk ? currentChunk + '. ' + trimmed : trimmed;
     } else {
@@ -1173,7 +1066,6 @@ function setupTTS() {
 
   playBtn.onclick = () => {
     if (!currentNews) return;
-    
     if (ttsSpeaking) {
       if (ttsPaused) {
         speechSynthesis.resume();
@@ -1186,31 +1078,19 @@ function setupTTS() {
       }
       return;
     }
-    
     const rawText = (currentNews.plain || currentNews.title || '');
     const cleanText = cleanTextForTTS(rawText);
-    
-    if (!cleanText || cleanText.length < 10) {
-      showToast('متنی برای خواندن نیست');
-      return;
-    }
-    
+    if (!cleanText || cleanText.length < 10) { showToast('متنی برای خواندن نیست'); return; }
     const text = cleanText.slice(0, 5000);
     ttsQueue = splitTextIntoChunks(text, 200);
     ttsCurrentIndex = 0;
-    
-    if (ttsQueue.length === 0) {
-      showToast('متنی برای خواندن نیست');
-      return;
-    }
-    
+    if (ttsQueue.length === 0) { showToast('متنی برای خواندن نیست'); return; }
     ttsSpeaking = true;
     ttsPaused = false;
     playBtn.classList.add('speaking');
     playBtn.textContent = '🔊 در حال خواندن...';
     pauseBtn.style.display = 'inline-flex';
     stopBtn.style.display = 'inline-flex';
-    
     speakNextChunk();
   };
 
@@ -1252,31 +1132,25 @@ function setupTTS() {
       showToast('✅ خواندن تمام شد');
       return;
     }
-    
     const chunk = ttsQueue[ttsCurrentIndex];
     ttsCurrentIndex++;
-    
     const utterance = new SpeechSynthesisUtterance(chunk);
     utterance.lang = 'fa-IR';
     utterance.rate = 0.9;
     utterance.pitch = 1;
     utterance.volume = 1;
-    
     const voice = getPersianVoice();
     if (voice) utterance.voice = voice;
-    
     utterance.onend = () => {
       if (!ttsSpeaking) return;
       setTimeout(() => {
         if (ttsSpeaking && !ttsPaused) speakNextChunk();
       }, 100);
     };
-    
     utterance.onerror = (e) => {
       if (e.error === 'interrupted' || e.error === 'canceled') return;
       if (ttsSpeaking) setTimeout(() => speakNextChunk(), 100);
     };
-    
     speechSynthesis.speak(utterance);
   }
 }
@@ -1467,7 +1341,7 @@ function showToast(message, duration = 3500) {
   setTimeout(() => { toast.classList.add('out'); setTimeout(() => toast.remove(), 400); }, duration);
 }
 
-// ⭐ buildFilters اصلاح‌شده — عدد بر اساس نمایش تدریجی
+// ⭐ نکته کلیدی: عدد فیلتر = تعداد نمایش داده شده
 function buildFilters() {
   const showingCount = Math.min(displayLimit, allNews.length);
   const display = allNews.slice(0, showingCount);
@@ -1485,7 +1359,6 @@ function buildFilters() {
   
   box.querySelectorAll('button').forEach(btn => {
     btn.onclick = () => {
-      // ⭐ فقط دسته‌بندی رو تغییر بده — displayLimit رو دست نزن
       activeCategory = btn.dataset.cat;
       buildFilters();
       render();
@@ -1787,7 +1660,7 @@ document.querySelectorAll('[data-share]').forEach(btn => { btn.onclick = () => s
 document.querySelectorAll('.viewmode-btn').forEach(btn => {
   btn.onclick = () => { 
     activeMode = btn.dataset.mode; 
-    displayLimit = INITIAL_COUNT;  // ⭐ فقط برای تغییر حالت نمایش ریست کن
+    displayLimit = INITIAL_COUNT;
     updateViewModeButtons(); 
     render(); 
   };
@@ -1858,7 +1731,7 @@ startCountdown();
 updatePersianDateTime();
 clockTimer = setInterval(updatePersianDateTime, 1000);
 loadWeather();
-setupRadio();
+setupTV();
 setupTTS();
 
 if (checkDayChanged()) {
