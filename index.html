@@ -56,13 +56,9 @@
     font-weight: 800; font-size: 1.4rem;
     background: linear-gradient(135deg, #ffffff 0%, #1e90ff 50%, #e8302a 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    white-space: nowrap;
-    letter-spacing: -0.5px;
+    white-space: nowrap; letter-spacing: -0.5px;
   }
-  .logo .logo-img {
-    width: 32px; height: 32px; border-radius: 8px;
-    object-fit: cover; flex-shrink: 0;
-  }
+  .logo .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
   .logo .dot {
     width: 10px; height: 10px; background: var(--danger);
     border-radius: 50%; animation: pulse 1.6s infinite;
@@ -143,26 +139,15 @@
   .info-card .value { font-size: 0.95rem; color: var(--text); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .info-card .sub { font-size: 0.7rem; color: var(--text-dim); }
   
-  /* ===== دکمه شبکه خبر ===== */
+  /* TV bar */
   .tv-bar {
-    max-width: 1280px; margin: 12px auto 0;
-    padding: 12px 16px;
+    max-width: 1280px; margin: 12px auto 0; padding: 12px 16px;
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    border-radius: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   }
-  .tv-bar .tv-info {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.85rem; font-weight: 700; color: var(--accent);
-  }
-  .tv-bar .tv-dot {
-    width: 8px; height: 8px; background: var(--danger);
-    border-radius: 50%; animation: pulse 1.6s infinite;
-  }
-  .tv-bar .tv-hint {
-    font-size: 0.72rem; color: var(--text-dim);
-    flex: 1; min-width: 150px;
-  }
+  .tv-bar .tv-info { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+  .tv-bar .tv-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1.6s infinite; }
+  .tv-bar .tv-hint { font-size: 0.72rem; color: var(--text-dim); flex: 1; min-width: 150px; }
   .tv-btn {
     background: linear-gradient(135deg, #e8302a, #ff4757);
     color: #fff; border: none; border-radius: 10px;
@@ -173,12 +158,41 @@
     box-shadow: 0 4px 14px rgba(232,48,42,0.3);
   }
   .tv-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,48,42,0.5); }
-  .tv-btn.secondary {
-    background: var(--card); color: var(--text);
-    border: 1px solid var(--border); box-shadow: none;
-  }
+  .tv-btn.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
   .tv-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
-  
+
+  /* Radio bar */
+  .radio-bar {
+    max-width: 1280px; margin: 12px auto 0; padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; flex-wrap: wrap;
+  }
+  .radio-bar .radio-title {
+    font-size: 0.85rem; font-weight: 700; color: var(--accent);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .radio-bar .radio-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1.6s infinite; }
+  .radio-select {
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); padding: 6px 12px; border-radius: 10px; font-family: inherit;
+    font-size: 0.8rem; outline: none; cursor: pointer;
+    flex: 1; min-width: 150px; max-width: 320px;
+  }
+  .radio-select:focus { border-color: var(--accent); }
+  .radio-play {
+    background: var(--accent); color: #fff; border: none; border-radius: 10px;
+    padding: 7px 16px; cursor: pointer; font-family: inherit; font-size: 0.8rem;
+    font-weight: 700; transition: 0.2s;
+    display: inline-flex; align-items: center; gap: 5px; touch-action: manipulation;
+  }
+  .radio-play:hover { background: var(--accent-2); }
+  .radio-play.playing { background: var(--danger); }
+  .radio-play.loading { background: var(--warn); color: #0a0e1a; }
+  .radio-play.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .radio-play.secondary:hover { background: var(--card-hover); border-color: var(--accent); color: var(--accent); }
+  .radio-hint { width: 100%; font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+
   .viewmodes-wrap {
     max-width: 1280px; margin: 0 auto; padding: 16px 24px 0;
     display: flex; gap: 8px; flex-wrap: wrap;
@@ -196,10 +210,7 @@
     color: #fff; border-color: transparent;
     box-shadow: 0 4px 14px var(--accent-glow);
   }
-  .viewmode-btn .cnt {
-    font-size: 11px; opacity: 0.75; background: rgba(255,255,255,0.15);
-    padding: 1px 6px; border-radius: 10px;
-  }
+  .viewmode-btn .cnt { font-size: 11px; opacity: 0.75; background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 10px; }
   .viewmode-btn.active .cnt { background: rgba(255,255,255,0.25); }
   .filters-wrap {
     max-width: 1280px; margin: 0 auto; padding: 12px 24px 4px;
@@ -228,90 +239,45 @@
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; overflow: hidden; transition: 0.25s;
     display: flex; flex-direction: column; position: relative;
-    animation: cardIn 0.4s ease-out;
-    cursor: pointer;
-    touch-action: manipulation;
+    animation: cardIn 0.4s ease-out; cursor: pointer; touch-action: manipulation;
   }
   @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .card:hover {
-    transform: translateY(-4px); border-color: var(--accent);
-    box-shadow: var(--shadow); background: var(--card-hover);
-  }
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow); background: var(--card-hover); }
   .card:active { transform: scale(0.98); background: var(--card-hover); }
   .card.read { opacity: 0.6; }
   .card.read h2 { color: var(--text-dim); }
   .card.saved { border-color: var(--star); }
-  .card-img {
-    width: 100%; height: 180px; object-fit: cover;
-    background: var(--bg-2); display: block; transition: 0.4s;
-    pointer-events: none;
-  }
+  .card-img { width: 100%; height: 180px; object-fit: cover; background: var(--bg-2); display: block; transition: 0.4s; pointer-events: none; }
+  .card:hover .card-img { transform: scale(1.04); }
   .card-img-wrap { position: relative; overflow: hidden; background: var(--bg-2); pointer-events: none; }
-  .card-img-wrap::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 60%; background: linear-gradient(to top, var(--card), transparent);
-    pointer-events: none;
-  }
+  .card-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, var(--card), transparent); pointer-events: none; }
   .star-btn {
     position: absolute; top: 12px; right: 12px;
     width: 44px; height: 44px; border-radius: 50%;
     background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #fff; cursor: pointer;
-    display: grid; place-items: center;
-    font-size: 20px; z-index: 5;
+    border: 1px solid rgba(255,255,255,0.15); color: #fff; cursor: pointer;
+    display: grid; place-items: center; font-size: 20px; z-index: 5;
     transition: 0.2s; touch-action: manipulation;
   }
   .star-btn.saved { background: var(--star); color: #0a0e1a; border-color: var(--star); }
-  .card-body {
-    padding: 18px 20px 20px; display: flex; flex-direction: column;
-    gap: 12px; flex: 1; pointer-events: none;
-  }
+  .card-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; pointer-events: none; }
   .card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .source-tag {
-    font-size: 11px; font-weight: 700; color: var(--accent);
-    background: var(--accent-glow); padding: 4px 12px; border-radius: 20px;
-  }
-  .cat-tag {
-    font-size: 11px; font-weight: 600; color: var(--text-dim);
-    padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border);
-  }
-  .read-tag {
-    font-size: 10.5px; font-weight: 700; color: var(--success);
-    background: rgba(52,211,153,0.12);
-    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
-  }
-  .time-tag {
-    font-size: 10.5px; color: var(--text-dim); padding: 4px 8px;
-    border-radius: 20px; background: var(--bg-2);
-  }
-  .card h2 {
-    font-size: 1rem; font-weight: 700; line-height: 1.7;
-    color: var(--text); display: -webkit-box;
-    -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .card p {
-    font-size: 0.84375rem; color: var(--text-dim); line-height: 1.8; flex: 1;
-    display: -webkit-box; -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .card-footer {
-    display: flex; justify-content: space-between; align-items: center;
-    border-top: 1px solid var(--border); padding-top: 12px;
-    font-size: 0.75rem; color: var(--text-dim);
-  }
-  .trend-badge {
-    font-size: 10.5px; font-weight: 700;
-    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
-  }
+  .source-tag { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: 4px 12px; border-radius: 20px; }
+  .cat-tag { font-size: 11px; font-weight: 600; color: var(--text-dim); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
+  .read-tag { font-size: 10.5px; font-weight: 700; color: var(--success); background: rgba(52,211,153,0.12); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+  .time-tag { font-size: 10.5px; color: var(--text-dim); padding: 4px 8px; border-radius: 20px; background: var(--bg-2); }
+  .card h2 { font-size: 1rem; font-weight: 700; line-height: 1.7; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card p { font-size: 0.84375rem; color: var(--text-dim); line-height: 1.8; flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.75rem; color: var(--text-dim); }
+  .trend-badge { font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
   .trend-badge.hot { color: #fff; background: linear-gradient(135deg, #ef4444, #f97316); }
   .trend-badge.trending { color: #0a0e1a; background: linear-gradient(135deg, #fbbf24, #f59e0b); }
   .trend-badge.new { color: #fff; background: linear-gradient(135deg, #10b981, #34d399); }
   .load-more { grid-column: 1 / -1; display: flex; justify-content: center; padding: 20px 0; }
   .load-more button {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text); padding: 12px 32px; border-radius: 12px; cursor: pointer;
-    font-family: inherit; font-size: 0.875rem; font-weight: 700; transition: 0.2s;
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 12px 32px; border-radius: 12px; cursor: pointer; font-family: inherit;
+    font-size: 0.875rem; font-weight: 700; transition: 0.2s;
     display: inline-flex; align-items: center; gap: 8px; touch-action: manipulation;
   }
   .load-more button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
@@ -322,16 +288,15 @@
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     z-index: 1000; display: none; align-items: flex-start;
     justify-content: center; padding: 20px; overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    animation: fadeIn 0.2s;
+    -webkit-overflow-scrolling: touch; animation: fadeIn 0.2s;
   }
   .modal-overlay.open { display: flex; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .modal {
     background: var(--bg-2); border: 1px solid var(--border);
     border-radius: 20px; max-width: 780px; width: 100%;
-    margin: auto; position: relative;
-    animation: slideUp 0.3s; box-shadow: var(--shadow); overflow: hidden;
+    margin: auto; position: relative; animation: slideUp 0.3s;
+    box-shadow: var(--shadow); overflow: hidden;
   }
   @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .modal-hero { width: 100%; max-height: 380px; object-fit: cover; display: block; background: var(--bg); }
@@ -383,34 +348,19 @@
   .related-item:hover { border-color: var(--accent); background: var(--card-hover); }
   .related-item .ri-icon { font-size: 20px; flex-shrink: 0; }
   .related-item .ri-body { flex: 1; min-width: 0; }
-  .related-item .ri-title {
-    font-size: 0.875rem; font-weight: 700; color: var(--text);
-    display: -webkit-box; -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7;
-  }
+  .related-item .ri-title { font-size: 0.875rem; font-weight: 700; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7; }
   .related-item .ri-meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
   .share-section { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border); }
   .share-title { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
-  .share-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
-    gap: 10px; 
-    margin-bottom: 20px; 
-  }
+  .share-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
   .share-btn {
     padding: 14px 8px; border-radius: 14px;
     border: 1px solid var(--border); background: var(--card);
     color: var(--text); font-family: inherit;
     font-size: 0.75rem; font-weight: 700; cursor: pointer;
-    text-decoration: none; display: flex;
-    flex-direction: column;
-    align-items: center; justify-content: center; 
-    gap: 8px;
-    transition: 0.2s; 
-    text-align: center; 
-    touch-action: manipulation;
-    position: relative;
-    overflow: hidden;
+    text-decoration: none; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    transition: 0.2s; text-align: center; touch-action: manipulation;
   }
   .share-btn svg { width: 28px; height: 28px; flex-shrink: 0; transition: 0.2s; }
   .share-btn .share-name { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); transition: 0.2s; }
@@ -441,38 +391,15 @@
     align-items: center; gap: 6px; transition: 0.2s; touch-action: manipulation;
   }
   .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border-color: transparent; color: #fff;
-  }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
   .btn.star-active { background: var(--star); color: #0a0e1a; border-color: var(--star); }
-  .btn.danger { border-color: var(--danger); color: var(--danger); }
-  .empty {
-    text-align: center; padding: 60px 20px;
-    color: var(--text-dim); grid-column: 1 / -1;
-    font-size: 0.9375rem; line-height: 2.2;
-  }
+  .empty { text-align: center; padding: 60px 20px; color: var(--text-dim); grid-column: 1 / -1; font-size: 0.9375rem; line-height: 2.2; }
   .empty .title { font-size: 1.125rem; color: var(--text); margin-bottom: 12px; font-weight: 700; }
-  .skeleton {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; height: 340px; position: relative; overflow: hidden;
-  }
-  .skeleton::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-    animation: shimmer 1.5s infinite;
-  }
+  .skeleton { background: var(--card); border: 1px solid var(--border); border-radius: 16px; height: 340px; position: relative; overflow: hidden; }
+  .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent); animation: shimmer 1.5s infinite; }
   @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-  footer {
-    text-align: center; padding: 30px 20px;
-    color: var(--text-dim); font-size: 0.78125rem;
-    border-top: 1px solid var(--border); margin-top: 40px;
-  }
-  footer .version {
-    display: inline-block; padding: 2px 10px;
-    background: var(--accent-glow); color: var(--accent);
-    border-radius: 20px; font-weight: 700; margin-right: 6px; font-size: 11px;
-  }
+  footer { text-align: center; padding: 30px 20px; color: var(--text-dim); font-size: 0.78125rem; border-top: 1px solid var(--border); margin-top: 40px; }
+  footer .version { display: inline-block; padding: 2px 10px; background: var(--accent-glow); color: var(--accent); border-radius: 20px; font-weight: 700; margin-right: 6px; font-size: 11px; }
   .settings-panel, .stats-panel {
     position: fixed; top: 70px; left: 20px;
     background: var(--bg-2); border: 1px solid var(--border);
@@ -482,29 +409,14 @@
   }
   .stats-panel { width: 340px; }
   .settings-panel.open, .stats-panel.open { display: block; }
-  .settings-panel h3, .stats-panel h3 {
-    font-size: 1rem; margin-bottom: 16px; color: var(--accent);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .settings-panel h3 button, .stats-panel h3 button {
-    background: transparent; border: none; color: var(--text-dim);
-    cursor: pointer; font-size: 20px; padding: 4px 8px;
-  }
+  .settings-panel h3, .stats-panel h3 { font-size: 1rem; margin-bottom: 16px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+  .settings-panel h3 button, .stats-panel h3 button { background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 20px; padding: 4px 8px; }
   .settings-section { margin-bottom: 18px; }
   .settings-section .stitle { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
   .font-controls { display: flex; gap: 8px; align-items: center; }
-  .font-controls button {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text); width: 40px; height: 40px;
-    border-radius: 10px; cursor: pointer; font-size: 18px;
-    display: grid; place-items: center; font-family: inherit; transition: 0.2s;
-    touch-action: manipulation;
-  }
+  .font-controls button { background: var(--card); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px; display: grid; place-items: center; font-family: inherit; transition: 0.2s; touch-action: manipulation; }
   .font-controls .val { font-size: 0.8125rem; color: var(--text-dim); min-width: 40px; text-align: center; }
-  .stat-row {
-    display: flex; justify-content: space-between;
-    padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 0.8125rem;
-  }
+  .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 0.8125rem; }
   .stat-row:last-child { border-bottom: none; }
   .stat-row .lbl { color: var(--text-dim); }
   .stat-row .val { color: var(--text); font-weight: 700; }
@@ -538,6 +450,10 @@
     .tv-bar .tv-info { font-size: 0.78rem; }
     .tv-bar .tv-hint { display: none; }
     .tv-btn { font-size: 0.75rem; padding: 8px 14px; }
+    .radio-bar { margin: 8px 16px 0; padding: 10px 12px; }
+    .radio-bar .radio-title { font-size: 0.75rem; }
+    .radio-select { font-size: 0.72rem; padding: 6px 8px; min-width: 90px; }
+    .radio-play { font-size: 0.72rem; padding: 7px 10px; }
     .viewmodes-wrap { padding: 12px 16px 0; gap: 6px; }
     .viewmode-btn { padding: 8px 12px; font-size: 0.75rem; }
     .filters-wrap { padding: 10px 16px 0; }
@@ -545,13 +461,8 @@
     .grid { padding: 14px 12px 50px; gap: 14px; grid-template-columns: 1fr; }
     .card-img { height: 220px; }
     .card-body { padding: 16px 16px 18px; }
-    .card h2 { font-size: 1rem; }
-    .card p { font-size: 0.875rem; }
     .modal-overlay { padding: 0; align-items: stretch; }
-    .modal {
-      border-radius: 0; max-width: 100%; min-height: 100vh;
-      margin: 0; animation: slideUpMobile 0.3s;
-    }
+    .modal { border-radius: 0; max-width: 100%; min-height: 100vh; margin: 0; animation: slideUpMobile 0.3s; }
     @keyframes slideUpMobile { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .modal-hero { max-height: 240px; }
     .modal-content { padding: 20px 18px 30px; }
@@ -560,8 +471,6 @@
     .modal-close, .modal-star { top: 12px; width: 42px; height: 42px; font-size: 18px; }
     .modal-close { left: 12px; }
     .modal-star { right: 12px; }
-    .tts-controls { gap: 6px; }
-    .tts-btn { padding: 10px 12px; font-size: 0.75rem; }
     .share-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .share-btn { padding: 12px 6px; font-size: 0.65rem; }
     .share-btn svg { width: 24px; height: 24px; }
@@ -577,7 +486,6 @@
     .logo { font-size: 1rem; }
     .card-img { height: 180px; }
     .modal h1 { font-size: 1.05rem; }
-    .modal-body { font-size: 0.9rem; }
     .share-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (hover: none) {
@@ -640,11 +548,30 @@
   </div>
 </div>
 
+<!-- TV -->
 <div class="tv-bar">
   <span class="tv-info"><span class="tv-dot"></span> شبکه خبر زنده</span>
-  <span class="tv-hint">پخش زنده شبکه خبر از تلوبیون</span>
+  <span class="tv-hint">پخش زنده شبکه خبر</span>
   <a class="tv-btn" href="https://telewebion.com/live/irinn" target="_blank" rel="noopener">📺 تماشا در تلوبیون</a>
-  <button class="tv-btn secondary" id="tvPlayBtn">▶ پخش در مرورگر</button>
+</div>
+
+<!-- Radio -->
+<div class="radio-bar">
+  <span class="radio-title"><span class="radio-dot"></span> رادیو زنده</span>
+  <select class="radio-select" id="radioSelect">
+    <option value="">— انتخاب کنید —</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-iran/playlist.m3u8">📻 رادیو ایران</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-avar/playlist.m3u8">📻 رادیو آوا</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-eghtesad/playlist.m3u8">📻 رادیو اقتصاد</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-tehran/playlist.m3u8">📻 رادیو تهران</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-javan/playlist.m3u8">📻 رادیو جوان</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-varzesh/playlist.m3u8">📻 رادیو ورزش</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-farhang/playlist.m3u8">📻 رادیو فرهنگ</option>
+    <option value="https://nl1.iranseda.ir/liveedge/radio-quran/playlist.m3u8">📻 رادیو قرآن</option>
+  </select>
+  <button class="radio-play" id="radioPlayBtn">▶ پخش</button>
+  <button class="radio-play secondary" id="radioCopyBtn">📋 کپی لینک</button>
+  <div class="radio-hint">💡 اگه پخش نشد، «کپی لینک» رو بزن و توی VLC باز کن</div>
 </div>
 
 <div class="viewmodes-wrap">
@@ -772,10 +699,7 @@
 </div>
 
 <script>
-// ============================================================
-// Lreporter v3.0
-// ============================================================
-const VERSION = '3.0';
+const VERSION = '4.0';
 const SUPABASE_URL = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
 const INITIAL_COUNT = 10;
 const DISPLAY_STEP = 10;
@@ -815,16 +739,16 @@ let currentNews = null;
 let isLoading = false;
 let countdownTimer = null;
 let clockTimer = null;
-let tvAudio = null;
+let radioAudio = null;
 let hlsInstance = null;
-let tvPlaying = false;
+let radioPlaying = false;
 
-const CACHE_KEY = 'lreporter_cache_v3';
+const CACHE_KEY = 'lreporter_cache_v4';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
-const READ_KEY = 'lreporter_read_v3';
-const SAVED_KEY = 'lreporter_saved_v3';
-const LAST_DAY_KEY = 'lreporter_lastday_v3';
-const FONT_KEY = 'lreporter_font_v3';
+const READ_KEY = 'lreporter_read_v4';
+const SAVED_KEY = 'lreporter_saved_v4';
+const LAST_DAY_KEY = 'lreporter_lastday_v4';
+const FONT_KEY = 'lreporter_font_v4';
 let readLinks = new Set();
 let savedLinks = new Set();
 
@@ -902,39 +826,59 @@ async function loadWeather() {
 }
 
 // ============================================================
-// شبکه خبر از تلوبیون
+// رادیو — پخش مستقیم + کپی لینک
 // ============================================================
-const TV_STREAM_URL = 'https://ncdn.telewebion.ir/irinn/live/1080p/index.m3u8';
+function setupRadio() {
+  const select = document.getElementById('radioSelect');
+  const playBtn = document.getElementById('radioPlayBtn');
+  const copyBtn = document.getElementById('radioCopyBtn');
 
-function setupTV() {
-  const btn = document.getElementById('tvPlayBtn');
-  btn.onclick = () => {
-    if (tvPlaying) { stopTV(); return; }
-    playTV();
+  playBtn.onclick = () => {
+    const url = select.value;
+    if (!url) { showToast('اول یه رادیو انتخاب کن'); return; }
+    if (radioPlaying) { stopRadio(); return; }
+    playRadio(url);
   };
+
+  copyBtn.onclick = () => {
+    const url = select.value;
+    if (!url) { showToast('اول یه رادیو انتخاب کن'); return; }
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('📋 لینک کپی شد — توی VLC بازش کن');
+    }).catch(() => {
+      prompt('این لینک رو کپی کن و توی VLC باز کن:', url);
+    });
+  };
+
+  select.onchange = () => { if (radioPlaying) stopRadio(); };
 }
 
-function playTV() {
-  const btn = document.getElementById('tvPlayBtn');
+function playRadio(url) {
+  const btn = document.getElementById('radioPlayBtn');
   
   if (hlsInstance) { try { hlsInstance.destroy(); } catch(e){} hlsInstance = null; }
-  if (tvAudio) { try { tvAudio.pause(); tvAudio.src=''; tvAudio.load(); } catch(e){} tvAudio = null; }
+  if (radioAudio) { 
+    try { radioAudio.pause(); radioAudio.src = ''; radioAudio.load(); } catch(e){}
+    radioAudio = null; 
+  }
   
-  btn.textContent = '⏳ در حال اتصال';
-  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = '⏳ اتصال';
   
   let done = false;
   const fail = (msg) => {
     if (done) return; done = true;
-    btn.textContent = '▶ پخش در مرورگر';
-    btn.disabled = false;
-    showToast(msg || '⚠️ پخش نشد — از دکمه «تماشا در تلوبیون» استفاده کن');
+    btn.classList.remove('loading'); 
+    btn.textContent = '▶ پخش';
+    showToast(msg || '⚠️ پخش نشد — «کپی لینک» رو بزن و توی VLC باز کن');
   };
   const success = () => {
     if (done) return; done = true;
-    tvPlaying = true;
-    btn.textContent = '⏸ توقف پخش';
-    btn.disabled = false;
+    radioPlaying = true;
+    btn.classList.remove('loading'); 
+    btn.textContent = '⏸ توقف';
+    btn.classList.add('playing');
+    showToast('▶ پخش شروع شد');
   };
   
   const timeout = setTimeout(() => fail('⏱ زمان انتظار تموم شد'), 10000);
@@ -942,7 +886,7 @@ function playTV() {
   try {
     if (window.Hls && Hls.isSupported()) {
       const audio = new Audio();
-      tvAudio = audio;
+      radioAudio = audio;
       const hls = new Hls({
         enableWorker: true,
         lowLatencyMode: true,
@@ -950,7 +894,7 @@ function playTV() {
         manifestLoadingMaxRetry: 1
       });
       hlsInstance = hls;
-      hls.loadSource(TV_STREAM_URL);
+      hls.loadSource(url);
       hls.attachMedia(audio);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         audio.play().then(() => {
@@ -968,26 +912,29 @@ function playTV() {
           fail();
         }
       });
-    } else if (audio?.canPlayType?.('application/vnd.apple.mpegurl')) {
-      const audio = new Audio(TV_STREAM_URL);
-      tvAudio = audio;
+    } else if (radioAudio?.canPlayType?.('application/vnd.apple.mpegurl')) {
+      const audio = new Audio(url);
+      radioAudio = audio;
       audio.play().then(() => { clearTimeout(timeout); success(); }).catch(() => { clearTimeout(timeout); fail(); });
     } else {
-      clearTimeout(timeout);
-      fail('مرورگر شما از پخش پشتیبانی نمی‌کند');
+      const audio = new Audio(url);
+      radioAudio = audio;
+      audio.play().then(() => { clearTimeout(timeout); success(); }).catch(() => { clearTimeout(timeout); fail(); });
     }
-  } catch (e) {
-    clearTimeout(timeout);
-    fail();
-  }
+  } catch (e) { clearTimeout(timeout); fail(); }
 }
 
-function stopTV() {
-  const btn = document.getElementById('tvPlayBtn');
+function stopRadio() {
+  const btn = document.getElementById('radioPlayBtn');
   if (hlsInstance) { try { hlsInstance.destroy(); } catch(e){} hlsInstance = null; }
-  if (tvAudio) { try { tvAudio.pause(); tvAudio.src=''; tvAudio.load(); } catch(e){} tvAudio = null; }
-  tvPlaying = false;
-  btn.textContent = '▶ پخش در مرورگر';
+  if (radioAudio) { 
+    try { radioAudio.pause(); radioAudio.src = ''; radioAudio.load(); } catch(e){}
+    radioAudio = null; 
+  }
+  radioPlaying = false;
+  btn.classList.remove('playing'); 
+  btn.classList.remove('loading');
+  btn.textContent = '▶ پخش';
 }
 
 // ============================================================
@@ -1341,7 +1288,6 @@ function showToast(message, duration = 3500) {
   setTimeout(() => { toast.classList.add('out'); setTimeout(() => toast.remove(), 400); }, duration);
 }
 
-// ⭐ نکته کلیدی: عدد فیلتر = تعداد نمایش داده شده
 function buildFilters() {
   const showingCount = Math.min(displayLimit, allNews.length);
   const display = allNews.slice(0, showingCount);
@@ -1731,7 +1677,7 @@ startCountdown();
 updatePersianDateTime();
 clockTimer = setInterval(updatePersianDateTime, 1000);
 loadWeather();
-setupTV();
+setupRadio();
 setupTTS();
 
 if (checkDayChanged()) {
