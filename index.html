@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>پایگاه خبری خودکار</title>
-<meta name="theme-color" content="#38bdf8">
+<meta name="theme-color" content="#1e90ff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="اخبار">
+<meta name="apple-mobile-web-app-title" content="Lreporter">
 <link id="manifestLink" rel="manifest">
 <link id="appleIcon" rel="apple-touch-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +16,7 @@
   :root {
     --bg:#0a0e1a; --bg-2:#111827; --card:#1a2234; --card-hover:#1f2940;
     --border:#2a3550; --text:#e8edf7; --text-dim:#94a3b8;
-    --accent:#38bdf8; --accent-2:#818cf8; --accent-glow:rgba(56,189,248,0.15);
+    --accent:#1e90ff; --accent-2:#6366f1; --accent-glow:rgba(30,144,255,0.15);
     --danger:#f87171; --success:#34d399; --warn:#fbbf24;
     --star:#fbbf24;
     --shadow:0 10px 40px rgba(0,0,0,0.4);
@@ -29,7 +28,7 @@
     --accent:#0ea5e9; --accent-2:#6366f1; --accent-glow:rgba(14,165,233,0.1);
     --shadow:0 10px 30px rgba(15,23,42,0.08);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; font-size: var(--base-font-size); }
   body {
     font-family: 'Vazirmatn', Tahoma, sans-serif;
@@ -40,6 +39,7 @@
       radial-gradient(circle at 15% 0%, var(--accent-glow), transparent 40%),
       radial-gradient(circle at 85% 100%, var(--accent-glow), transparent 40%);
     background-attachment: fixed;
+    -webkit-text-size-adjust: 100%;
   }
   header {
     position: sticky; top: 0; z-index: 100;
@@ -53,10 +53,15 @@
   }
   .logo {
     display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 1.25rem;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    font-weight: 800; font-size: 1.4rem;
+    background: linear-gradient(135deg, #ffffff 0%, #1e90ff 50%, #e8302a 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
     white-space: nowrap;
+    letter-spacing: -0.5px;
+  }
+  .logo .logo-img {
+    width: 32px; height: 32px; border-radius: 8px;
+    object-fit: cover; flex-shrink: 0;
   }
   .logo .dot {
     width: 10px; height: 10px; background: var(--danger);
@@ -74,9 +79,7 @@
     border-radius: 12px; color: var(--text);
     font-family: inherit; font-size: 0.875rem; outline: none; transition: 0.2s;
   }
-  .search-box input:focus {
-    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
-  }
+  .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   .search-box::before {
     content: '🔍'; position: absolute; right: 14px; top: 50%;
     transform: translateY(-50%); font-size: 14px; opacity: 0.5; pointer-events: none;
@@ -86,11 +89,9 @@
     color: var(--text); width: 42px; height: 42px;
     border-radius: 12px; cursor: pointer; font-size: 18px;
     display: grid; place-items: center; transition: 0.2s; flex-shrink: 0;
-    position: relative;
+    position: relative; touch-action: manipulation;
   }
-  .icon-btn:hover {
-    background: var(--card-hover); border-color: var(--accent); transform: translateY(-2px);
-  }
+  .icon-btn:hover { background: var(--card-hover); border-color: var(--accent); }
   .icon-btn.spinning { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .icon-btn .badge {
@@ -117,46 +118,30 @@
   }
   .live-badge.loading { background: rgba(251,191,36,0.1); color: var(--warn); }
   .live-badge.loading .dot { background: var(--warn); }
-  #unreadCount {
-    font-size: 11px; font-weight: 600; color: var(--accent);
-    background: var(--accent-glow); padding: 3px 10px; border-radius: 20px;
-  }
-  #countdown {
-    font-size: 11px; color: var(--text-dim);
-    background: var(--bg-2); padding: 3px 10px; border-radius: 20px;
-    border: 1px solid var(--border);
-  }
+  #unreadCount { font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-glow); padding: 3px 10px; border-radius: 20px; }
+  #countdown { font-size: 11px; color: var(--text-dim); background: var(--bg-2); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); }
   .progress-bar {
     position: fixed; top: 0; right: 0; left: 0; height: 3px;
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transform-origin: right; transform: scaleX(0);
-    transition: transform 0.3s; z-index: 200;
+    transform-origin: right; transform: scaleX(0); transition: transform 0.3s; z-index: 200;
   }
   .progress-bar.active { animation: progressAnim 2s ease-out forwards; }
-  @keyframes progressAnim {
-    0% { transform: scaleX(0); }
-    40% { transform: scaleX(0.6); }
-    100% { transform: scaleX(0.95); }
-  }
+  @keyframes progressAnim { 0% { transform: scaleX(0); } 40% { transform: scaleX(0.6); } 100% { transform: scaleX(0.95); } }
   .infobar {
     max-width: 1280px; margin: 0 auto; padding: 16px 24px 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
   }
   .info-card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 14px; padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px;
-    transition: 0.2s;
+    display: flex; align-items: center; gap: 10px; transition: 0.2s;
   }
-  .info-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .info-card:hover { border-color: var(--accent); }
   .info-card .ico { font-size: 22px; flex-shrink: 0; }
   .info-card .body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .info-card .label { font-size: 0.7rem; color: var(--text-dim); font-weight: 600; white-space: nowrap; }
   .info-card .value { font-size: 0.95rem; color: var(--text); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .info-card .sub { font-size: 0.7rem; color: var(--text-dim); }
-  .info-card .value.loading { color: var(--text-dim); font-size: 0.8rem; font-weight: 400; }
   .radio-bar {
     max-width: 1280px; margin: 12px auto 0; padding: 12px 16px;
     display: flex; align-items: center; gap: 10px;
@@ -167,28 +152,30 @@
     font-size: 0.85rem; font-weight: 700; color: var(--accent);
     display: flex; align-items: center; gap: 6px;
   }
-  .radio-bar .radio-dot {
-    width: 8px; height: 8px; background: var(--danger);
-    border-radius: 50%; animation: pulse 1.6s infinite;
-  }
+  .radio-bar .radio-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1.6s infinite; }
   .radio-select {
     background: var(--bg); border: 1px solid var(--border);
-    color: var(--text); padding: 6px 12px;
-    border-radius: 10px; font-family: inherit;
+    color: var(--text); padding: 6px 12px; border-radius: 10px; font-family: inherit;
     font-size: 0.8rem; outline: none; cursor: pointer;
     flex: 1; min-width: 150px; max-width: 320px;
   }
   .radio-select:focus { border-color: var(--accent); }
   .radio-play {
-    background: var(--accent); color: #fff;
-    border: none; border-radius: 10px;
-    padding: 7px 16px; cursor: pointer;
-    font-family: inherit; font-size: 0.8rem;
+    background: var(--accent); color: #fff; border: none; border-radius: 10px;
+    padding: 7px 16px; cursor: pointer; font-family: inherit; font-size: 0.8rem;
     font-weight: 700; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 5px;
+    display: inline-flex; align-items: center; gap: 5px; touch-action: manipulation;
   }
   .radio-play:hover { background: var(--accent-2); }
   .radio-play.playing { background: var(--danger); }
+  .radio-play.loading { background: var(--warn); color: #0a0e1a; }
+  .radio-play.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .radio-play.secondary:hover { background: var(--card-hover); border-color: var(--accent); color: var(--accent); }
+  .radio-info {
+    width: 100%; font-size: 0.72rem; color: var(--text-dim);
+    margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .radio-info span { background: var(--bg-2); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); }
   .viewmodes-wrap {
     max-width: 1280px; margin: 0 auto; padding: 16px 24px 0;
     display: flex; gap: 8px; flex-wrap: wrap;
@@ -198,7 +185,7 @@
     border: 1px solid var(--border); padding: 8px 16px;
     border-radius: 12px; cursor: pointer; font-family: inherit;
     font-size: 0.8125rem; font-weight: 600; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px; touch-action: manipulation;
   }
   .viewmode-btn:hover { color: var(--text); border-color: var(--accent); }
   .viewmode-btn.active {
@@ -207,14 +194,13 @@
     box-shadow: 0 4px 14px var(--accent-glow);
   }
   .viewmode-btn .cnt {
-    font-size: 11px; opacity: 0.75;
-    background: rgba(255,255,255,0.15);
+    font-size: 11px; opacity: 0.75; background: rgba(255,255,255,0.15);
     padding: 1px 6px; border-radius: 10px;
   }
   .viewmode-btn.active .cnt { background: rgba(255,255,255,0.25); }
   .filters-wrap {
     max-width: 1280px; margin: 0 auto; padding: 12px 24px 4px;
-    overflow-x: auto; scrollbar-width: none;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
   .filters-wrap::-webkit-scrollbar { display: none; }
   .filters { display: flex; gap: 8px; padding-bottom: 4px; }
@@ -223,6 +209,7 @@
     border: 1px solid var(--border); padding: 8px 18px;
     border-radius: 20px; cursor: pointer; font-family: inherit;
     font-size: 0.8125rem; font-weight: 500; transition: 0.2s; white-space: nowrap;
+    touch-action: manipulation;
   }
   .filters button:hover { color: var(--text); border-color: var(--accent); }
   .filters button.active {
@@ -232,33 +219,31 @@
   }
   .grid {
     max-width: 1280px; margin: 0 auto; padding: 20px 24px 60px;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
   }
   .card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; overflow: hidden; transition: 0.25s;
-    display: flex; flex-direction: column; cursor: pointer; position: relative;
+    display: flex; flex-direction: column; position: relative;
     animation: cardIn 0.4s ease-out;
+    cursor: pointer;
+    touch-action: manipulation;
   }
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .card:hover {
     transform: translateY(-4px); border-color: var(--accent);
     box-shadow: var(--shadow); background: var(--card-hover);
   }
+  .card:active { transform: scale(0.98); background: var(--card-hover); }
   .card.read { opacity: 0.6; }
-  .card.read:hover { opacity: 1; }
   .card.read h2 { color: var(--text-dim); }
   .card.saved { border-color: var(--star); }
   .card-img {
     width: 100%; height: 180px; object-fit: cover;
     background: var(--bg-2); display: block; transition: 0.4s;
+    pointer-events: none;
   }
-  .card:hover .card-img { transform: scale(1.04); }
-  .card-img-wrap { position: relative; overflow: hidden; background: var(--bg-2); }
+  .card-img-wrap { position: relative; overflow: hidden; background: var(--bg-2); pointer-events: none; }
   .card-img-wrap::after {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0;
     height: 60%; background: linear-gradient(to top, var(--card), transparent);
@@ -266,19 +251,18 @@
   }
   .star-btn {
     position: absolute; top: 12px; right: 12px;
-    width: 38px; height: 38px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 50%;
     background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
     border: 1px solid rgba(255,255,255,0.15);
     color: #fff; cursor: pointer;
     display: grid; place-items: center;
-    font-size: 18px; z-index: 5;
-    transition: 0.2s;
+    font-size: 20px; z-index: 5;
+    transition: 0.2s; touch-action: manipulation;
   }
-  .star-btn:hover { background: rgba(0,0,0,0.75); transform: scale(1.1); }
   .star-btn.saved { background: var(--star); color: #0a0e1a; border-color: var(--star); }
   .card-body {
     padding: 18px 20px 20px; display: flex; flex-direction: column;
-    gap: 12px; flex: 1;
+    gap: 12px; flex: 1; pointer-events: none;
   }
   .card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
   .source-tag {
@@ -320,33 +304,22 @@
   .trend-badge.hot { color: #fff; background: linear-gradient(135deg, #ef4444, #f97316); }
   .trend-badge.trending { color: #0a0e1a; background: linear-gradient(135deg, #fbbf24, #f59e0b); }
   .trend-badge.new { color: #fff; background: linear-gradient(135deg, #10b981, #34d399); }
-  .load-more {
-    grid-column: 1 / -1;
-    display: flex; justify-content: center;
-    padding: 20px 0;
-  }
+  .load-more { grid-column: 1 / -1; display: flex; justify-content: center; padding: 20px 0; }
   .load-more button {
     background: var(--card); border: 1px solid var(--border);
-    color: var(--text); padding: 12px 32px;
-    border-radius: 12px; cursor: pointer;
-    font-family: inherit; font-size: 0.875rem; font-weight: 700;
-    transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--text); padding: 12px 32px; border-radius: 12px; cursor: pointer;
+    font-family: inherit; font-size: 0.875rem; font-weight: 700; transition: 0.2s;
+    display: inline-flex; align-items: center; gap: 8px; touch-action: manipulation;
   }
-  .load-more button:hover:not(:disabled) {
-    border-color: var(--accent); color: var(--accent);
-    transform: translateY(-2px);
-  }
+  .load-more button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
   .load-more button.pulse { animation: loadPulse 1.5s infinite; }
-  @keyframes loadPulse {
-    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-    50% { box-shadow: 0 0 0 8px transparent; }
-  }
+  @keyframes loadPulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); } 50% { box-shadow: 0 0 0 8px transparent; } }
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.75);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     z-index: 1000; display: none; align-items: flex-start;
     justify-content: center; padding: 20px; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     animation: fadeIn 0.2s;
   }
   .modal-overlay.open { display: flex; }
@@ -357,35 +330,30 @@
     margin: auto; position: relative;
     animation: slideUp 0.3s; box-shadow: var(--shadow); overflow: hidden;
   }
-  @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .modal-hero { width: 100%; max-height: 380px; object-fit: cover; display: block; background: var(--bg); }
   .modal-content { padding: 30px 34px 34px; }
   .modal-close {
     position: absolute; top: 16px; left: 16px;
-    width: 38px; height: 38px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 50%;
     background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
     border: 1px solid rgba(255,255,255,0.15); color: #fff;
-    cursor: pointer; font-size: 18px; display: grid; place-items: center;
-    transition: 0.2s; z-index: 10;
+    cursor: pointer; font-size: 20px; display: grid; place-items: center;
+    transition: 0.2s; z-index: 10; touch-action: manipulation;
   }
-  .modal-close:hover { background: var(--danger); transform: rotate(90deg); }
+  .modal-close:hover { background: var(--danger); }
   .modal-star {
     position: absolute; top: 16px; right: 16px;
-    width: 42px; height: 42px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 50%;
     background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
     border: 1px solid rgba(255,255,255,0.15); color: #fff;
-    cursor: pointer; font-size: 20px;
-    display: grid; place-items: center;
-    transition: 0.2s; z-index: 10;
+    cursor: pointer; font-size: 22px; display: grid; place-items: center;
+    transition: 0.2s; z-index: 10; touch-action: manipulation;
   }
-  .modal-star:hover { background: rgba(0,0,0,0.8); transform: scale(1.1); }
   .modal-star.saved { background: var(--star); color: #0a0e1a; border-color: var(--star); }
   .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
   .modal h1 { font-size: 1.5rem; font-weight: 800; line-height: 1.7; margin-bottom: 22px; color: var(--text); }
-  .modal-body { font-size: 0.96875rem; line-height: 2.2; color: var(--text); }
+  .modal-body { font-size: 0.96875rem; line-height: 2.2; color: var(--text); word-wrap: break-word; }
   .modal-body p { margin-bottom: 16px; }
   .modal-body a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); }
   .modal-body img { max-width: 100%; height: auto; border-radius: 12px; margin: 16px auto; display: block; }
@@ -395,11 +363,9 @@
   .tts-controls { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
   .tts-btn {
     background: var(--card); border: 1px solid var(--border);
-    color: var(--text); padding: 8px 16px;
-    border-radius: 10px; cursor: pointer;
-    font-family: inherit; font-size: 0.8125rem;
-    font-weight: 600; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--text); padding: 10px 16px; border-radius: 10px; cursor: pointer;
+    font-family: inherit; font-size: 0.8125rem; font-weight: 600; transition: 0.2s;
+    display: inline-flex; align-items: center; gap: 6px; touch-action: manipulation;
   }
   .tts-btn:hover { border-color: var(--accent); color: var(--accent); }
   .tts-btn.speaking { background: var(--danger); color: #fff; border-color: var(--danger); }
@@ -408,11 +374,10 @@
   .related-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
   .related-item {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px;
-    cursor: pointer; transition: 0.2s;
-    display: flex; gap: 12px; align-items: center;
+    border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: 0.2s;
+    display: flex; gap: 12px; align-items: center; touch-action: manipulation;
   }
-  .related-item:hover { border-color: var(--accent); background: var(--card-hover); transform: translateX(-4px); }
+  .related-item:hover { border-color: var(--accent); background: var(--card-hover); }
   .related-item .ri-icon { font-size: 20px; flex-shrink: 0; }
   .related-item .ri-body { flex: 1; min-width: 0; }
   .related-item .ri-title {
@@ -421,70 +386,94 @@
     -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7;
   }
   .related-item .ri-meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
+
+  /* ====== اشتراک‌گذاری با آیکون ====== */
   .share-section { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border); }
-  .share-title { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-  .share-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 8px; margin-bottom: 16px;
+  .share-title { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+  .share-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+    gap: 10px; 
+    margin-bottom: 20px; 
   }
   .share-btn {
-    padding: 10px 8px; border-radius: 12px;
+    padding: 14px 8px; border-radius: 14px;
     border: 1px solid var(--border); background: var(--card);
     color: var(--text); font-family: inherit;
-    font-size: 0.78125rem; font-weight: 600; cursor: pointer;
-    text-decoration: none; display: inline-flex;
-    align-items: center; justify-content: center; gap: 5px;
-    transition: 0.2s; text-align: center;
+    font-size: 0.75rem; font-weight: 700; cursor: pointer;
+    text-decoration: none; display: flex;
+    flex-direction: column;
+    align-items: center; justify-content: center; 
+    gap: 8px;
+    transition: 0.2s; 
+    text-align: center; 
+    touch-action: manipulation;
+    position: relative;
+    overflow: hidden;
   }
-  .share-btn:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .share-btn.telegram:hover  { background: #0088cc; color: #fff; border-color: #0088cc; }
-  .share-btn.whatsapp:hover  { background: #25d366; color: #fff; border-color: #25d366; }
-  .share-btn.twitter:hover   { background: #000; color: #fff; border-color: #000; }
-  .share-btn.facebook:hover  { background: #1877f2; color: #fff; border-color: #1877f2; }
-  .share-btn.linkedin:hover  { background: #0a66c2; color: #fff; border-color: #0a66c2; }
-  .share-btn.reddit:hover    { background: #ff4500; color: #fff; border-color: #ff4500; }
-  .share-btn.pinterest:hover { background: #e60023; color: #fff; border-color: #e60023; }
-  .share-btn.email:hover     { background: #6b7280; color: #fff; border-color: #6b7280; }
-  .share-btn.sms:hover       { background: #22c55e; color: #fff; border-color: #22c55e; }
-  .share-btn.native:hover    { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .share-btn.eitaa:hover     { background: #ef7f1a; color: #fff; border-color: #ef7f1a; }
-  .share-btn.bale:hover      { background: #00a86b; color: #fff; border-color: #00a86b; }
-  .share-btn.soroush:hover   { background: #6b46c1; color: #fff; border-color: #6b46c1; }
+  .share-btn svg {
+    width: 28px; height: 28px;
+    flex-shrink: 0;
+    transition: 0.2s;
+  }
+  .share-btn .share-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    transition: 0.2s;
+  }
+  .share-btn:hover {
+    transform: translateY(-3px);
+    border-color: transparent;
+  }
+  .share-btn:hover svg {
+    transform: scale(1.15);
+  }
+  .share-btn:hover .share-name {
+    color: #fff;
+  }
+
+  /* رنگ‌های اختصاصی هر پیام‌رسان */
+  .share-btn.telegram:hover { background: linear-gradient(135deg, #0088cc, #229ed9); }
+  .share-btn.whatsapp:hover { background: linear-gradient(135deg, #25d366, #128c7e); }
+  .share-btn.eitaa:hover { background: linear-gradient(135deg, #ef7f1a, #ff9f43); }
+  .share-btn.bale:hover { background: linear-gradient(135deg, #00a86b, #00c98d); }
+  .share-btn.soroush:hover { background: linear-gradient(135deg, #6b46c1, #9333ea); }
+  .share-btn.twitter:hover { background: linear-gradient(135deg, #000000, #333333); }
+  .share-btn.facebook:hover { background: linear-gradient(135deg, #1877f2, #0d65d9); }
+  .share-btn.linkedin:hover { background: linear-gradient(135deg, #0a66c2, #004182); }
+  .share-btn.reddit:hover { background: linear-gradient(135deg, #ff4500, #ff5722); }
+  .share-btn.pinterest:hover { background: linear-gradient(135deg, #e60023, #bd081c); }
+  .share-btn.email:hover { background: linear-gradient(135deg, #6b7280, #4b5563); }
+  .share-btn.sms:hover { background: linear-gradient(135deg, #22c55e, #16a34a); }
+  .share-btn.copy:hover { background: linear-gradient(135deg, #1e90ff, #0066cc); }
+  .share-btn.native:hover { background: linear-gradient(135deg, #1e90ff, #6366f1); }
+
   .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn {
-    padding: 10px 20px; border-radius: 12px;
+    padding: 12px 20px; border-radius: 12px;
     border: 1px solid var(--border); background: var(--card);
     color: var(--text); font-family: inherit;
     font-size: 0.84375rem; font-weight: 600; cursor: pointer;
     text-decoration: none; display: inline-flex;
-    align-items: center; gap: 6px; transition: 0.2s;
+    align-items: center; gap: 6px; transition: 0.2s; touch-action: manipulation;
   }
-  .btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
   .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     border-color: transparent; color: #fff;
   }
-  .btn-primary:hover { color: #fff; box-shadow: 0 6px 20px var(--accent-glow); }
   .btn.star-active { background: var(--star); color: #0a0e1a; border-color: var(--star); }
   .btn.danger { border-color: var(--danger); color: var(--danger); }
-  .btn.danger:hover { background: var(--danger); color: #fff; }
   .empty {
     text-align: center; padding: 60px 20px;
     color: var(--text-dim); grid-column: 1 / -1;
     font-size: 0.9375rem; line-height: 2.2;
   }
   .empty .title { font-size: 1.125rem; color: var(--text); margin-bottom: 12px; font-weight: 700; }
-  .empty .hint {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 20px; margin-top: 16px;
-    text-align: right; font-size: 0.84375rem; line-height: 2;
-    color: var(--text);
-  }
-  .empty .hint strong { color: var(--accent); }
   .skeleton {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; height: 340px;
-    position: relative; overflow: hidden;
+    border-radius: 16px; height: 340px; position: relative; overflow: hidden;
   }
   .skeleton::after {
     content: ''; position: absolute; inset: 0;
@@ -500,56 +489,45 @@
   footer .version {
     display: inline-block; padding: 2px 10px;
     background: var(--accent-glow); color: var(--accent);
-    border-radius: 20px; font-weight: 700; margin-right: 6px;
-    font-size: 11px;
+    border-radius: 20px; font-weight: 700; margin-right: 6px; font-size: 11px;
   }
   .settings-panel, .stats-panel {
     position: fixed; top: 70px; left: 20px;
     background: var(--bg-2); border: 1px solid var(--border);
     border-radius: 16px; padding: 20px;
     width: 320px; max-height: 80vh; overflow-y: auto;
-    z-index: 2000; box-shadow: var(--shadow);
-    display: none;
+    z-index: 2000; box-shadow: var(--shadow); display: none;
   }
   .stats-panel { width: 340px; }
-  .settings-panel.open, .stats-panel.open { display: block; animation: slideUp 0.3s; }
+  .settings-panel.open, .stats-panel.open { display: block; }
   .settings-panel h3, .stats-panel h3 {
     font-size: 1rem; margin-bottom: 16px; color: var(--accent);
     display: flex; justify-content: space-between; align-items: center;
   }
   .settings-panel h3 button, .stats-panel h3 button {
     background: transparent; border: none; color: var(--text-dim);
-    cursor: pointer; font-size: 18px;
+    cursor: pointer; font-size: 20px; padding: 4px 8px;
   }
   .settings-section { margin-bottom: 18px; }
   .settings-section .stitle { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
-  .source-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 12px; background: var(--bg); border-radius: 10px;
-    margin-bottom: 6px; font-size: 0.8125rem;
-  }
-  .source-toggle label { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
-  .source-toggle input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
   .font-controls { display: flex; gap: 8px; align-items: center; }
   .font-controls button {
     background: var(--card); border: 1px solid var(--border);
-    color: var(--text); width: 36px; height: 36px;
-    border-radius: 10px; cursor: pointer; font-size: 16px;
-    display: grid; place-items: center;
-    font-family: inherit; transition: 0.2s;
+    color: var(--text); width: 40px; height: 40px;
+    border-radius: 10px; cursor: pointer; font-size: 18px;
+    display: grid; place-items: center; font-family: inherit; transition: 0.2s;
+    touch-action: manipulation;
   }
-  .font-controls button:hover { border-color: var(--accent); }
   .font-controls .val { font-size: 0.8125rem; color: var(--text-dim); min-width: 40px; text-align: center; }
   .stat-row {
     display: flex; justify-content: space-between;
-    padding: 8px 0; border-bottom: 1px dashed var(--border);
-    font-size: 0.8125rem;
+    padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 0.8125rem;
   }
   .stat-row:last-child { border-bottom: none; }
   .stat-row .lbl { color: var(--text-dim); }
   .stat-row .val { color: var(--text); font-weight: 700; }
   .stat-bar { height: 6px; background: var(--bg); border-radius: 3px; margin-top: 4px; overflow: hidden; }
-  .stat-bar .fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 3px; transition: width 0.5s; }
+  .stat-bar .fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 3px; }
   .header-actions { display: flex; gap: 8px; align-items: center; }
   .toast {
     position: fixed; bottom: 30px; right: 30px;
@@ -557,28 +535,74 @@
     color: var(--text); padding: 14px 22px;
     border-radius: 14px; box-shadow: var(--shadow);
     z-index: 3000; font-size: 0.875rem;
-    animation: slideInRight 0.4s;
-    max-width: 340px;
+    animation: slideInRight 0.4s; max-width: 340px;
   }
   @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
   .toast.out { animation: slideOutRight 0.4s forwards; }
   @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
   @media (max-width: 640px) {
-    .header-inner { padding: 12px 16px; gap: 10px; }
-    .logo { font-size: 1.0625rem; }
-    .grid { padding: 16px; gap: 14px; grid-template-columns: 1fr; }
-    .filters-wrap { padding: 12px 16px 0; }
-    .viewmodes-wrap { padding: 14px 16px 0; }
-    .statusbar { padding: 0 16px 10px; }
-    .infobar { padding: 14px 16px 0; grid-template-columns: 1fr 1fr; }
-    .radio-bar { margin: 0 16px; }
-    .modal-content { padding: 22px 20px; }
-    .modal h1 { font-size: 1.125rem; }
-    .modal-body { font-size: 0.90625rem; }
-    .card-img { height: 200px; }
-    .settings-panel, .stats-panel { left: 10px; right: 10px; width: auto; }
+    .header-inner { padding: 12px 16px; gap: 8px; }
+    .logo { font-size: 1.1rem; flex: 1; }
+    .logo .logo-img { width: 28px; height: 28px; }
+    .search-box { order: 3; width: 100%; flex: none; margin-top: 4px; }
+    .header-actions { gap: 6px; }
+    .icon-btn { width: 38px; height: 38px; font-size: 16px; }
+    .statusbar { padding: 8px 16px 10px; font-size: 0.7rem; }
+    .infobar { padding: 12px 16px 0; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .info-card { padding: 10px 12px; }
+    .info-card .ico { font-size: 18px; }
+    .info-card .value { font-size: 0.8rem; }
+    .radio-bar { margin: 8px 16px 0; padding: 10px 12px; }
+    .radio-bar .radio-title { font-size: 0.75rem; }
+    .radio-select { font-size: 0.75rem; padding: 6px 10px; min-width: 100px; }
+    .radio-play { font-size: 0.75rem; padding: 8px 12px; }
+    .viewmodes-wrap { padding: 12px 16px 0; gap: 6px; }
+    .viewmode-btn { padding: 8px 12px; font-size: 0.75rem; }
+    .filters-wrap { padding: 10px 16px 0; }
+    .filters button { padding: 7px 14px; font-size: 0.75rem; }
+    .grid { padding: 14px 12px 50px; gap: 14px; grid-template-columns: 1fr; }
+    .card-img { height: 220px; }
+    .card-body { padding: 16px 16px 18px; }
+    .card h2 { font-size: 1rem; }
+    .card p { font-size: 0.875rem; }
+    .modal-overlay { padding: 0; align-items: stretch; }
+    .modal {
+      border-radius: 0; max-width: 100%; min-height: 100vh;
+      margin: 0; animation: slideUpMobile 0.3s;
+    }
+    @keyframes slideUpMobile { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-hero { max-height: 240px; }
+    .modal-content { padding: 20px 18px 30px; }
+    .modal h1 { font-size: 1.2rem; margin-bottom: 16px; }
+    .modal-body { font-size: 0.95rem; line-height: 2; }
+    .modal-close, .modal-star { top: 12px; width: 42px; height: 42px; font-size: 18px; }
+    .modal-close { left: 12px; }
+    .modal-star { right: 12px; }
+    .tts-controls { gap: 6px; }
+    .tts-btn { padding: 10px 12px; font-size: 0.75rem; }
+    .share-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .share-btn { padding: 12px 6px; font-size: 0.65rem; }
+    .share-btn svg { width: 24px; height: 24px; }
+    .share-btn .share-name { font-size: 0.65rem; }
+    .btn { padding: 12px 16px; font-size: 0.8rem; flex: 1; justify-content: center; }
+    .settings-panel, .stats-panel { top: 0; left: 0; right: 0; bottom: 0; width: 100%; max-height: 100vh; border-radius: 0; padding: 24px 20px; }
     .toast { bottom: 20px; right: 16px; left: 16px; max-width: none; }
-    .share-grid { grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); }
+    footer { padding: 24px 16px; font-size: 0.75rem; }
+    .load-more button { padding: 12px 24px; font-size: 0.8rem; }
+  }
+  @media (max-width: 380px) {
+    .infobar { grid-template-columns: 1fr; }
+    .logo { font-size: 1rem; }
+    .card-img { height: 180px; }
+    .modal h1 { font-size: 1.05rem; }
+    .modal-body { font-size: 0.9rem; }
+    .share-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (hover: none) {
+    .card:hover { transform: none; box-shadow: none; background: var(--card); }
+    .icon-btn:hover { background: var(--card); border-color: var(--border); }
+    .viewmode-btn:hover { color: var(--text-dim); border-color: var(--border); }
+    .filters button:hover { color: var(--text-dim); border-color: var(--border); }
   }
 </style>
 </head>
@@ -588,26 +612,28 @@
 
 <header>
   <div class="header-inner">
-    <div class="logo"><span class="dot"></span> پایگاه خبری خودکار</div>
+    <div class="logo">
+      <img class="logo-img" id="logoImg" alt="Lreporter">
+      Lreporter
+    </div>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="جستجو در اخبار...">
+      <input type="text" id="searchInput" placeholder="جستجو...">
     </div>
     <div class="header-actions">
       <button class="icon-btn" id="settingsBtn" title="تنظیمات">⚙️</button>
       <button class="icon-btn" id="statsBtn" title="آمار">📊</button>
-      <button class="icon-btn" id="savedBtn" title="ذخیره‌شده‌ها">
+      <button class="icon-btn" id="savedBtn" title="ذخیره‌شده">
         ⭐<span class="badge" id="savedBadge" style="display:none">0</span>
       </button>
-      <button class="icon-btn" id="themeBtn" title="تغییر تم">🌙</button>
-      <button class="icon-btn" id="clearReadBtn" title="پاک کردن علامت‌ها">👁️</button>
+      <button class="icon-btn" id="themeBtn" title="تم">🌙</button>
       <button class="icon-btn" id="refreshBtn" title="به‌روزرسانی">🔄</button>
     </div>
   </div>
   <div class="statusbar">
     <span class="statusbar-left">
       <span class="live-badge" id="liveBadge"><span class="dot"></span> زنده</span>
-      <span id="unreadCount">۰ خوانده‌نشده</span>
-      <span id="countdown">⏰ محاسبه...</span>
+      <span id="unreadCount">۰</span>
+      <span id="countdown">⏰ ...</span>
     </span>
     <span id="status">در حال بارگذاری...</span>
   </div>
@@ -617,23 +643,9 @@
   <div class="info-card">
     <span class="ico">📅</span>
     <div class="body">
-      <span class="label">تاریخ شمسی</span>
-      <span class="value" id="persianDate">در حال بارگذاری...</span>
+      <span class="label">تاریخ</span>
+      <span class="value" id="persianDate">...</span>
       <span class="sub" id="clockTime"></span>
-    </div>
-  </div>
-  <div class="info-card">
-    <span class="ico">💵</span>
-    <div class="body">
-      <span class="label">دلار آمریکا</span>
-      <span class="value loading" id="dollarPrice">در حال دریافت...</span>
-    </div>
-  </div>
-  <div class="info-card">
-    <span class="ico">🪙</span>
-    <div class="body">
-      <span class="label">سکه امامی</span>
-      <span class="value loading" id="coinPrice">در حال دریافت...</span>
     </div>
   </div>
   <div class="info-card">
@@ -647,10 +659,10 @@
 </div>
 
 <div class="radio-bar">
-  <span class="radio-title"><span class="radio-dot"></span> رادیو و تلویزیون زنده</span>
+  <span class="radio-title"><span class="radio-dot"></span> رادیو و تلویزیون</span>
   <select class="radio-select" id="radioSelect">
     <option value="">— انتخاب کنید —</option>
-    <option value="https://ncdn.telewebion.ir/irinn/live/1080p/index.m3u8">📺 شبکه خبر (زنده)</option>
+    <option value="https://ncdn.telewebion.ir/irinn/live/1080p/index.m3u8">📺 شبکه خبر</option>
     <option value="https://nl1.iranseda.ir/liveedge/radio-iran/playlist.m3u8">📻 رادیو ایران</option>
     <option value="https://nl1.iranseda.ir/liveedge/radio-avar/playlist.m3u8">📻 رادیو آوا</option>
     <option value="https://nl1.iranseda.ir/liveedge/radio-eghtesad/playlist.m3u8">📻 رادیو اقتصاد</option>
@@ -658,18 +670,19 @@
     <option value="https://nl1.iranseda.ir/liveedge/radio-javan/playlist.m3u8">📻 رادیو جوان</option>
     <option value="https://nl1.iranseda.ir/liveedge/radio-varzesh/playlist.m3u8">📻 رادیو ورزش</option>
     <option value="https://nl1.iranseda.ir/liveedge/radio-farhang/playlist.m3u8">📻 رادیو فرهنگ</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-salamat/playlist.m3u8">📻 رادیو سلامت</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-quran/playlist.m3u8">📻 رادیو قرآن</option>
-    <option value="https://nl1.iranseda.ir/liveedge/radio-payam/playlist.m3u8">📻 رادیو پیام</option>
   </select>
   <button class="radio-play" id="radioPlayBtn">▶ پخش</button>
+  <button class="radio-play secondary" id="radioOpenBtn">📻 خارجی</button>
+  <div class="radio-info">
+    <span>💡 اگه «پخش» کار نکرد، «خارجی» رو بزن</span>
+  </div>
 </div>
 
 <div class="viewmodes-wrap">
   <button class="viewmode-btn active" data-mode="all">📰 همه <span class="cnt" id="cntAll">0</span></button>
-  <button class="viewmode-btn" data-mode="unread">📬 خوانده‌نشده <span class="cnt" id="cntUnread">0</span></button>
-  <button class="viewmode-btn" data-mode="saved">⭐ ذخیره‌شده <span class="cnt" id="cntSaved">0</span></button>
-  <button class="viewmode-btn" data-mode="trending">🔥 ترندینگ <span class="cnt" id="cntTrending">0</span></button>
+  <button class="viewmode-btn" data-mode="unread">📬 نخوانده <span class="cnt" id="cntUnread">0</span></button>
+  <button class="viewmode-btn" data-mode="saved">⭐ ذخیره <span class="cnt" id="cntSaved">0</span></button>
+  <button class="viewmode-btn" data-mode="trending">🔥 ترند <span class="cnt" id="cntTrending">0</span></button>
 </div>
 
 <div class="filters-wrap">
@@ -678,12 +691,11 @@
 
 <div class="grid" id="content">
   <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-  <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
 </div>
 
 <footer>
-  <span class="version">نسخه ۲۰ (Supabase)</span>
-  ساخته‌شده با ❤️ — تمام اخبار از منابع اصلی با ذکر منبع منتشر می‌شود
+  <span class="version">Lreporter</span>
+  ساخته‌شده با ❤️
 </footer>
 
 <div class="settings-panel" id="settingsPanel">
@@ -699,12 +711,12 @@
 </div>
 
 <div class="stats-panel" id="statsPanel">
-  <h3>📊 آمار و ترندینگ<button id="statsClose">✕</button></h3>
+  <h3>📊 آمار<button id="statsClose">✕</button></h3>
   <div id="statsContent"></div>
 </div>
 
 <div class="modal-overlay" id="modal">
-  <div class="modal">
+  <div class="modal" id="modalBox">
     <button class="modal-close" id="modalClose">✕</button>
     <button class="modal-star" id="modalStar" title="ذخیره">☆</button>
     <img class="modal-hero" id="modalHero" style="display:none" alt="">
@@ -712,9 +724,9 @@
       <div class="modal-meta" id="modalMeta"></div>
       <h1 id="modalTitle"></h1>
       <div class="tts-controls" id="ttsControls">
-        <button class="tts-btn" id="ttsPlayBtn">🔊 خواندن خبر</button>
+        <button class="tts-btn" id="ttsPlayBtn">🔊 خواندن</button>
         <button class="tts-btn" id="ttsPauseBtn" style="display:none">⏸ توقف</button>
-        <button class="tts-btn" id="ttsStopBtn" style="display:none">⏹ توقف کامل</button>
+        <button class="tts-btn" id="ttsStopBtn" style="display:none">⏹ پایان</button>
       </div>
       <div class="modal-body" id="modalBody"></div>
       <div class="related-section" id="relatedSection" style="display:none">
@@ -722,27 +734,81 @@
         <div class="related-grid" id="relatedGrid"></div>
       </div>
       <div class="share-section">
-        <div class="share-title">📤 اشتراک‌گذاری در:</div>
+        <div class="share-title">📤 اشتراک‌گذاری:</div>
         <div class="share-grid">
-          <button class="share-btn telegram" data-share="telegram">📢 تلگرام</button>
-          <button class="share-btn whatsapp" data-share="whatsapp">💬 واتساپ</button>
-          <button class="share-btn eitaa" data-share="eitaa">📨 ایتا</button>
-          <button class="share-btn bale" data-share="bale">💚 بله</button>
-          <button class="share-btn soroush" data-share="soroush">🌐 سروش</button>
-          <button class="share-btn twitter" data-share="twitter">𝕏 توییتر</button>
-          <button class="share-btn facebook" data-share="facebook">📘 فیسبوک</button>
-          <button class="share-btn linkedin" data-share="linkedin">💼 لینکدین</button>
-          <button class="share-btn reddit" data-share="reddit">👽 ردیت</button>
-          <button class="share-btn pinterest" data-share="pinterest">📌 پینترست</button>
-          <button class="share-btn email" data-share="email">✉️ ایمیل</button>
-          <button class="share-btn sms" data-share="sms">💌 پیامک</button>
-          <button class="share-btn native" data-share="native">📱 اشتراک سیستمی</button>
+          <button class="share-btn telegram" data-share="telegram" title="تلگرام">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            <span class="share-name">تلگرام</span>
+          </button>
+          
+          <button class="share-btn whatsapp" data-share="whatsapp" title="واتساپ">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span class="share-name">واتساپ</span>
+          </button>
+          
+          <button class="share-btn eitaa" data-share="eitaa" title="ایتا">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
+            <span class="share-name">ایتا</span>
+          </button>
+          
+          <button class="share-btn bale" data-share="bale" title="بله">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3.5 8.5l-5 5c-.2.2-.5.3-.7.3s-.5-.1-.7-.3l-2.5-2.5c-.4-.4-.4-1 0-1.4s1-.4 1.4 0l1.8 1.8 4.3-4.3c.4-.4 1-.4 1.4 0s.4 1 0 1.4z"/></svg>
+            <span class="share-name">بله</span>
+          </button>
+          
+          <button class="share-btn soroush" data-share="soroush" title="سروش">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+            <span class="share-name">سروش</span>
+          </button>
+          
+          <button class="share-btn twitter" data-share="twitter" title="توییتر">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <span class="share-name">توییتر</span>
+          </button>
+          
+          <button class="share-btn facebook" data-share="facebook" title="فیسبوک">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span class="share-name">فیسبوک</span>
+          </button>
+          
+          <button class="share-btn linkedin" data-share="linkedin" title="لینکدین">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            <span class="share-name">لینکدین</span>
+          </button>
+          
+          <button class="share-btn reddit" data-share="reddit" title="ردیت">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+            <span class="share-name">ردیت</span>
+          </button>
+          
+          <button class="share-btn pinterest" data-share="pinterest" title="پینترست">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+            <span class="share-name">پینترست</span>
+          </button>
+          
+          <button class="share-btn email" data-share="email" title="ایمیل">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span class="share-name">ایمیل</span>
+          </button>
+          
+          <button class="share-btn sms" data-share="sms" title="پیامک">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 9h10v2H7V9zm7 5H7v-2h7v2zm3-6H7V6h10v2z"/></svg>
+            <span class="share-name">پیامک</span>
+          </button>
+          
+          <button class="share-btn copy" id="modalCopyBtn" title="کپی لینک">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            <span class="share-name">کپی</span>
+          </button>
+          
+          <button class="share-btn native" data-share="native" title="اشتراک سیستمی">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+            <span class="share-name">اشتراک</span>
+          </button>
         </div>
         <div class="modal-actions">
           <a class="btn btn-primary" id="modalSourceBtn" target="_blank" rel="noopener">🔗 مشاهده در منبع</a>
           <button class="btn" id="modalStarBtn">⭐ ذخیره</button>
-          <button class="btn" id="modalCopyBtn">📋 کپی لینک</button>
-          <button class="btn danger" id="modalReportBtn">🚨 گزارش مشکل</button>
         </div>
       </div>
     </div>
@@ -751,13 +817,63 @@
 
 <script>
 // ============================================================
-// نسخه ۲۰ — اتصال به Supabase
+// Lreporter v2.0
 // ============================================================
-const VERSION = '20.0';
+const VERSION = '2.0';
 const SUPABASE_URL = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
 const INITIAL_COUNT = 10;
 const DISPLAY_STEP = 10;
 const DISPLAY_INTERVAL = 30000;
+
+// آیکون SVG
+const APP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a3a"/><stop offset="1" stop-color="#050a1a"/></linearGradient>
+<linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient>
+<linearGradient id="lGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d0d8e8"/></linearGradient>
+<linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f7fb"/><stop offset="1" stop-color="#c0c8d8"/></linearGradient>
+<radialGradient id="globeShine" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stop-color="#4fb8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#0066cc" stop-opacity="0"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="512" height="512" rx="115" fill="url(#bgGrad)"/>
+<rect x="4" y="4" width="504" height="504" rx="112" fill="none" stroke="#1e90ff" stroke-width="3" opacity="0.6"/>
+<rect x="8" y="8" width="496" height="496" rx="108" fill="none" stroke="#1e90ff" stroke-width="1" opacity="0.3"/>
+<circle cx="320" cy="200" r="115" fill="url(#globeGrad)" filter="url(#glow)" opacity="0.95"/>
+<circle cx="320" cy="200" r="115" fill="url(#globeShine)"/>
+<g fill="#0a2a5a" opacity="0.85">
+<path d="M 260 130 Q 280 120 300 130 L 310 145 Q 295 160 275 155 Z"/>
+<path d="M 240 160 Q 260 155 270 175 L 260 200 Q 245 195 240 180 Z"/>
+<path d="M 280 190 Q 310 185 330 200 L 340 230 Q 320 245 295 235 Q 275 220 280 190 Z"/>
+<path d="M 350 160 Q 380 165 395 185 L 385 210 Q 360 210 350 190 Z"/>
+<path d="M 355 230 Q 380 235 385 260 L 370 285 Q 350 275 355 250 Z"/>
+<path d="M 290 260 Q 320 255 335 280 L 325 305 Q 295 305 290 280 Z"/>
+<path d="M 380 130 Q 400 140 405 160 L 395 175 Q 380 170 380 150 Z"/>
+</g>
+<ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="3" opacity="0.55" transform="rotate(-20 320 200)"/>
+<ellipse cx="320" cy="200" rx="145" ry="45" fill="none" stroke="#3ba9ff" stroke-width="1.5" opacity="0.35" transform="rotate(20 320 200)"/>
+<g transform="translate(230 240) rotate(-8)"><rect x="0" y="0" width="200" height="150" rx="12" fill="#a8b4c8"/></g>
+<g transform="translate(220 230) rotate(-4)">
+<rect x="0" y="0" width="210" height="160" rx="14" fill="url(#paperGrad)"/>
+<rect x="20" y="25" width="80" height="8" rx="4" fill="#1a3a6a"/>
+<rect x="20" y="45" width="130" height="6" rx="3" fill="#3a5a8a"/>
+<rect x="20" y="60" width="120" height="6" rx="3" fill="#3a5a8a"/>
+<rect x="20" y="75" width="135" height="6" rx="3" fill="#3a5a8a"/>
+<rect x="20" y="90" width="100" height="6" rx="3" fill="#3a5a8a"/>
+<rect x="20" y="105" width="125" height="6" rx="3" fill="#3a5a8a"/>
+<rect x="20" y="120" width="115" height="6" rx="3" fill="#3a5a8a"/>
+<rect x="130" y="20" width="65" height="50" rx="6" fill="#c8d0e0" stroke="#8a9ab0" stroke-width="2"/>
+<path d="M 135 60 L 150 40 L 165 55 L 180 35 L 190 60 Z" fill="#6a7a90"/>
+<circle cx="175" cy="35" r="5" fill="#6a7a90"/>
+<rect x="130" y="80" width="65" height="5" rx="2" fill="#3a5a8a"/>
+<rect x="130" y="92" width="65" height="5" rx="2" fill="#3a5a8a"/>
+<rect x="130" y="104" width="50" height="5" rx="2" fill="#3a5a8a"/>
+</g>
+<g filter="url(#glow)"><path d="M 100 130 L 175 130 L 175 330 L 260 330 L 260 385 L 100 385 Z" fill="url(#lGrad)"/></g>
+<path d="M 175 330 L 260 330 L 260 385 L 175 385 Z" fill="#e8302a"/>
+<path d="M 175 130 L 185 130 L 185 340 L 175 340 Z" fill="#000000" opacity="0.15"/>
+</svg>`;
+
+const ICON_URL = 'data:image/svg+xml,' + encodeURIComponent(APP_ICON_SVG);
 
 let displayLimit = INITIAL_COUNT;
 let displayTimer = null;
@@ -787,19 +903,18 @@ let activeMode = 'all';
 let searchQuery = '';
 let currentNews = null;
 let isLoading = false;
-let midnightTimer = null;
 let countdownTimer = null;
 let clockTimer = null;
 let radioAudio = null;
 let hlsInstance = null;
 let radioPlaying = false;
 
-const CACHE_KEY = 'news_cache_v20';
+const CACHE_KEY = 'lreporter_cache_v2';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
-const READ_KEY = 'read_news_v20';
-const SAVED_KEY = 'saved_news_v20';
-const LAST_DAY_KEY = 'last_news_day_v20';
-const FONT_KEY = 'font_size_v20';
+const READ_KEY = 'lreporter_read_v2';
+const SAVED_KEY = 'lreporter_saved_v2';
+const LAST_DAY_KEY = 'lreporter_lastday_v2';
+const FONT_KEY = 'lreporter_font_v2';
 let readLinks = new Set();
 let savedLinks = new Set();
 
@@ -819,20 +934,44 @@ function toggleSaved(link) {
   savedLinks.add(link); saveSaved(); return true;
 }
 
+// ============================================================
+// PWA Setup
+// ============================================================
 (function setupPWA() {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs><rect width="512" height="512" rx="100" fill="#0a0e1a"/><rect x="56" y="96" width="400" height="320" rx="24" fill="url(#g)"/><rect x="100" y="150" width="140" height="20" rx="10" fill="#0a0e1a" opacity="0.7"/><rect x="100" y="200" width="312" height="12" rx="6" fill="#0a0e1a" opacity="0.5"/><rect x="100" y="230" width="280" height="12" rx="6" fill="#0a0e1a" opacity="0.5"/><rect x="100" y="260" width="300" height="12" rx="6" fill="#0a0e1a" opacity="0.5"/><rect x="100" y="290" width="240" height="12" rx="6" fill="#0a0e1a" opacity="0.5"/><rect x="100" y="320" width="270" height="12" rx="6" fill="#0a0e1a" opacity="0.5"/><circle cx="380" cy="380" r="60" fill="#f87171"/><text x="380" y="405" font-size="60" text-anchor="middle" fill="#fff" font-family="sans-serif" font-weight="bold">!</text></svg>`;
-  const iconUrl = 'data:image/svg+xml,' + encodeURIComponent(svg);
-  document.getElementById('appleIcon').href = iconUrl;
+  document.getElementById('appleIcon').href = ICON_URL;
+  document.getElementById('logoImg').src = ICON_URL;
+
   const manifest = {
-    name: 'پایگاه خبری خودکار', short_name: 'اخبار',
-    start_url: location.pathname || '/', display: 'standalone',
-    background_color: '#0a0e1a', theme_color: '#38bdf8', lang: 'fa', dir: 'rtl',
-    icons: [{ src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }]
+    name: 'Lreporter',
+    short_name: 'Lreporter',
+    description: 'پایگاه خبری Lreporter',
+    start_url: location.pathname || '/',
+    scope: location.pathname || '/',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#0a0e1a',
+    theme_color: '#1e90ff',
+    lang: 'fa',
+    dir: 'rtl',
+    icons: [
+      { src: ICON_URL, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
+      { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
+      { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
+    ]
   };
+
   try {
     const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
     document.getElementById('manifestLink').href = URL.createObjectURL(blob);
   } catch (e) {}
+
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    const swCode = `self.addEventListener('install', e => self.skipWaiting());self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
+    try {
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    } catch (e) {}
+  }
 })();
 
 function updatePersianDateTime() {
@@ -841,10 +980,10 @@ function updatePersianDateTime() {
   document.getElementById('clockTime').textContent = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-function fetchWithTimeout(url, ms = 10000) {
+function fetchWithTimeout(url, ms = 10000, opts = {}) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+  return fetch(url, { signal: ctrl.signal, ...opts }).finally(() => clearTimeout(t));
 }
 
 async function loadWeather() {
@@ -855,53 +994,48 @@ async function loadWeather() {
     const data = await res.json();
     const cur = data.current;
     document.getElementById('weatherTemp').textContent = `${Math.round(cur.temperature_2m)}°C`;
-    const codes = { 0: 'صاف ☀️', 1: 'عمدتاً صاف 🌤️', 2: 'نیمه ابری ⛅', 3: 'ابری ☁️', 61: 'باران 🌧️', 80: 'رگبار 🌦️', 95: 'رعد و برق ⛈️' };
+    const codes = { 0: 'صاف ☀️', 1: 'صاف 🌤️', 2: 'نیمه ابری ⛅', 3: 'ابری ☁️', 61: 'باران 🌧️', 80: 'رگبار 🌦️', 95: 'رعد ⛈️' };
     document.getElementById('weatherDesc').textContent = codes[cur.weather_code] || `کد ${cur.weather_code}`;
   } catch (e) {
     document.getElementById('weatherTemp').textContent = '—';
-    document.getElementById('weatherDesc').textContent = 'در دسترس نیست';
+    document.getElementById('weatherDesc').textContent = '—';
   }
 }
 
-async function loadPrices() {
-  const dollarEl = document.getElementById('dollarPrice');
-  const coinEl = document.getElementById('coinPrice');
-
-  // دلار و سکه از طریق API Supabase هم می‌تونه بیاد. فعلاً از priceto.day استفاده می‌کنیم
-  const apis = [
-    { el: dollarEl, url: 'https://api.priceto.day/v1/latest/irr/usd', divisor: 10 },
-    { el: coinEl, url: 'https://api.priceto.day/v1/latest/irr/coin-emami', divisor: 10 }
-  ];
-
-  for (const api of apis) {
-    try {
-      const res = await fetchWithTimeout(api.url, 8000);
-      if (!res.ok) throw 0;
-      const d = await res.json();
-      const val = d?.data?.value || d?.value;
-      if (val) {
-        api.el.textContent = Math.round(val / api.divisor).toLocaleString('fa-IR') + ' تومان';
-        api.el.classList.remove('loading');
-      } else {
-        api.el.textContent = 'در دسترس نیست';
-        api.el.classList.remove('loading');
-      }
-    } catch (e) {
-      api.el.textContent = 'در دسترس نیست';
-      api.el.classList.remove('loading');
-    }
-  }
-}
-
+// ============================================================
+// رادیو
+// ============================================================
 function setupRadio() {
   const select = document.getElementById('radioSelect');
   const btn = document.getElementById('radioPlayBtn');
+  const openBtn = document.getElementById('radioOpenBtn');
+
   btn.onclick = () => {
     const url = select.value;
-    if (!url) { showToast('اول یه گزینه انتخاب کن'); return; }
+    if (!url) { showToast('اول انتخاب کن'); return; }
     if (radioPlaying) { stopRadio(); return; }
     playRadio(url);
   };
+
+  openBtn.onclick = () => {
+    const url = select.value;
+    if (!url) { showToast('اول یه رادیو انتخاب کن'); return; }
+    const ua = navigator.userAgent;
+    if (/Android/i.test(ua)) {
+      try {
+        const a = document.createElement('a');
+        a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.click();
+        showToast('📻 در حال بازکردن...');
+      } catch (e) {
+        navigator.clipboard.writeText(url).then(() => showToast('📋 لینک کپی شد')).catch(() => prompt('لینک:', url));
+      }
+    } else if (/iPhone|iPad|iPod/i.test(ua)) {
+      window.location.href = url;
+    } else {
+      navigator.clipboard.writeText(url).then(() => showToast('📋 لینک کپی شد')).catch(() => prompt('لینک:', url));
+    }
+  };
+
   select.onchange = () => { if (radioPlaying) stopRadio(); };
 }
 
@@ -910,30 +1044,43 @@ function playRadio(url) {
   if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
   if (radioAudio) { radioAudio.pause(); radioAudio = null; }
   const isHls = url.includes('.m3u8');
+  btn.classList.add('loading');
+  btn.textContent = '⏳ اتصال';
+  let done = false;
+  const fail = () => {
+    if (done) return; done = true;
+    btn.classList.remove('loading'); btn.textContent = '▶ پخش';
+    showToast('⚠️ پخش نشد — «📻 خارجی» رو بزن');
+  };
+  const success = () => {
+    if (done) return; done = true;
+    radioPlaying = true;
+    btn.classList.remove('loading'); btn.textContent = '⏸ توقف';
+    btn.classList.add('playing');
+    showToast('▶ پخش شروع شد');
+  };
+  const timeout = setTimeout(() => fail(), 8000);
   try {
     if (isHls && window.Hls && Hls.isSupported()) {
-      radioAudio = new Audio();
-      hlsInstance = new Hls({ enableWorker: true, lowLatencyMode: true, backBufferLength: 30 });
-      hlsInstance.loadSource(url);
-      hlsInstance.attachMedia(radioAudio);
-      hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-        radioAudio.play().then(() => {
-          radioPlaying = true;
-          btn.textContent = '⏸ توقف'; btn.classList.add('playing');
-          showToast('▶ پخش شروع شد');
-        }).catch(() => { showToast('⚠️ پخش ممکن نشد'); stopRadio(); });
+      const audio = new Audio();
+      audio.crossOrigin = 'anonymous';
+      radioAudio = audio;
+      const hls = new Hls({ enableWorker: true, manifestLoadingTimeOut: 7000, manifestLoadingMaxRetry: 0 });
+      hlsInstance = hls;
+      hls.loadSource(url); hls.attachMedia(audio);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        audio.play().then(() => { clearTimeout(timeout); success(); }).catch(() => { clearTimeout(timeout); fail(); });
       });
-      hlsInstance.on(Hls.Events.ERROR, (e, data) => {
-        if (data.fatal) { showToast('⚠️ خطا در پخش'); stopRadio(); }
+      hls.on(Hls.Events.ERROR, (e, data) => {
+        if (data.fatal) { clearTimeout(timeout); hls.destroy(); hlsInstance = null; fail(); }
       });
     } else {
-      radioAudio = new Audio(url);
-      radioAudio.play().then(() => {
-        radioPlaying = true;
-        btn.textContent = '⏸ توقف'; btn.classList.add('playing');
-      }).catch(() => { showToast('⚠️ پخش ممکن نشد'); stopRadio(); });
+      const audio = new Audio(url);
+      audio.crossOrigin = 'anonymous';
+      radioAudio = audio;
+      audio.play().then(() => { clearTimeout(timeout); success(); }).catch(() => { clearTimeout(timeout); fail(); });
     }
-  } catch (e) { showToast('⚠️ خطا در پخش'); stopRadio(); }
+  } catch (e) { clearTimeout(timeout); fail(); }
 }
 
 function stopRadio() {
@@ -941,46 +1088,199 @@ function stopRadio() {
   if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
   if (radioAudio) { radioAudio.pause(); radioAudio = null; }
   radioPlaying = false;
-  btn.textContent = '▶ پخش'; btn.classList.remove('playing');
+  btn.classList.remove('playing'); btn.classList.remove('loading');
+  btn.textContent = '▶ پخش';
 }
 
+// ============================================================
+// TTS (خواندن خبر)
+// ============================================================
 let ttsUtterance = null;
 let ttsSpeaking = false;
+let ttsPaused = false;
+let ttsQueue = [];
+let ttsCurrentIndex = 0;
+
+function cleanTextForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[«»""'']/g, '')
+    .replace(/\[.*?\]/g, '')
+    .replace(/\(.*?\)/g, '')
+    .replace(/https?:\/\/\S+/g, '')
+    .replace(/[\w-]+@[\w-]+\.\w+/g, '')
+    .replace(/[#@]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function splitTextIntoChunks(text, maxLength = 200) {
+  const sentences = text.split(/[.!؟?\n]+/).filter(s => s.trim().length > 0);
+  const chunks = [];
+  let currentChunk = '';
+  
+  for (const sentence of sentences) {
+    const trimmed = sentence.trim();
+    if (!trimmed) continue;
+    
+    if ((currentChunk + ' ' + trimmed).length <= maxLength) {
+      currentChunk = currentChunk ? currentChunk + '. ' + trimmed : trimmed;
+    } else {
+      if (currentChunk) chunks.push(currentChunk + '.');
+      if (trimmed.length > maxLength) {
+        const words = trimmed.split(' ');
+        let subChunk = '';
+        for (const word of words) {
+          if ((subChunk + ' ' + word).length <= maxLength) {
+            subChunk = subChunk ? subChunk + ' ' + word : word;
+          } else {
+            if (subChunk) chunks.push(subChunk);
+            subChunk = word;
+          }
+        }
+        if (subChunk) currentChunk = subChunk;
+      } else {
+        currentChunk = trimmed;
+      }
+    }
+  }
+  if (currentChunk) chunks.push(currentChunk + '.');
+  return chunks;
+}
+
+function getPersianVoice() {
+  const voices = speechSynthesis.getVoices();
+  let voice = voices.find(v => v.lang === 'fa-IR');
+  if (voice) return voice;
+  voice = voices.find(v => v.lang.startsWith('fa'));
+  if (voice) return voice;
+  voice = voices.find(v => v.lang.startsWith('ar'));
+  if (voice) return voice;
+  return voices[0];
+}
 
 function setupTTS() {
   const playBtn = document.getElementById('ttsPlayBtn');
   const pauseBtn = document.getElementById('ttsPauseBtn');
   const stopBtn = document.getElementById('ttsStopBtn');
+
+  if (speechSynthesis.getVoices().length === 0) {
+    speechSynthesis.onvoiceschanged = () => {};
+  }
+
   playBtn.onclick = () => {
     if (!currentNews) return;
-    if (ttsSpeaking) { speechSynthesis.pause(); return; }
-    const text = (currentNews.plain || currentNews.title || '').slice(0, 3000);
-    if (!text) { showToast('متنی برای خواندن نیست'); return; }
-    ttsUtterance = new SpeechSynthesisUtterance(text);
-    ttsUtterance.lang = 'fa-IR';
-    ttsUtterance.rate = 0.95;
-    const voices = speechSynthesis.getVoices();
-    const faVoice = voices.find(v => v.lang.startsWith('fa')) || voices[0];
-    if (faVoice) ttsUtterance.voice = faVoice;
-    ttsUtterance.onstart = () => { ttsSpeaking = true; playBtn.classList.add('speaking'); playBtn.textContent = '🔊 در حال خواندن...'; pauseBtn.style.display = 'inline-flex'; stopBtn.style.display = 'inline-flex'; };
-    ttsUtterance.onend = () => { ttsSpeaking = false; playBtn.classList.remove('speaking'); playBtn.textContent = '🔊 خواندن خبر'; pauseBtn.style.display = 'none'; stopBtn.style.display = 'none'; };
-    ttsUtterance.onerror = () => { ttsSpeaking = false; playBtn.classList.remove('speaking'); playBtn.textContent = '🔊 خواندن خبر'; pauseBtn.style.display = 'none'; stopBtn.style.display = 'none'; };
-    speechSynthesis.cancel();
-    speechSynthesis.speak(ttsUtterance);
+    
+    if (ttsSpeaking) {
+      if (ttsPaused) {
+        speechSynthesis.resume();
+        ttsPaused = false;
+        playBtn.textContent = '🔊 در حال خواندن...';
+      } else {
+        speechSynthesis.pause();
+        ttsPaused = true;
+        playBtn.textContent = '▶ ادامه';
+      }
+      return;
+    }
+    
+    const rawText = (currentNews.plain || currentNews.title || '');
+    const cleanText = cleanTextForTTS(rawText);
+    
+    if (!cleanText || cleanText.length < 10) {
+      showToast('متنی برای خواندن نیست');
+      return;
+    }
+    
+    const text = cleanText.slice(0, 5000);
+    ttsQueue = splitTextIntoChunks(text, 200);
+    ttsCurrentIndex = 0;
+    
+    if (ttsQueue.length === 0) {
+      showToast('متنی برای خواندن نیست');
+      return;
+    }
+    
+    ttsSpeaking = true;
+    ttsPaused = false;
+    playBtn.classList.add('speaking');
+    playBtn.textContent = '🔊 در حال خواندن...';
+    pauseBtn.style.display = 'inline-flex';
+    stopBtn.style.display = 'inline-flex';
+    
+    speakNextChunk();
   };
+
   pauseBtn.onclick = () => {
-    if (speechSynthesis.paused) { speechSynthesis.resume(); pauseBtn.textContent = '⏸ توقف'; }
-    else { speechSynthesis.pause(); pauseBtn.textContent = '▶ ادامه'; }
+    if (ttsPaused) {
+      speechSynthesis.resume();
+      ttsPaused = false;
+      pauseBtn.textContent = '⏸ توقف';
+      playBtn.textContent = '🔊 در حال خواندن...';
+    } else {
+      speechSynthesis.pause();
+      ttsPaused = true;
+      pauseBtn.textContent = '▶ ادامه';
+      playBtn.textContent = '⏸ متوقف';
+    }
   };
+
   stopBtn.onclick = () => {
-    speechSynthesis.cancel(); ttsSpeaking = false;
-    playBtn.classList.remove('speaking'); playBtn.textContent = '🔊 خواندن خبر';
-    pauseBtn.style.display = 'none'; stopBtn.style.display = 'none';
+    speechSynthesis.cancel();
+    ttsSpeaking = false;
+    ttsPaused = false;
+    ttsQueue = [];
+    ttsCurrentIndex = 0;
+    playBtn.classList.remove('speaking');
+    playBtn.textContent = '🔊 خواندن';
+    pauseBtn.textContent = '⏸ توقف';
+    pauseBtn.style.display = 'none';
+    stopBtn.style.display = 'none';
   };
+
+  function speakNextChunk() {
+    if (ttsCurrentIndex >= ttsQueue.length) {
+      ttsSpeaking = false;
+      ttsPaused = false;
+      playBtn.classList.remove('speaking');
+      playBtn.textContent = '🔊 خواندن';
+      pauseBtn.style.display = 'none';
+      stopBtn.style.display = 'none';
+      showToast('✅ خواندن تمام شد');
+      return;
+    }
+    
+    const chunk = ttsQueue[ttsCurrentIndex];
+    ttsCurrentIndex++;
+    
+    const utterance = new SpeechSynthesisUtterance(chunk);
+    utterance.lang = 'fa-IR';
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    const voice = getPersianVoice();
+    if (voice) utterance.voice = voice;
+    
+    utterance.onend = () => {
+      if (!ttsSpeaking) return;
+      setTimeout(() => {
+        if (ttsSpeaking && !ttsPaused) speakNextChunk();
+      }, 100);
+    };
+    
+    utterance.onerror = (e) => {
+      if (e.error === 'interrupted' || e.error === 'canceled') return;
+      if (ttsSpeaking) setTimeout(() => speakNextChunk(), 100);
+    };
+    
+    speechSynthesis.speak(utterance);
+  }
 }
 
 function estimateReadTime(textLength) {
-  return `📖 ${Math.max(1, Math.ceil(textLength / 1000))} دقیقه مطالعه`;
+  return `📖 ${Math.max(1, Math.ceil(textLength / 1000))} دقیقه`;
 }
 
 function calculateTrendScore(news) {
@@ -1036,7 +1336,6 @@ function finishLoading() {
   if (rBtn) rBtn.classList.remove('spinning');
 }
 
-// ⚡ تابع اصلی: دریافت از Supabase
 async function loadAll() {
   if (isLoading) return;
   if (checkDayChanged()) { isLoading = false; resetDailyNews(true); return; }
@@ -1051,41 +1350,31 @@ async function loadAll() {
   bar.classList.add('active');
 
   try {
-    // ۱. نمایش فوری از کش
     if (!allNews.length) {
       const cached = loadCache();
       if (cached?.length) {
         allNews = cached;
         displayLimit = Math.max(INITIAL_COUNT, Math.min(cached.length, 60));
         buildFilters(); render();
-        document.getElementById('status').textContent = `از حافظه • ${allNews.length} خبر — در حال به‌روزرسانی...`;
-        finishLoading();
-        isLoading = true;
+        document.getElementById('status').textContent = `از حافظه • به‌روزرسانی...`;
+        finishLoading(); isLoading = true;
         badge.classList.add('loading');
         badge.innerHTML = '<span class="dot"></span> در حال دریافت';
       }
     }
 
-    document.getElementById('status').textContent = '📡 در حال دریافت از سرور...';
+    document.getElementById('status').textContent = '📡 دریافت از سرور...';
 
-    // ۲. دریافت از Supabase
     const res = await fetchWithTimeout(SUPABASE_URL, 30000);
-
     if (!res.ok) throw new Error('HTTP ' + res.status);
-
     const news = await res.json();
+    if (!Array.isArray(news)) throw new Error('پاسخ نامعتبر');
 
-    if (!Array.isArray(news)) {
-      throw new Error('پاسخ نامعتبر');
-    }
-
-    // ۳. ادغام با کش قبلی
     const prevLinks = new Set(allNews.map(n => n.link));
     news.forEach(item => {
       if (!item.link || !item.title) return;
       if (prevLinks.has(item.link)) return;
       if (allNews.some(n => n.link === item.link)) return;
-      // اطمینان از اینکه category داره
       if (!item.category) item.category = detectCategory(item.title + ' ' + (item.plain || ''));
       allNews.push(item);
       prevLinks.add(item.link);
@@ -1101,13 +1390,12 @@ async function loadAll() {
     if (allNews.length === 0) {
       showEmptyState();
     } else {
-      document.getElementById('status').textContent = `آخرین به‌روزرسانی: ${now} • ${allNews.length} خبر`;
+      document.getElementById('status').textContent = `آخرین: ${now}`;
       startProgressiveDisplay();
     }
-
   } catch (err) {
     console.error('loadAll error:', err);
-    document.getElementById('status').textContent = '⚠️ خطا در دریافت اخبار';
+    document.getElementById('status').textContent = '⚠️ خطا در دریافت';
     if (!allNews.length) showEmptyState();
   } finally {
     finishLoading();
@@ -1118,12 +1406,9 @@ function startProgressiveDisplay() {
   if (displayTimer) clearInterval(displayTimer);
   displayTimer = setInterval(() => {
     const total = getFilteredList().length;
-    if (displayLimit >= total) {
-      clearInterval(displayTimer); displayTimer = null;
-      return;
-    }
+    if (displayLimit >= total) { clearInterval(displayTimer); displayTimer = null; return; }
     displayLimit += DISPLAY_STEP;
-    render();
+    buildFilters(); render();
   }, DISPLAY_INTERVAL);
 }
 
@@ -1131,7 +1416,6 @@ function showEmptyState() {
   document.getElementById('content').innerHTML = `
     <div class="empty">
       <div class="title">⚠️ هیچ خبری دریافت نشد</div>
-      <div style="margin-top:12px">سرور Supabase در دسترس نیست یا خطایی رخ داده است.</div>
       <div style="margin-top:16px"><button class="btn btn-primary" onclick="loadAll()">🔄 تلاش مجدد</button></div>
     </div>
   `;
@@ -1151,19 +1435,12 @@ function resetDailyNews(silent = false) {
   if (displayTimer) { clearInterval(displayTimer); displayTimer = null; }
   document.getElementById('searchInput').value = '';
   try { localStorage.removeItem(CACHE_KEY); } catch {}
-  document.getElementById('content').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+  document.getElementById('content').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
   document.getElementById('filters').innerHTML = '';
-  document.getElementById('status').textContent = '🌅 روز جدید — در حال دریافت اخبار تازه...';
+  document.getElementById('status').textContent = '🌅 روز جدید...';
   localStorage.setItem(LAST_DAY_KEY, new Date().toDateString());
-  if (!silent) showToast('🌅 روز جدید');
+  if (!silent) showToast('روز جدید');
   isLoading = false; updateViewModeButtons(); loadAll();
-}
-
-function scheduleMidnightReset() {
-  if (midnightTimer) clearTimeout(midnightTimer);
-  const now = new Date();
-  const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
-  midnightTimer = setTimeout(() => { resetDailyNews(); scheduleMidnightReset(); }, midnight - now);
 }
 
 function startCountdown() {
@@ -1175,14 +1452,13 @@ function startCountdown() {
     const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
     const diff = midnight - now;
     const h = Math.floor(diff / 1000 / 3600), m = Math.floor((diff / 1000 % 3600) / 60);
-    if (h > 0) el.textContent = `⏰ ریست تا ${h} ساعت و ${m} دقیقه`;
-    else if (m > 0) el.textContent = `⏰ ریست تا ${m} دقیقه`;
-    else el.textContent = `⏰ ریست تا کمتر از ۱ دقیقه`;
+    if (h > 0) el.textContent = `⏰ ${h}:${String(m).padStart(2,'0')}`;
+    else el.textContent = `⏰ ${m}د`;
   }
   tick(); countdownTimer = setInterval(tick, 30000);
 }
 
-function showToast(message, duration = 3000) {
+function showToast(message, duration = 3500) {
   const toast = document.createElement('div');
   toast.className = 'toast'; toast.textContent = message;
   document.body.appendChild(toast);
@@ -1190,25 +1466,28 @@ function showToast(message, duration = 3000) {
 }
 
 function buildFilters() {
+  const showingCount = Math.min(displayLimit, allNews.length);
+  const display = allNews.slice(0, showingCount);
   const counts = {};
-  allNews.forEach(n => counts[n.category] = (counts[n.category] || 0) + 1);
+  display.forEach(n => counts[n.category] = (counts[n.category] || 0) + 1);
   const cats = ['همه', ...Object.keys(counts).sort((a, b) => counts[b] - counts[a])];
   const box = document.getElementById('filters');
   box.innerHTML = cats.map(c => {
-    const label = c === 'همه' ? `همه (${allNews.length})` : `${c} (${counts[c] || 0})`;
+    const label = c === 'همه' ? `همه (${showingCount.toLocaleString('fa-IR')})` : `${c} (${(counts[c] || 0).toLocaleString('fa-IR')})`;
     return `<button class="${c === activeCategory ? 'active' : ''}" data-cat="${c}">${label}</button>`;
   }).join('');
   box.querySelectorAll('button').forEach(btn => {
-    btn.onclick = () => { activeCategory = btn.dataset.cat; displayLimit = INITIAL_COUNT; buildFilters(); render(); };
+    btn.onclick = () => { activeCategory = btn.dataset.cat; buildFilters(); render(); };
   });
 }
 
 function updateViewModeButtons() {
   document.querySelectorAll('.viewmode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === activeMode));
-  document.getElementById('cntAll').textContent = allNews.length;
-  document.getElementById('cntUnread').textContent = allNews.filter(n => !readLinks.has(n.link)).length;
+  const showingCount = Math.min(displayLimit, allNews.length);
+  document.getElementById('cntAll').textContent = showingCount;
+  document.getElementById('cntUnread').textContent = allNews.slice(0, showingCount).filter(n => !readLinks.has(n.link)).length;
   document.getElementById('cntSaved').textContent = allNews.filter(n => savedLinks.has(n.link)).length;
-  document.getElementById('cntTrending').textContent = Math.min(allNews.length, 30);
+  document.getElementById('cntTrending').textContent = Math.min(showingCount, 30);
   const savedBadge = document.getElementById('savedBadge');
   if (savedLinks.size > 0) { savedBadge.style.display = 'block'; savedBadge.textContent = savedLinks.size; }
   else savedBadge.style.display = 'none';
@@ -1231,9 +1510,9 @@ function render() {
   const list = getFilteredList();
   const box = document.getElementById('content');
   if (!list.length) {
-    let msg = '📭 خبری با این مشخصات پیدا نشد';
-    if (activeMode === 'unread' && allNews.length) msg = '🎉 همه اخبار رو خوندی!';
-    else if (activeMode === 'saved' && !savedLinks.size) msg = '⭐ هنوز خبری ذخیره نکردی';
+    let msg = '📭 خبری پیدا نشد';
+    if (activeMode === 'unread' && allNews.length) msg = '🎉 همه رو خوندی!';
+    else if (activeMode === 'saved' && !savedLinks.size) msg = '⭐ هنوز چیزی ذخیره نکردی';
     box.innerHTML = `<div class="empty">${msg}</div>`;
     updateViewModeButtons(); updateUnreadCount();
     return;
@@ -1251,33 +1530,55 @@ function render() {
     if (activeMode === 'trending') {
       const ts = calculateTrendScore(n);
       if (ts > 80) trendBadge = '<span class="trend-badge hot">🔥 داغ</span>';
-      else if (ts > 60) trendBadge = '<span class="trend-badge trending">📈 پرطرفدار</span>';
-      else trendBadge = '<span class="trend-badge new">✨ جدید</span>';
+      else if (ts > 60) trendBadge = '<span class="trend-badge trending">📈</span>';
+      else trendBadge = '<span class="trend-badge new">✨</span>';
     }
-    return `<article class="card${isRead ? ' read' : ''}${isSaved ? ' saved' : ''}" onclick="openModal(${i})"><button class="star-btn${isSaved ? ' saved' : ''}" data-star="${i}" title="${isSaved ? 'حذف' : 'ذخیره'}">${isSaved ? '★' : '☆'}</button>${img}<div class="card-body"><div class="card-top"><span class="source-tag">${escapeHtml(n.source)}</span><span class="cat-tag">${escapeHtml(n.category)}</span>${trendBadge}${isRead ? '<span class="read-tag">✓ خوانده شده</span>' : ''}</div><h2>${escapeHtml(n.title)}</h2><p>${escapeHtml(n.summary || '')}</p><div class="card-footer"><span>🕐 ${time}</span><span class="time-tag">${readTime}</span></div></div></article>`;
+    return `<article class="card${isRead ? ' read' : ''}${isSaved ? ' saved' : ''}" data-card-idx="${i}"><button class="star-btn${isSaved ? ' saved' : ''}" data-star="${i}">${isSaved ? '★' : '☆'}</button>${img}<div class="card-body"><div class="card-top"><span class="source-tag">${escapeHtml(n.source)}</span><span class="cat-tag">${escapeHtml(n.category)}</span>${trendBadge}${isRead ? '<span class="read-tag">✓ خوانده</span>' : ''}</div><h2>${escapeHtml(n.title)}</h2><p>${escapeHtml(n.summary || '')}</p><div class="card-footer"><span>🕐 ${time}</span><span class="time-tag">${readTime}</span></div></div></article>`;
   }).join('');
 
   if (showing < total) {
     const remaining = total - showing;
     const nextBatch = Math.min(DISPLAY_STEP, remaining);
-    box.innerHTML += `<div class="load-more"><button id="loadMoreBtn" class="pulse">⏳ <span>${nextBatch} خبر بعدی...</span><span style="font-size:11px;opacity:0.7">(${showing.toLocaleString('fa-IR')} از ${total.toLocaleString('fa-IR')})</span></button></div>`;
+    box.innerHTML += `<div class="load-more"><button id="loadMoreBtn" class="pulse">⏳ ${nextBatch} خبر بعدی <span style="font-size:11px;opacity:0.7">(${showing.toLocaleString('fa-IR')}/${total.toLocaleString('fa-IR')})</span></button></div>`;
     const btn = document.getElementById('loadMoreBtn');
-    if (btn) btn.onclick = () => { displayLimit += 30; render(); };
+    if (btn) btn.onclick = () => { displayLimit += 30; buildFilters(); render(); };
     if (!displayTimer) startProgressiveDisplay();
   } else {
     if (displayTimer) { clearInterval(displayTimer); displayTimer = null; }
   }
 
-  box.querySelectorAll('[data-star]').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      const idx = +btn.dataset.star;
+  const handler = (e) => {
+    const starBtn = e.target.closest('.star-btn');
+    if (starBtn) {
+      e.preventDefault(); e.stopPropagation();
+      const idx = +starBtn.dataset.star;
       const news = list[idx];
       if (!news) return;
       const nowSaved = toggleSaved(news.link);
-      showToast(nowSaved ? '⭐ ذخیره شد' : 'از ذخیره حذف شد');
+      showToast(nowSaved ? '⭐ ذخیره شد' : 'حذف شد');
       render(); updateViewModeButtons();
-    };
+      return;
+    }
+    const card = e.target.closest('.card');
+    if (card) {
+      e.preventDefault();
+      const idx = +card.dataset.cardIdx;
+      openModal(idx);
+    }
+  };
+
+  box.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', handler);
+    card.addEventListener('touchend', (e) => {
+      if (Math.abs(e.changedTouches[0].clientX - (card._touchStartX || 0)) < 15 &&
+          Math.abs(e.changedTouches[0].clientY - (card._touchStartY || 0)) < 15) {
+        e.preventDefault(); handler(e);
+      }
+    });
+    card.addEventListener('touchstart', (e) => {
+      card._touchStartX = e.touches[0].clientX;
+      card._touchStartY = e.touches[0].clientY;
+    }, { passive: true });
   });
 
   window.__currentList = display;
@@ -1287,7 +1588,7 @@ function render() {
 function updateUnreadCount() {
   const unread = allNews.filter(n => !readLinks.has(n.link)).length;
   const el = document.getElementById('unreadCount');
-  if (el) el.textContent = unread > 0 ? `${unread.toLocaleString('fa-IR')} خوانده‌نشده` : 'همه خوانده شده ✓';
+  if (el) el.textContent = unread > 0 ? `${unread.toLocaleString('fa-IR')}` : '✓';
 }
 
 function updateCardReadState(link) {
@@ -1299,7 +1600,7 @@ function updateCardReadState(link) {
       const top = cards[i].querySelector('.card-top');
       if (top && !top.querySelector('.read-tag')) {
         const tag = document.createElement('span');
-        tag.className = 'read-tag'; tag.textContent = '✓ خوانده شده';
+        tag.className = 'read-tag'; tag.textContent = '✓ خوانده';
         top.appendChild(tag);
       }
     }
@@ -1313,9 +1614,9 @@ function formatTime(dateStr) {
     if (isNaN(d)) return '';
     const diff = (Date.now() - d) / 1000;
     if (diff < 60) return 'همین الان';
-    if (diff < 3600) return Math.floor(diff / 60) + ' دقیقه پیش';
-    if (diff < 86400) return Math.floor(diff / 3600) + ' ساعت پیش';
-    if (diff < 604800) return Math.floor(diff / 86400) + ' روز پیش';
+    if (diff < 3600) return Math.floor(diff / 60) + ' دقیقه';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' ساعت';
+    if (diff < 604800) return Math.floor(diff / 86400) + ' روز';
     return d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' });
   } catch { return ''; }
 }
@@ -1333,33 +1634,47 @@ function openModal(index) {
   if (news.image) { hero.src = news.image; hero.style.display = 'block'; hero.onerror = () => { hero.style.display = 'none'; }; }
   else hero.style.display = 'none';
   document.getElementById('modalTitle').textContent = news.title;
-  document.getElementById('modalMeta').innerHTML = `<span class="source-tag">${escapeHtml(news.source)}</span><span class="cat-tag">${escapeHtml(news.category)}</span><span class="cat-tag">🕐 ${formatTime(news.date)}</span><span class="cat-tag">${estimateReadTime(news.textLength || 0)}</span>`;
+  document.getElementById('modalMeta').innerHTML = `<span class="source-tag">${escapeHtml(news.source)}</span><span class="cat-tag">${escapeHtml(news.category)}</span><span class="cat-tag">🕐 ${formatTime(news.date)}</span>`;
   document.getElementById('modalBody').innerHTML = cleanContent(news.content || news.plain || '');
   const isShort = (news.textLength || 0) < 400;
   const srcBtn = document.getElementById('modalSourceBtn');
   srcBtn.href = news.link;
-  srcBtn.textContent = `🔗 ${isShort ? 'خواندن متن کامل' : 'مشاهده در'} ${news.source}`;
+  srcBtn.textContent = `🔗 ${isShort ? 'خواندن کامل' : 'مشاهده در'} ${news.source}`;
   updateModalStar();
   const related = findRelatedNews(news, allNews);
   const relSection = document.getElementById('relatedSection');
   const relGrid = document.getElementById('relatedGrid');
   if (related.length) {
     relSection.style.display = 'block';
-    relGrid.innerHTML = related.map(r => `<div class="related-item" onclick="openRelatedNews('${escapeAttr(r.link)}')"><span class="ri-icon">📰</span><div class="ri-body"><div class="ri-title">${escapeHtml(r.title)}</div><div class="ri-meta">${escapeHtml(r.source)} • ${formatTime(r.date)}</div></div></div>`).join('');
+    relGrid.innerHTML = related.map(r => `<div class="related-item" data-related-link="${escapeAttr(r.link)}"><span class="ri-icon">📰</span><div class="ri-body"><div class="ri-title">${escapeHtml(r.title)}</div><div class="ri-meta">${escapeHtml(r.source)} • ${formatTime(r.date)}</div></div></div>`).join('');
+    relGrid.querySelectorAll('[data-related-link]').forEach(el => {
+      el.onclick = () => openRelatedNews(el.dataset.relatedLink);
+    });
   } else relSection.style.display = 'none';
   document.getElementById('ttsControls').style.display = (news.plain || '').length > 50 ? 'flex' : 'none';
-  speechSynthesis.cancel(); ttsSpeaking = false;
+  speechSynthesis.cancel(); ttsSpeaking = false; ttsPaused = false;
   document.getElementById('ttsPlayBtn').classList.remove('speaking');
-  document.getElementById('ttsPlayBtn').textContent = '🔊 خواندن خبر';
+  document.getElementById('ttsPlayBtn').textContent = '🔊 خواندن';
   document.getElementById('ttsPauseBtn').style.display = 'none';
   document.getElementById('ttsStopBtn').style.display = 'none';
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  document.getElementById('modalBox').scrollTop = 0;
 }
 
 function openRelatedNews(link) {
   const idx = (window.__currentList || []).findIndex(n => n.link === link);
   if (idx >= 0) { openModal(idx); return; }
+  const news = allNews.find(n => n.link === link);
+  if (!news) return;
+  currentNews = news;
+  markAsRead(news.link);
+  const hero = document.getElementById('modalHero');
+  if (news.image) { hero.src = news.image; hero.style.display = 'block'; } else hero.style.display = 'none';
+  document.getElementById('modalTitle').textContent = news.title;
+  document.getElementById('modalMeta').innerHTML = `<span class="source-tag">${escapeHtml(news.source)}</span><span class="cat-tag">${escapeHtml(news.category)}</span>`;
+  document.getElementById('modalBody').innerHTML = cleanContent(news.content || news.plain || '');
+  document.getElementById('relatedSection').style.display = 'none';
 }
 
 function updateModalStar() {
@@ -1369,7 +1684,7 @@ function updateModalStar() {
   star.textContent = isSaved ? '★' : '☆';
   star.classList.toggle('saved', isSaved);
   const btn = document.getElementById('modalStarBtn');
-  btn.textContent = isSaved ? '★ حذف از ذخیره' : '⭐ ذخیره';
+  btn.textContent = isSaved ? '★ حذف' : '⭐ ذخیره';
   btn.classList.toggle('star-active', isSaved);
 }
 
@@ -1387,11 +1702,11 @@ function cleanContent(html) {
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
-  speechSynthesis.cancel(); ttsSpeaking = false; currentNews = null;
+  speechSynthesis.cancel(); ttsSpeaking = false; ttsPaused = false; currentNews = null;
 }
 
 function copyLink(url) {
-  navigator.clipboard.writeText(url).then(() => showToast('📋 لینک کپی شد ✅')).catch(() => prompt('لینک:', url));
+  navigator.clipboard.writeText(url).then(() => showToast('📋 کپی شد')).catch(() => prompt('لینک:', url));
 }
 
 function shareTo(platform) {
@@ -1427,18 +1742,12 @@ function openStats() {
   const content = document.getElementById('statsContent');
   const sourceCounts = {}; allNews.forEach(n => sourceCounts[n.source] = (sourceCounts[n.source] || 0) + 1);
   const maxSourceCount = Math.max(...Object.values(sourceCounts), 1);
-  const catCounts = {}; allNews.forEach(n => catCounts[n.category] = (catCounts[n.category] || 0) + 1);
-  const maxCatCount = Math.max(...Object.values(catCounts), 1);
   const totalRead = allNews.filter(n => readLinks.has(n.link)).length;
   const totalSaved = allNews.filter(n => savedLinks.has(n.link)).length;
-  let html = `<div class="stat-row"><span class="lbl">کل اخبار</span><span class="val">${allNews.length.toLocaleString('fa-IR')}</span></div><div class="stat-row"><span class="lbl">خوانده‌شده</span><span class="val">${totalRead.toLocaleString('fa-IR')}</span></div><div class="stat-row"><span class="lbl">ذخیره‌شده</span><span class="val">${totalSaved.toLocaleString('fa-IR')}</span></div>`;
-  html += `<div style="margin-top:16px;margin-bottom:8px;font-size:0.8125rem;font-weight:700;color:var(--accent)">📡 اخبار بر اساس منبع</div>`;
+  let html = `<div class="stat-row"><span class="lbl">کل</span><span class="val">${allNews.length.toLocaleString('fa-IR')}</span></div><div class="stat-row"><span class="lbl">خوانده</span><span class="val">${totalRead.toLocaleString('fa-IR')}</span></div><div class="stat-row"><span class="lbl">ذخیره</span><span class="val">${totalSaved.toLocaleString('fa-IR')}</span></div>`;
+  html += `<div style="margin-top:16px;margin-bottom:8px;font-size:0.8125rem;font-weight:700;color:var(--accent)">📡 منابع</div>`;
   Object.entries(sourceCounts).sort((a, b) => b[1] - a[1]).forEach(([src, cnt]) => {
     html += `<div class="stat-row" style="flex-direction:column;align-items:stretch;gap:4px"><div style="display:flex;justify-content:space-between"><span class="lbl">${src}</span><span class="val">${cnt.toLocaleString('fa-IR')}</span></div><div class="stat-bar"><div class="fill" style="width:${(cnt / maxSourceCount * 100).toFixed(1)}%"></div></div></div>`;
-  });
-  html += `<div style="margin-top:16px;margin-bottom:8px;font-size:0.8125rem;font-weight:700;color:var(--accent)">📂 اخبار بر اساس دسته</div>`;
-  Object.entries(catCounts).sort((a, b) => b[1] - a[1]).forEach(([cat, cnt]) => {
-    html += `<div class="stat-row" style="flex-direction:column;align-items:stretch;gap:4px"><div style="display:flex;justify-content:space-between"><span class="lbl">${cat}</span><span class="val">${cnt.toLocaleString('fa-IR')}</span></div><div class="stat-bar"><div class="fill" style="width:${(cnt / maxCatCount * 100).toFixed(1)}%"></div></div></div>`;
   });
   content.innerHTML = html;
 }
@@ -1450,20 +1759,16 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal
 document.getElementById('modalStar').onclick = () => {
   if (!currentNews) return;
   const nowSaved = toggleSaved(currentNews.link);
-  showToast(nowSaved ? '⭐ ذخیره شد' : 'از ذخیره حذف شد');
+  showToast(nowSaved ? '⭐ ذخیره شد' : 'حذف شد');
   updateModalStar(); render();
 };
 document.getElementById('modalStarBtn').onclick = () => {
   if (!currentNews) return;
   const nowSaved = toggleSaved(currentNews.link);
-  showToast(nowSaved ? '⭐ ذخیره شد' : 'از ذخیره حذف شد');
+  showToast(nowSaved ? '⭐ ذخیره شد' : 'حذف شد');
   updateModalStar(); render();
 };
 document.getElementById('modalCopyBtn').onclick = () => { if (currentNews) copyLink(currentNews.link); };
-document.getElementById('modalReportBtn').onclick = () => {
-  if (!currentNews) return;
-  location.href = `mailto:report@example.com?subject=${encodeURIComponent('گزارش مشکل خبر')}&body=${encodeURIComponent(`خبر: ${currentNews.title}\nلینک: ${currentNews.link}\n\nمشکل:`)}`;
-};
 
 document.querySelectorAll('[data-share]').forEach(btn => { btn.onclick = () => shareTo(btn.dataset.share); });
 document.querySelectorAll('.viewmode-btn').forEach(btn => {
@@ -1515,12 +1820,6 @@ document.getElementById('themeBtn').onclick = () => {
   }
 })();
 
-document.getElementById('clearReadBtn').onclick = () => {
-  if (!readLinks.size) { showToast('هیچ خبری علامت نخورده'); return; }
-  if (!confirm(`علامت «خوانده شده» از ${readLinks.size} خبر پاک بشه؟`)) return;
-  readLinks.clear(); saveRead(); render(); showToast('علامت‌ها پاک شدند');
-};
-
 document.getElementById('refreshBtn').onclick = (e) => {
   const btn = e.currentTarget;
   if (btn.classList.contains('spinning')) return;
@@ -1528,28 +1827,23 @@ document.getElementById('refreshBtn').onclick = (e) => {
   loadAll().catch(err => console.error(err)).finally(() => { setTimeout(() => btn.classList.remove('spinning'), 400); });
 };
 
-console.log(`%c📰 پایگاه خبری نسخه ${VERSION} (Supabase)`, 'background:#38bdf8;color:#0a0e1a;padding:4px 12px;border-radius:20px;font-weight:bold');
-console.log(`🔗 منبع: ${SUPABASE_URL}`);
+console.log(`%c📰 Lreporter v${VERSION}`, 'background:#1e90ff;color:#fff;padding:4px 12px;border-radius:20px;font-weight:bold');
 
 startCountdown();
 updatePersianDateTime();
 clockTimer = setInterval(updatePersianDateTime, 1000);
 loadWeather();
-loadPrices();
 setupRadio();
 setupTTS();
 
 if (checkDayChanged()) {
   resetDailyNews(false);
-  setTimeout(scheduleMidnightReset, 2000);
 } else {
   loadAll();
-  scheduleMidnightReset();
 }
 
 setInterval(loadAll, 5 * 60 * 1000);
 setInterval(loadWeather, 30 * 60 * 1000);
-setInterval(loadPrices, 10 * 60 * 1000);
 
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
@@ -1560,16 +1854,16 @@ document.addEventListener('visibilitychange', () => {
 });
 window.__lastUpdate = Date.now();
 
-window.addEventListener('online', () => { console.log('🌐 آنلاین شد'); loadAll(); });
+window.addEventListener('online', () => { console.log('🌐 آنلاین'); loadAll(); });
 
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   setTimeout(() => {
-    if (deferredPrompt && confirm('می‌خوای این سایت رو مثل اپ روی گوشی نصب کنی؟')) {
+    if (deferredPrompt && confirm('Lreporter رو مثل اپ نصب کنی؟')) {
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(choice => { if (choice.outcome === 'accepted') showToast('📱 نصب شد!'); deferredPrompt = null; });
+      deferredPrompt.userChoice.then(choice => { if (choice.outcome === 'accepted') showToast('📱 نصب شد'); deferredPrompt = null; });
     }
   }, 8000);
 });
