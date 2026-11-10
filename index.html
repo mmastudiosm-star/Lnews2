@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1e90ff">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lreporter">
 <link id="manifestLink" rel="manifest">
@@ -665,7 +666,7 @@
 
 <script>
 const VERSION = '6.4';
-// 🚨 آدرس‌های پروژه جدید شما 🚨
+// آدرس پروژه جدید شما
 const SUPABASE_URL = 'https://lzfzmsidjggghkdrmgaz.supabase.co/functions/v1/rapid-processor';
 const VIEWS_API = 'https://lzfzmsidjggghkdrmgaz.supabase.co/functions/v1/views';
 const INITIAL_COUNT = 10;
@@ -860,7 +861,8 @@ function updateViewsUI(link) {
   const manifest = {
     name: 'Lreporter', short_name: 'Lreporter',
     description: 'پایگاه خبری Lreporter',
-    start_url: location.pathname || '/', scope: location.pathname || '/',
+    start_url: '/Lnews2/', // 👈 مسیر درست برای GitHub Pages
+    scope: '/Lnews2/',     // 👈 مسیر درست برای GitHub Pages
     display: 'standalone', orientation: 'portrait',
     background_color: '#0a0e1a', theme_color: '#1e90ff',
     lang: 'fa', dir: 'rtl',
@@ -1137,6 +1139,12 @@ async function loadAll() {
       if (!item || !item.link || !item.title) continue;
       if (knownLinks.has(item.link)) continue;
       if (!item.category) item.category = detectCategory(item.title + ' ' + (item.plain || ''));
+      
+      // 🔥 تبدیل عکس‌های HTTP به HTTPS برای جلوگیری از بلاک شدن
+      if (item.image && item.image.startsWith('http://')) {
+        item.image = item.image.replace('http://', 'https://');
+      }
+      
       allNews.push(item);
       knownLinks.add(item.link);
       added++;
