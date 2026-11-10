@@ -551,11 +551,15 @@
   <div class="settings-section">
     <div class="stitle">📡 انتخاب ایستگاه</div>
     <select id="radioStation" style="width: 100%; padding: 10px; border-radius: 10px; background: var(--card); color: var(--text); border: 1px solid var(--border); font-family: inherit; font-size: 0.8125rem; margin-bottom: 12px;">
-      <option value="https://stream.radiojar.com/8s5u5tpdtwzuv">رادیو جوان</option>
-      <option value="https://s1.radio.ir/radiofarhang">رادیو فرهنگ</option>
-      <option value="https://s1.radio.ir/radiosalamat">رادیو سلامت</option>
-      <option value="https://s1.radio.ir/radiotehran">رادیو تهران</option>
-      <option value="https://s1.radio.ir/radioquran">رادیو قرآن</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-iran/playlist.m3u8">رادیو ایران</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-tehran/playlist.m3u8">رادیو تهران</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-javan/playlist.m3u8">رادیو جوان</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-farhang/playlist.m3u8">رادیو فرهنگ</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-salamat/playlist.m3u8">رادیو سلامت</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-quran/playlist.m3u8">رادیو قرآن</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-varzesh/playlist.m3u8">رادیو ورزش</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-payam/playlist.m3u8">رادیو پیام</option>
+      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-avar/playlist.m3u8">رادیو آوا</option>
     </select>
     <div style="display: flex; gap: 8px; justify-content: center;">
       <button class="btn btn-primary" id="radioPlayBtn" style="flex: 1;">▶ پخش</button>
@@ -658,10 +662,12 @@
     </div>
   </div>
 </div>
+
 <script>
 const VERSION = '6.4';
-const SUPABASE_URL = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
-const VIEWS_API = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/views';
+// 🚨 آدرس‌های پروژه جدید شما 🚨
+const SUPABASE_URL = 'https://lzfzmsidjggghkdrmgaz.supabase.co/functions/v1/rapid-processor';
+const VIEWS_API = 'https://lzfzmsidjggghkdrmgaz.supabase.co/functions/v1/views';
 const INITIAL_COUNT = 10;
 const DISPLAY_STEP = 10;
 const DISPLAY_INTERVAL = 5000;
