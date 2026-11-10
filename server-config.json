@@ -1,0 +1,39 @@
+// killswitch.js — قبل از هر اسکریپت دیگه لود بشه
+(async function () {
+  let cfg = { enabled: true };
+  try {
+    const res = await fetch(`./server-config.json?t=${Date.now()}`, { cache: 'no-store' });
+    cfg = await res.json();
+  } catch (e) {
+    console.warn('config لود نشد، پیش‌فرض: فعال');
+  }
+
+  window.__SERVER_ENABLED__ = cfg.enabled !== false;
+
+  if (!window.__SERVER_ENABLED__) {
+    console.warn('🚨 Kill switch فعال — سرور قطع است');
+    document.documentElement.classList.add('server-off');
+
+    // مسدود کردن هر درخواست Supabase که بعداً زده بشه
+    const origFetch = window.fetch;
+    window.fetch = (url, ...args) => {
+      if (String(url).includes('supabase.co')) {
+        return Promise.reject(new TypeError('Server disabled by kill switch'));
+      }
+      return origFetch(url, ...args);
+    };
+
+    // نمایش صفحه تعمیرات بعد از لود DOM
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.innerHTML = `
+        <div class="maintenance">
+          <div class="maintenance-box">
+            <div class="maintenance-icon">🛠️</div>
+            <h1>در حال تعمیرات</h1>
+            <p>${cfg.message || 'سرور موقتاً در دسترس نیست.'}</p>
+            <button onclick="location.reload()">تلاش مجدد</button>
+          </div>
+        </div>`;
+    });
+  }
+})();
