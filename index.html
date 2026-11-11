@@ -3,661 +3,351 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1e90ff">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lreporter">
 <link id="manifestLink" rel="manifest">
 <link id="appleIcon" rel="apple-touch-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  /* ==================== VARIABLES ==================== */
   :root {
-    --bg:#0a0e1a; --bg-2:#111827; --card:#1a2234; --card-hover:#1f2940;
-    --border:#2a3550; --text:#e8edf7; --text-dim:#94a3b8;
-    --accent:#1e90ff; --accent-2:#6366f1; --accent-glow:rgba(30,144,255,0.15);
-    --danger:#f87171; --success:#34d399; --warn:#fbbf24;
-    --star:#fbbf24;
-    --shadow:0 10px 40px rgba(0,0,0,0.4);
+    --bg: #050810;
+    --bg-secondary: #0a0f1c;
+    --glass-bg: rgba(18, 26, 43, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-hover: rgba(30, 144, 255, 0.15);
+    --text-main: #f0f4f8;
+    --text-muted: #8b9bb4;
+    --accent-blue: #3b82f6;
+    --accent-purple: #8b5cf6;
+    --accent-cyan: #06b6d4;
+    --accent-red: #ef4444;
+    --accent-gold: #f59e0b;
+    --accent-green: #10b981;
+    --gradient-main: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    --gradient-hot: linear-gradient(135deg, #ef4444, #f97316);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0));
+    --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.2);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
     --base-font-size: 16px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
   }
   [data-theme="light"] {
-    --bg:#f5f7fb; --bg-2:#ffffff; --card:#ffffff; --card-hover:#f8fafc;
-    --border:#e2e8f0; --text:#0f172a; --text-dim:#64748b;
-    --accent:#0ea5e9; --accent-2:#6366f1; --accent-glow:rgba(14,165,233,0.1);
-    --shadow:0 10px 30px rgba(15,23,42,0.08);
+    --bg: #f0f4f8; --bg-secondary: #ffffff; --glass-bg: rgba(255,255,255,0.7);
+    --glass-border: rgba(0,0,0,0.1); --text-main: #0f172a; --text-muted: #64748b;
+    --gradient-glass: linear-gradient(135deg, rgba(0,0,0,0.02), rgba(0,0,0,0));
+    --shadow-card: 0 8px 32px rgba(0,0,0,0.1);
   }
+
+  /* ==================== RESET & BASE ==================== */
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; font-size: var(--base-font-size); }
   body {
-    font-family: 'Vazirmatn', Tahoma, sans-serif;
-    background: var(--bg); color: var(--text);
-    line-height: 1.9; min-height: 100vh;
-    transition: background 0.3s, color 0.3s;
-    background-image:
-      radial-gradient(circle at 15% 0%, var(--accent-glow), transparent 40%),
-      radial-gradient(circle at 85% 100%, var(--accent-glow), transparent 40%);
-    background-attachment: fixed;
-    -webkit-text-size-adjust: 100%;
+    font-family: 'Vazirmatn', Tahoma, sans-serif; background-color: var(--bg);
+    color: var(--text-main); line-height: 1.8; min-height: 100vh;
+    overflow-x: hidden; -webkit-text-size-adjust: 100%; transition: background 0.3s, color 0.3s;
   }
+
+  /* ==================== BACKGROUND ==================== */
+  .bg-mesh {
+    position: fixed; inset: 0; z-index: -2;
+    background: radial-gradient(circle at 15% 15%, rgba(59,130,246,0.15), transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(139,92,246,0.15), transparent 40%);
+    filter: blur(40px); animation: meshMove 20s ease-in-out infinite alternate;
+  }
+  @keyframes meshMove { 0% { transform: scale(1) translate(0,0); } 100% { transform: scale(1.1) translate(2%,2%); } }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: -1;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 50px 50px; mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+  [data-theme="light"] .bg-grid { background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px); }
+
+  /* ==================== HEADER ==================== */
   header {
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    background: color-mix(in srgb, var(--bg) 85%, transparent);
-    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100; background: rgba(5,8,16,0.7);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
   }
-  .header-inner {
-    max-width: 1280px; margin: 0 auto; padding: 16px 24px;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 1.4rem;
-    background: linear-gradient(135deg, #ffffff 0%, #1e90ff 50%, #e8302a 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    white-space: nowrap; letter-spacing: -0.5px;
-  }
-  .logo .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
-  .logo .dot {
-    width: 10px; height: 10px; background: var(--danger);
-    border-radius: 50%; animation: pulse 1.6s infinite;
-  }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(248,113,113,0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(248,113,113,0); }
-    100% { box-shadow: 0 0 0 0 rgba(248,113,113,0); }
-  }
-  .search-box { flex: 1; min-width: 200px; position: relative; }
+  [data-theme="light"] header { background: rgba(240,244,248,0.7); }
+  .header-inner { max-width: 1400px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 1.6rem; }
+  .logo span { background: var(--gradient-main); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; }
+  .logo-img { width: 40px; height: 40px; border-radius: 12px; box-shadow: var(--shadow-glow); }
+  
+  .search-box { flex: 1; min-width: 250px; position: relative; }
   .search-box input {
-    width: 100%; padding: 11px 44px 11px 16px;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; color: var(--text);
-    font-family: inherit; font-size: 0.875rem; outline: none; transition: 0.2s;
+    width: 100%; padding: 14px 48px 14px 20px; background: var(--glass-bg);
+    border: 1px solid var(--glass-border); border-radius: var(--radius-md);
+    color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.3s;
   }
-  .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-  .search-box::before {
-    content: '🔍'; position: absolute; right: 14px; top: 50%;
-    transform: translateY(-50%); font-size: 14px; opacity: 0.5; pointer-events: none;
-  }
+  .search-box input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 4px rgba(59,130,246,0.15); }
+  .search-box::before { content: '🔍'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; opacity: 0.6; pointer-events: none; }
+
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .icon-btn {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text); width: 42px; height: 42px;
-    border-radius: 12px; cursor: pointer; font-size: 18px;
-    display: grid; place-items: center; transition: 0.2s; flex-shrink: 0;
-    position: relative; touch-action: manipulation;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    color: var(--text-main); width: 44px; height: 44px; border-radius: var(--radius-md);
+    cursor: pointer; font-size: 18px; display: grid; place-items: center; transition: 0.3s; position: relative;
   }
-  .icon-btn:hover { background: var(--card-hover); border-color: var(--accent); }
-  .icon-btn.spinning { animation: spin 1s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .icon-btn:hover { background: var(--glass-hover); border-color: var(--accent-blue); transform: translateY(-2px); }
   .icon-btn .badge {
-    position: absolute; top: -4px; right: -4px;
-    background: var(--star); color: #0a0e1a;
-    font-size: 10px; font-weight: 700;
-    padding: 2px 6px; border-radius: 10px;
-    min-width: 18px; text-align: center;
+    position: absolute; top: -6px; right: -6px; background: var(--gradient-hot);
+    color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 12px; box-shadow: 0 0 10px rgba(239,68,68,0.5);
   }
-  .statusbar {
-    max-width: 1280px; margin: 0 auto; padding: 0 24px 12px;
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.75rem; color: var(--text-dim); flex-wrap: wrap; gap: 8px;
-  }
-  .statusbar-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .live-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 3px 10px; background: rgba(52,211,153,0.1);
-    color: var(--success); border-radius: 20px; font-size: 11px; font-weight: 600;
-  }
-  .live-badge .dot {
-    width: 6px; height: 6px; background: var(--success);
-    border-radius: 50%; animation: pulse 1.6s infinite;
-  }
-  .live-badge.loading { background: rgba(251,191,36,0.1); color: var(--warn); }
-  .live-badge.loading .dot { background: var(--warn); }
-  #unreadCount { font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-glow); padding: 3px 10px; border-radius: 20px; }
-  #countdown { font-size: 11px; color: var(--text-dim); background: var(--bg-2); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); }
-  .progress-bar {
-    position: fixed; top: 0; right: 0; left: 0; height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transform-origin: right; transform: scaleX(0); transition: transform 0.3s; z-index: 200;
-  }
-  .progress-bar.active { animation: progressAnim 2s ease-out forwards; }
-  @keyframes progressAnim { 0% { transform: scaleX(0); } 40% { transform: scaleX(0.6); } 100% { transform: scaleX(0.95); } }
-  .infobar {
-    max-width: 1280px; margin: 0 auto; padding: 16px 24px 0;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
-  }
+
+  /* ==================== STATUS BAR ==================== */
+  .statusbar { max-width: 1400px; margin: 0 auto; padding: 0 24px 12px; display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap; gap: 10px; }
+  .live-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(16,185,129,0.1); color: var(--accent-green); border-radius: 20px; font-weight: 700; border: 1px solid rgba(16,185,129,0.2); }
+  .live-badge .dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; animation: pulse 1.5s infinite; }
+  .live-badge.loading { background: rgba(245,158,11,0.1); color: var(--accent-gold); border-color: rgba(245,158,11,0.2); }
+  .live-badge.loading .dot { background: var(--accent-gold); }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* ==================== INFO BAR (Date/Weather) ==================== */
+  .infobar { max-width: 1400px; margin: 0 auto; padding: 16px 24px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
   .info-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px; transition: 0.2s;
+    background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md); padding: 14px 20px; display: flex; align-items: center; gap: 14px; transition: 0.3s;
   }
-  .info-card:hover { border-color: var(--accent); }
-  .info-card .ico { font-size: 22px; flex-shrink: 0; }
-  .info-card .body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .info-card .label { font-size: 0.7rem; color: var(--text-dim); font-weight: 600; white-space: nowrap; }
-  .info-card .value { font-size: 0.95rem; color: var(--text); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .info-card .sub { font-size: 0.7rem; color: var(--text-dim); }
-  .viewmodes-wrap {
-    max-width: 1280px; margin: 0 auto; padding: 16px 24px 0;
-    display: flex; gap: 8px; flex-wrap: wrap;
+  .info-card:hover { border-color: var(--accent-blue); }
+  .info-card .ico { font-size: 24px; }
+  .info-card .body { display: flex; flex-direction: column; }
+  .info-card .label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+  .info-card .value { font-size: 0.95rem; font-weight: 800; }
+  .info-card .sub { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ==================== NAVIGATION & FILTERS ==================== */
+  .nav-wrap { max-width: 1400px; margin: 0 auto; padding: 16px 24px 8px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+  .nav-wrap::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-muted);
+    padding: 10px 20px; border-radius: 30px; cursor: pointer; font-family: inherit; font-size: 0.9rem;
+    font-weight: 700; transition: 0.3s; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;
   }
-  .viewmode-btn {
-    background: var(--card); color: var(--text-dim);
-    border: 1px solid var(--border); padding: 8px 16px;
-    border-radius: 12px; cursor: pointer; font-family: inherit;
-    font-size: 0.8125rem; font-weight: 600; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 6px; touch-action: manipulation;
-  }
-  .viewmode-btn:hover { color: var(--text); border-color: var(--accent); }
-  .viewmode-btn.active {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff; border-color: transparent;
-    box-shadow: 0 4px 14px var(--accent-glow);
-  }
-  .viewmode-btn .cnt { font-size: 11px; opacity: 0.75; background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 10px; }
-  .viewmode-btn.active .cnt { background: rgba(255,255,255,0.25); }
-  .filters-wrap {
-    max-width: 1280px; margin: 0 auto; padding: 12px 24px 4px;
-    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
-  }
+  .nav-btn:hover { background: var(--glass-hover); color: var(--text-main); border-color: var(--accent-blue); }
+  .nav-btn.active { background: var(--gradient-main); color: #fff; border-color: transparent; box-shadow: 0 4px 20px rgba(59,130,246,0.4); }
+  .nav-btn .cnt { font-size: 11px; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; }
+
+  .filters-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 16px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .filters-wrap::-webkit-scrollbar { display: none; }
-  .filters { display: flex; gap: 8px; padding-bottom: 4px; }
-  .filters button {
-    background: var(--card); color: var(--text-dim);
-    border: 1px solid var(--border); padding: 8px 18px;
-    border-radius: 20px; cursor: pointer; font-family: inherit;
-    font-size: 0.8125rem; font-weight: 500; transition: 0.2s; white-space: nowrap;
-    touch-action: manipulation;
+  .filter-btn {
+    background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted);
+    padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.8rem;
+    font-weight: 600; transition: 0.3s; white-space: nowrap;
   }
-  .filters button:hover { color: var(--text); border-color: var(--accent); }
-  .filters button.active {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff; border-color: transparent;
-    box-shadow: 0 4px 14px var(--accent-glow);
-  }
-  .grid {
-    max-width: 1280px; margin: 0 auto; padding: 20px 24px 60px;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
-  }
+  .filter-btn:hover { border-color: var(--accent-blue); color: var(--text-main); }
+  .filter-btn.active { background: rgba(59,130,246,0.2); border-color: var(--accent-blue); color: var(--accent-blue); }
+
+  /* ==================== GRID & CARDS ==================== */
+  .grid { max-width: 1400px; margin: 0 auto; padding: 0 24px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
   .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden; transition: 0.25s;
-    display: flex; flex-direction: column; position: relative;
-    animation: cardIn 0.4s ease-out; cursor: pointer; touch-action: manipulation;
+    background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; cursor: pointer;
   }
-  @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow); background: var(--card-hover); }
-  .card:active { transform: scale(0.98); background: var(--card-hover); }
-  .card.read { opacity: 0.6; }
-  .card.read h2 { color: var(--text-dim); }
-  .card.saved { border-color: var(--star); }
-  .card-img { width: 100%; height: 180px; object-fit: cover; background: var(--bg-2); display: block; transition: 0.4s; pointer-events: none; }
-  .card:hover .card-img { transform: scale(1.04); }
-  .card-img-wrap { position: relative; overflow: hidden; background: var(--bg-2); pointer-events: none; }
-  .card-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, var(--card), transparent); pointer-events: none; }
+  .card:hover { transform: translateY(-8px) scale(1.01); border-color: rgba(59,130,246,0.4); box-shadow: var(--shadow-card), var(--shadow-glow); }
+  .card.read { opacity: 0.6; filter: grayscale(0.5); }
+  .card.saved { border-color: var(--accent-gold); box-shadow: 0 0 20px rgba(245,158,11,0.2); }
+  .card.manual { border-right: 4px solid var(--accent-gold); }
+
+  .card-img-wrap { position: relative; height: 200px; background: #0f1525; overflow: hidden; }
+  .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+  .card:hover .card-img { transform: scale(1.08); }
+  .card-img-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, transparent 50%); }
+
   .star-btn {
-    position: absolute; top: 12px; right: 12px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.15); color: #fff; cursor: pointer;
-    display: grid; place-items: center; font-size: 20px; z-index: 5;
-    transition: 0.2s; touch-action: manipulation;
+    position: absolute; top: 16px; right: 16px; z-index: 10; width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; display: grid; place-items: center; font-size: 20px; transition: 0.3s; cursor: pointer;
   }
-  .star-btn.saved { background: var(--star); color: #0a0e1a; border-color: var(--star); }
-  .card-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; pointer-events: none; }
-  .card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .source-tag { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: 4px 12px; border-radius: 20px; }
-  .cat-tag { font-size: 11px; font-weight: 600; color: var(--text-dim); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
-  .read-tag { font-size: 10.5px; font-weight: 700; color: var(--success); background: rgba(52,211,153,0.12); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
-  .time-tag { font-size: 10.5px; color: var(--text-dim); padding: 4px 8px; border-radius: 20px; background: var(--bg-2); }
-  .card h2 { font-size: 1rem; font-weight: 700; line-height: 1.7; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .card p { font-size: 0.84375rem; color: var(--text-dim); line-height: 1.8; flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-  .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.75rem; color: var(--text-dim); }
-  .trend-badge { font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
-  .trend-badge.hot { color: #fff; background: linear-gradient(135deg, #ef4444, #f97316); }
+  .star-btn:hover { background: var(--accent-gold); color: #000; transform: scale(1.1) rotate(15deg); }
+  .star-btn.saved { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
 
-  .views-tag {
-    font-size: 10.5px; font-weight: 700;
-    color: var(--text-dim);
-    background: var(--bg-2);
-    padding: 4px 10px; border-radius: 20px;
-    white-space: nowrap;
-    border: 1px solid var(--border);
-    display: inline-flex; align-items: center; gap: 3px;
-    transition: 0.2s;
-  }
-  .views-tag.hot {
-    color: #fff;
-    background: linear-gradient(135deg, #ef4444, #f97316);
-    border-color: transparent;
-    box-shadow: 0 0 12px rgba(239,68,68,0.35);
-    animation: hotPulse 2s infinite;
-  }
-  @keyframes hotPulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(239,68,68,0.3); }
-    50%      { box-shadow: 0 0 20px rgba(239,68,68,0.65); }
-  }
+  .card-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; z-index: 2; }
+  .card-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .source-tag { font-size: 11px; font-weight: 800; color: #fff; background: var(--gradient-main); padding: 5px 14px; border-radius: 20px; }
+  .source-tag.manual { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+  
+  .views-tag { font-size: 11px; font-weight: 700; color: var(--text-main); background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--glass-border); }
+  .views-tag.hot { background: var(--gradient-hot); color: #fff; animation: pulse-hot 2s infinite; }
+  @keyframes pulse-hot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-  .load-more { grid-column: 1 / -1; display: flex; justify-content: center; padding: 20px 0; }
-  .load-more button {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    padding: 12px 32px; border-radius: 12px; cursor: pointer; font-family: inherit;
-    font-size: 0.875rem; font-weight: 700; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 8px; touch-action: manipulation;
-  }
-  .load-more button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .load-more button.pulse { animation: loadPulse 1.5s infinite; }
-  @keyframes loadPulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); } 50% { box-shadow: 0 0 0 8px transparent; } }
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    z-index: 1000; display: none; align-items: flex-start;
-    justify-content: center; padding: 20px; overflow-y: auto;
-    -webkit-overflow-scrolling: touch; animation: fadeIn 0.2s;
-  }
-  .modal-overlay.open { display: flex; }
+  .card h2 { font-size: 1.15rem; font-weight: 800; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--glass-border); padding-top: 14px; font-size: 0.8rem; color: var(--text-muted); }
+
+  /* ==================== MODAL ==================== */
+  .modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(5,8,16,0.85); backdrop-filter: blur(12px); display: none; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.3s; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .modal {
-    background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 20px; max-width: 780px; width: 100%;
-    margin: auto; position: relative; animation: slideUp 0.3s;
-    box-shadow: var(--shadow); overflow: hidden;
-  }
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .modal-hero { width: 100%; max-height: 380px; object-fit: cover; display: block; background: var(--bg); }
-  .modal-content { padding: 30px 34px 34px; }
-  .modal-close {
-    position: absolute; top: 16px; left: 16px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.15); color: #fff;
-    cursor: pointer; font-size: 20px; display: grid; place-items: center;
-    transition: 0.2s; z-index: 10; touch-action: manipulation;
-  }
-  .modal-close:hover { background: var(--danger); }
-  .modal-star {
-    position: absolute; top: 16px; right: 16px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.15); color: #fff;
-    cursor: pointer; font-size: 22px; display: grid; place-items: center;
-    transition: 0.2s; z-index: 10; touch-action: manipulation;
-  }
-  .modal-star.saved { background: var(--star); color: #0a0e1a; border-color: var(--star); }
-  .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
-  .modal h1 { font-size: 1.5rem; font-weight: 800; line-height: 1.7; margin-bottom: 22px; color: var(--text); }
-  .modal-body { font-size: 0.96875rem; line-height: 2.2; color: var(--text); word-wrap: break-word; }
-  .modal-body p { margin-bottom: 16px; }
-  .modal-body a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); }
-  .modal-body img { max-width: 100%; height: auto; border-radius: 12px; margin: 16px auto; display: block; }
-  .modal-body h2, .modal-body h3 { font-size: 1.125rem; margin: 20px 0 12px; color: var(--text); }
-  .modal-body ul, .modal-body ol { margin: 12px 24px; }
-  .modal-body blockquote { border-right: 3px solid var(--accent); padding-right: 14px; margin: 14px 0; color: var(--text-dim); font-style: italic; }
-  .tts-controls { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  .tts-btn {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text); padding: 10px 16px; border-radius: 10px; cursor: pointer;
-    font-family: inherit; font-size: 0.8125rem; font-weight: 600; transition: 0.2s;
-    display: inline-flex; align-items: center; gap: 6px; touch-action: manipulation;
-  }
-  .tts-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .tts-btn.speaking { background: var(--danger); color: #fff; border-color: var(--danger); }
-  .related-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
-  .related-title { font-size: 0.875rem; font-weight: 700; color: var(--text-dim); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
-  .related-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-  .related-item {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: 0.2s;
-    display: flex; gap: 12px; align-items: center; touch-action: manipulation;
-  }
-  .related-item:hover { border-color: var(--accent); background: var(--card-hover); }
-  .related-item .ri-icon { font-size: 20px; flex-shrink: 0; }
-  .related-item .ri-body { flex: 1; min-width: 0; }
-  .related-item .ri-title { font-size: 0.875rem; font-weight: 700; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7; }
-  .related-item .ri-meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
-  .share-section { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border); }
-  .share-title { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
-  .share-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
-  .share-btn {
-    padding: 14px 8px; border-radius: 14px;
-    border: 1px solid var(--border); background: var(--card);
-    color: var(--text); font-family: inherit;
-    font-size: 0.75rem; font-weight: 700; cursor: pointer;
-    text-decoration: none; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 8px;
-    transition: 0.2s; text-align: center; touch-action: manipulation;
-  }
-  .share-btn svg { width: 28px; height: 28px; flex-shrink: 0; transition: 0.2s; }
-  .share-btn .share-name { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); transition: 0.2s; }
-  .share-btn:hover { transform: translateY(-3px); border-color: transparent; }
-  .share-btn:hover svg { transform: scale(1.15); }
-  .share-btn:hover .share-name { color: #fff; }
-  .share-btn.telegram:hover { background: linear-gradient(135deg, #0088cc, #229ed9); }
-  .share-btn.whatsapp:hover { background: linear-gradient(135deg, #25d366, #128c7e); }
-  .share-btn.eitaa:hover { background: linear-gradient(135deg, #ef7f1a, #ff9f43); }
-  .share-btn.bale:hover { background: linear-gradient(135deg, #00a86b, #00c98d); }
-  .share-btn.soroush:hover { background: linear-gradient(135deg, #6b46c1, #9333ea); }
-  .share-btn.twitter:hover { background: linear-gradient(135deg, #000000, #333333); }
-  .share-btn.facebook:hover { background: linear-gradient(135deg, #1877f2, #0d65d9); }
-  .share-btn.linkedin:hover { background: linear-gradient(135deg, #0a66c2, #004182); }
-  .share-btn.reddit:hover { background: linear-gradient(135deg, #ff4500, #ff5722); }
-  .share-btn.pinterest:hover { background: linear-gradient(135deg, #e60023, #bd081c); }
-  .share-btn.email:hover { background: linear-gradient(135deg, #6b7280, #4b5563); }
-  .share-btn.sms:hover { background: linear-gradient(135deg, #22c55e, #16a34a); }
-  .share-btn.copy:hover { background: linear-gradient(135deg, #1e90ff, #0066cc); }
-  .share-btn.native:hover { background: linear-gradient(135deg, #1e90ff, #6366f1); }
-  .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  .btn {
-    padding: 12px 20px; border-radius: 12px;
-    border: 1px solid var(--border); background: var(--card);
-    color: var(--text); font-family: inherit;
-    font-size: 0.84375rem; font-weight: 600; cursor: pointer;
-    text-decoration: none; display: inline-flex;
-    align-items: center; gap: 6px; transition: 0.2s; touch-action: manipulation;
-  }
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
-  .btn.star-active { background: var(--star); color: #0a0e1a; border-color: var(--star); }
-  .empty { text-align: center; padding: 60px 20px; color: var(--text-dim); grid-column: 1 / -1; font-size: 0.9375rem; line-height: 2.2; }
-  .empty .title { font-size: 1.125rem; color: var(--text); margin-bottom: 12px; font-weight: 700; }
-  .skeleton { background: var(--card); border: 1px solid var(--border); border-radius: 16px; height: 340px; position: relative; overflow: hidden; }
-  .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent); animation: shimmer 1.5s infinite; }
+  .modal { background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); max-width: 800px; width: 100%; margin: auto; position: relative; box-shadow: var(--shadow-card); animation: slideUp 0.4s; overflow: hidden; }
+  @keyframes slideUp { from { transform: translateY(40px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+  .modal-hero { width: 100%; max-height: 400px; object-fit: cover; }
+  .modal-content { padding: 32px; }
+  .modal-close, .modal-star { position: absolute; top: 16px; width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); color: #fff; display: grid; place-items: center; cursor: pointer; transition: 0.3s; z-index: 10; }
+  .modal-close { left: 16px; font-size: 24px; }
+  .modal-star { right: 16px; font-size: 22px; }
+  .modal-close:hover { background: var(--accent-red); transform: rotate(90deg); }
+  .modal-star:hover { background: var(--accent-gold); color: #000; }
+  .modal-star.saved { background: var(--accent-gold); color: #000; }
+  .modal h1 { font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; line-height: 1.5; }
+  .modal-body { font-size: 1rem; line-height: 2.2; }
+  .modal-body img { max-width: 100%; border-radius: var(--radius-md); margin: 20px 0; }
+  .modal-body a { color: var(--accent-cyan); text-decoration: none; border-bottom: 1px dashed; }
+
+  /* ==================== RELATED & SHARE ==================== */
+  .related-item { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 12px 16px; border-radius: var(--radius-md); cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+  .related-item:hover { border-color: var(--accent-blue); background: var(--glass-hover); }
+  .related-item .ri-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+  .related-item .ri-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+  .share-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-top: 20px; }
+  .share-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); padding: 12px 8px; border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+  .share-btn:hover { background: var(--glass-hover); transform: translateY(-3px); border-color: var(--accent-blue); }
+  .share-btn svg { width: 22px; height: 22px; }
+
+  .btn { padding: 12px 24px; border-radius: var(--radius-md); font-weight: 700; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); transition: 0.3s; font-family: inherit; }
+  .btn:hover { background: var(--glass-hover); border-color: var(--accent-blue); transform: translateY(-2px); }
+  .btn-primary { background: var(--gradient-main); border: none; color: #fff; box-shadow: 0 4px 15px rgba(59,130,246,0.3); }
+
+  .skeleton { background: var(--glass-bg); border-radius: var(--radius-lg); height: 380px; border: 1px solid var(--glass-border); position: relative; overflow: hidden; }
+  .skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
   @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-  footer { text-align: center; padding: 30px 20px; color: var(--text-dim); font-size: 0.78125rem; border-top: 1px solid var(--border); margin-top: 40px; }
-  footer .version { display: inline-block; padding: 2px 10px; background: var(--accent-glow); color: var(--accent); border-radius: 20px; font-weight: 700; margin-right: 6px; font-size: 11px; }
-  .settings-panel, .stats-panel {
-    position: fixed; top: 70px; left: 20px;
-    background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 16px; padding: 20px;
-    width: 320px; max-height: 80vh; overflow-y: auto;
-    z-index: 2000; box-shadow: var(--shadow); display: none;
+
+  @media (max-width: 768px) {
+    .header-inner { padding: 12px 16px; }
+    .search-box { order: 3; width: 100%; min-width: 100%; margin-top: 8px; }
+    .infobar { grid-template-columns: 1fr; padding: 12px 16px 0; }
+    .nav-wrap, .filters-wrap { padding-left: 16px; padding-right: 16px; }
+    .grid { padding: 0 16px 30px; grid-template-columns: 1fr; gap: 16px; }
+    .modal-overlay { padding: 0; }
+    .modal { border-radius: 0; min-height: 100vh; max-width: 100%; overflow-y: auto; }
+    .modal-content { padding: 24px 20px; }
+    .share-grid { grid-template-columns: repeat(3, 1fr); }
   }
-  .stats-panel { width: 340px; }
-  .settings-panel.open, .stats-panel.open { display: block; }
-  .settings-panel h3, .stats-panel h3 { font-size: 1rem; margin-bottom: 16px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
-  .settings-panel h3 button, .stats-panel h3 button { background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 20px; padding: 4px 8px; }
-  .settings-section { margin-bottom: 18px; }
-  .settings-section .stitle { font-size: 0.8125rem; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
-  .font-controls { display: flex; gap: 8px; align-items: center; }
-  .font-controls button { background: var(--card); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px; display: grid; place-items: center; font-family: inherit; transition: 0.2s; touch-action: manipulation; }
-  .font-controls .val { font-size: 0.8125rem; color: var(--text-dim); min-width: 40px; text-align: center; }
-  .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 0.8125rem; }
-  .stat-row:last-child { border-bottom: none; }
-  .stat-row .lbl { color: var(--text-dim); }
-  .stat-row .val { color: var(--text); font-weight: 700; }
-  .stat-bar { height: 6px; background: var(--bg); border-radius: 3px; margin-top: 4px; overflow: hidden; }
-  .stat-bar .fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 3px; }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
-  .toast {
-    position: fixed; bottom: 30px; right: 30px;
-    background: var(--bg-2); border: 1px solid var(--accent);
-    color: var(--text); padding: 14px 22px;
-    border-radius: 14px; box-shadow: var(--shadow);
-    z-index: 3000; font-size: 0.875rem;
-    animation: slideInRight 0.4s; max-width: 340px;
-  }
-  @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-  .toast.out { animation: slideOutRight 0.4s forwards; }
-  @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
-  @media (max-width: 640px) {
-    .header-inner { padding: 12px 16px; gap: 8px; }
-    .logo { font-size: 1.1rem; flex: 1; }
-    .logo .logo-img { width: 28px; height: 28px; }
-    .search-box { order: 3; width: 100%; flex: none; margin-top: 4px; }
-    .header-actions { gap: 6px; }
-    .icon-btn { width: 38px; height: 38px; font-size: 16px; }
-    .statusbar { padding: 8px 16px 10px; font-size: 0.7rem; }
-    .infobar { padding: 12px 16px 0; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .info-card { padding: 10px 12px; }
-    .info-card .ico { font-size: 18px; }
-    .info-card .value { font-size: 0.8rem; }
-    .viewmodes-wrap { padding: 12px 16px 0; gap: 6px; }
-    .viewmode-btn { padding: 8px 12px; font-size: 0.75rem; }
-    .filters-wrap { padding: 10px 16px 0; }
-    .filters button { padding: 7px 14px; font-size: 0.75rem; }
-    .grid { padding: 14px 12px 50px; gap: 14px; grid-template-columns: 1fr; }
-    .card-img { height: 220px; }
-    .card-body { padding: 16px 16px 18px; }
-    .modal-overlay { padding: 0; align-items: stretch; }
-    .modal {
-      border-radius: 0;
-      max-width: 100%;
-      height: 100vh;
-      margin: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      animation: slideUpMobile 0.3s;
-    }
-    @keyframes slideUpMobile { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal-hero { max-height: 240px; }
-    .modal-content { padding: 20px 18px 30px; }
-    .modal h1 { font-size: 1.2rem; margin-bottom: 16px; }
-    .modal-body { font-size: 0.95rem; line-height: 2; }
-    .modal-close, .modal-star { top: 12px; width: 42px; height: 42px; font-size: 18px; }
-    .modal-close { left: 12px; }
-    .modal-star { right: 12px; }
-    .share-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .share-btn { padding: 12px 6px; font-size: 0.65rem; }
-    .share-btn svg { width: 24px; height: 24px; }
-    .share-btn .share-name { font-size: 0.65rem; }
-    .btn { padding: 12px 16px; font-size: 0.8rem; flex: 1; justify-content: center; }
-    .settings-panel, .stats-panel { top: 0; left: 0; right: 0; bottom: 0; width: 100%; max-height: 100vh; border-radius: 0; padding: 24px 20px; }
-    .toast { bottom: 20px; right: 16px; left: 16px; max-width: none; }
-    footer { padding: 24px 16px; font-size: 0.75rem; }
-    .load-more button { padding: 12px 24px; font-size: 0.8rem; }
-  }
-  @media (max-width: 380px) {
-    .infobar { grid-template-columns: 1fr; }
-    .logo { font-size: 1rem; }
-    .card-img { height: 180px; }
-    .modal h1 { font-size: 1.05rem; }
-    .share-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (hover: none) {
-    .card:hover { transform: none; box-shadow: none; background: var(--card); }
-    .icon-btn:hover { background: var(--card); border-color: var(--border); }
-    .viewmode-btn:hover { color: var(--text-dim); border-color: var(--border); }
-    .filters button:hover { color: var(--text-dim); border-color: var(--border); }
-  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<div class="progress-bar" id="progressBar"></div>
+<div class="bg-mesh"></div><div class="bg-grid"></div>
+<div class="progress-bar" id="progressBar" style="position:fixed;top:0;left:0;right:0;height:3px;background:var(--gradient-main);transform-origin:right;transform:scaleX(0);transition:transform 0.3s;z-index:9999;"></div>
 
 <header>
   <div class="header-inner">
-    <div class="logo">
-      <img class="logo-img" id="logoImg" alt="Lreporter">
-      Lreporter
-    </div>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="جستجو...">
-    </div>
+    <div class="logo"><img class="logo-img" id="logoImg" alt="Lreporter"><span>Lreporter</span></div>
+    <div class="search-box"><input type="text" id="searchInput" placeholder="جستجو در اخبار..."></div>
     <div class="header-actions">
-      <button class="icon-btn" id="settingsBtn" title="تنظیمات">⚙️</button>
+      <button class="icon-btn" id="themeBtn" title="تغییر تم">🌙</button>
       <button class="icon-btn" id="statsBtn" title="آمار">📊</button>
-      <button class="icon-btn" id="savedBtn" title="ذخیره‌شده">
-        ⭐<span class="badge" id="savedBadge" style="display:none">0</span>
-      </button>
-      <button class="icon-btn" id="radioBtn" title="رادیو">📻</button>
-      <button class="icon-btn" id="themeBtn" title="تم">🌙</button>
+      <button class="icon-btn" id="settingsBtn" title="تنظیمات">⚙️</button>
+      <button class="icon-btn" id="savedBtn" title="ذخیره‌شده">⭐<span class="badge" id="savedBadge" style="display:none">0</span></button>
       <button class="icon-btn" id="refreshBtn" title="به‌روزرسانی">🔄</button>
     </div>
   </div>
   <div class="statusbar">
-    <span class="statusbar-left">
+    <span style="display:flex;gap:10px;align-items:center;">
       <span class="live-badge" id="liveBadge"><span class="dot"></span> زنده</span>
-      <span id="unreadCount">۰</span>
+      <span id="unreadCount" style="font-weight:800;color:var(--accent-cyan);">۰</span>
       <span id="countdown">⏰ ...</span>
     </span>
-    <span id="status">در حال بارگذاری...</span>
+    <span id="status" style="font-weight:600;">در حال بارگذاری...</span>
   </div>
 </header>
 
 <div class="infobar">
-  <div class="info-card">
-    <span class="ico">📅</span>
-    <div class="body">
-      <span class="label">تاریخ</span>
-      <span class="value" id="persianDate">...</span>
-      <span class="sub" id="clockTime"></span>
-    </div>
-  </div>
-  <div class="info-card">
-    <span class="ico">🌡️</span>
-    <div class="body">
-      <span class="label">آب و هوای تهران</span>
-      <span class="value" id="weatherTemp">—</span>
-      <span class="sub" id="weatherDesc">—</span>
-    </div>
-  </div>
+  <div class="info-card"><span class="ico">📅</span><div class="body"><span class="label">تاریخ</span><span class="value" id="persianDate">...</span><span class="sub" id="clockTime"></span></div></div>
+  <div class="info-card"><span class="ico">🌡️</span><div class="body"><span class="label">آب و هوای تهران</span><span class="value" id="weatherTemp">—</span><span class="sub" id="weatherDesc">—</span></div></div>
 </div>
 
-<div class="viewmodes-wrap">
-  <button class="viewmode-btn active" data-mode="all">📰 همه <span class="cnt" id="cntAll">0</span></button>
-  <button class="viewmode-btn" data-mode="unread">📬 نخوانده <span class="cnt" id="cntUnread">0</span></button>
-  <button class="viewmode-btn" data-mode="saved">⭐ ذخیره <span class="cnt" id="cntSaved">0</span></button>
-  <button class="viewmode-btn" data-mode="trending">🔥 ترند <span class="cnt" id="cntTrending">0</span></button>
+<div class="nav-wrap">
+  <button class="nav-btn active" data-mode="all">📰 همه <span class="cnt" id="cntAll">0</span></button>
+  <button class="nav-btn" data-mode="unread">📬 نخوانده <span class="cnt" id="cntUnread">0</span></button>
+  <button class="nav-btn" data-mode="saved">⭐ ذخیره <span class="cnt" id="cntSaved">0</span></button>
+  <button class="nav-btn" data-mode="trending">🔥 ترند <span class="cnt" id="cntTrending">0</span></button>
 </div>
 
-<div class="filters-wrap">
-  <div class="filters" id="filters"></div>
-</div>
+<div class="filters-wrap" id="filtersWrap"></div>
 
-<div class="grid" id="content">
-  <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-</div>
+<div class="grid" id="content"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
 
-<footer>
-  <span class="version">Lreporter</span>
-  ساخته‌شده با ❤️
+<footer style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:0.85rem;border-top:1px solid var(--glass-border);margin-top:40px;">
+  <div style="font-weight:900;font-size:1.2rem;margin-bottom:8px;background:var(--gradient-main);-webkit-background-clip:text;color:transparent;">Lreporter v8.1</div>
+  ساخته‌شده با ❤️ و تکنولوژی‌های مدرن
 </footer>
 
-<div class="settings-panel" id="settingsPanel">
-  <h3>⚙️ تنظیمات<button id="settingsClose">✕</button></h3>
-  <div class="settings-section">
-    <div class="stitle">📏 اندازه فونت</div>
-    <div class="font-controls">
-      <button id="fontMinus">−</button>
-      <span class="val" id="fontVal">۱۶</span>
-      <button id="fontPlus">+</button>
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal" style="z-index:2000;">
+  <div class="modal" style="max-width:400px;">
+    <button class="modal-close" id="settingsClose">✕</button>
+    <div class="modal-content">
+      <h2 style="font-size:1.2rem;margin-bottom:20px;color:var(--accent-cyan);">⚙️ تنظیمات</h2>
+      <div style="margin-bottom:20px;">
+        <label style="display:block;margin-bottom:8px;font-weight:700;color:var(--text-muted);">اندازه فونت</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn" id="fontMinus">−</button>
+          <span id="fontVal" style="flex:1;text-align:center;font-weight:800;font-size:1.1rem;">۱۶</span>
+          <button class="btn" id="fontPlus">+</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="settings-panel" id="radioPanel" style="top: 120px; left: 20px;">
-  <h3>📻 رادیو آنلاین<button id="radioClose">✕</button></h3>
-  <div class="settings-section">
-    <div class="stitle">📡 انتخاب ایستگاه</div>
-    <select id="radioStation" style="width: 100%; padding: 10px; border-radius: 10px; background: var(--card); color: var(--text); border: 1px solid var(--border); font-family: inherit; font-size: 0.8125rem; margin-bottom: 12px;">
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-iran/playlist.m3u8">رادیو ایران</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-tehran/playlist.m3u8">رادیو تهران</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-javan/playlist.m3u8">رادیو جوان</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-farhang/playlist.m3u8">رادیو فرهنگ</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-salamat/playlist.m3u8">رادیو سلامت</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-quran/playlist.m3u8">رادیو قرآن</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-varzesh/playlist.m3u8">رادیو ورزش</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-payam/playlist.m3u8">رادیو پیام</option>
-      <option value="http://s1.cdn1.iranseda.ir:1935/liveedge/radio-avar/playlist.m3u8">رادیو آوا</option>
-    </select>
-    <div style="display: flex; gap: 8px; justify-content: center;">
-      <button class="btn btn-primary" id="radioPlayBtn" style="flex: 1;">▶ پخش</button>
-      <button class="btn" id="radioStopBtn" style="flex: 1;">⏹ توقف</button>
-    </div>
-    <div id="radioStatus" style="text-align: center; margin-top: 12px; font-size: 0.75rem; color: var(--text-dim);">
-      آماده پخش
+<!-- Stats Modal -->
+<div class="modal-overlay" id="statsModal" style="z-index:2000;">
+  <div class="modal" style="max-width:450px;">
+    <button class="modal-close" id="statsClose">✕</button>
+    <div class="modal-content">
+      <h2 style="font-size:1.2rem;margin-bottom:20px;color:var(--accent-cyan);">📊 آمار سیستم</h2>
+      <div id="statsContent"></div>
     </div>
   </div>
 </div>
 
-<div class="stats-panel" id="statsPanel">
-  <h3>📊 آمار<button id="statsClose">✕</button></h3>
-  <div id="statsContent"></div>
-</div>
-
+<!-- News Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal" id="modalBox">
     <button class="modal-close" id="modalClose">✕</button>
-    <button class="modal-star" id="modalStar" title="ذخیره">☆</button>
+    <button class="modal-star" id="modalStar">☆</button>
     <img class="modal-hero" id="modalHero" style="display:none" alt="">
     <div class="modal-content">
-      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-meta" id="modalMeta" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;"></div>
       <h1 id="modalTitle"></h1>
-      <div class="tts-controls" id="ttsControls">
-        <button class="tts-btn" id="ttsPlayBtn">🔊 خواندن</button>
-        <button class="tts-btn" id="ttsPauseBtn" style="display:none">⏸ توقف</button>
-        <button class="tts-btn" id="ttsStopBtn" style="display:none">⏹ پایان</button>
+      
+      <div class="tts-controls" id="ttsControls" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+        <button class="btn" id="ttsPlayBtn" style="padding:8px 16px;">🔊 خواندن</button>
+        <button class="btn" id="ttsPauseBtn" style="padding:8px 16px;display:none;">⏸ توقف</button>
+        <button class="btn" id="ttsStopBtn" style="padding:8px 16px;display:none;">⏹ پایان</button>
       </div>
+
       <div class="modal-body" id="modalBody"></div>
-      <div class="related-section" id="relatedSection" style="display:none">
-        <div class="related-title">🎯 خبرهای مرتبط</div>
-        <div class="related-grid" id="relatedGrid"></div>
+      
+      <div id="relatedSection" style="display:none;margin-top:30px;padding-top:20px;border-top:1px solid var(--glass-border);">
+        <div style="font-size:0.9rem;font-weight:700;margin-bottom:16px;color:var(--accent-cyan);">🎯 اخبار مرتبط:</div>
+        <div id="relatedGrid" style="display:flex;flex-direction:column;gap:10px;"></div>
       </div>
-      <div class="share-section">
-        <div class="share-title">📤 اشتراک‌گذاری:</div>
+
+      <div style="margin-top:30px;padding-top:24px;border-top:1px solid var(--glass-border);">
+        <div style="font-size:0.9rem;font-weight:700;margin-bottom:16px;color:var(--text-muted);">📤 اشتراک‌گذاری:</div>
         <div class="share-grid">
-          <button class="share-btn telegram" data-share="telegram" title="تلگرام">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            <span class="share-name">تلگرام</span>
-          </button>
-          <button class="share-btn whatsapp" data-share="whatsapp" title="واتساپ">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            <span class="share-name">واتساپ</span>
-          </button>
-          <button class="share-btn eitaa" data-share="eitaa" title="ایتا">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
-            <span class="share-name">ایتا</span>
-          </button>
-          <button class="share-btn bale" data-share="bale" title="بله">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3.5 8.5l-5 5c-.2.2-.5.3-.7.3s-.5-.1-.7-.3l-2.5-2.5c-.4-.4-.4-1 0-1.4s1-.4 1.4 0l1.8 1.8 4.3-4.3c.4-.4 1-.4 1.4 0s.4 1 0 1.4z"/></svg>
-            <span class="share-name">بله</span>
-          </button>
-          <button class="share-btn soroush" data-share="soroush" title="سروش">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
-            <span class="share-name">سروش</span>
-          </button>
-          <button class="share-btn twitter" data-share="twitter" title="توییتر">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            <span class="share-name">توییتر</span>
-          </button>
-          <button class="share-btn facebook" data-share="facebook" title="فیسبوک">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            <span class="share-name">فیسبوک</span>
-          </button>
-          <button class="share-btn linkedin" data-share="linkedin" title="لینکدین">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            <span class="share-name">لینکدین</span>
-          </button>
-          <button class="share-btn reddit" data-share="reddit" title="ردیت">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
-            <span class="share-name">ردیت</span>
-          </button>
-          <button class="share-btn pinterest" data-share="pinterest" title="پینترست">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
-            <span class="share-name">پینترست</span>
-          </button>
-          <button class="share-btn email" data-share="email" title="ایمیل">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            <span class="share-name">ایمیل</span>
-          </button>
-          <button class="share-btn sms" data-share="sms" title="پیامک">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 9h10v2H7V9zm7 5H7v-2h7v2zm3-6H7V6h10v2z"/></svg>
-            <span class="share-name">پیامک</span>
-          </button>
-          <button class="share-btn copy" id="modalCopyBtn" title="کپی لینک">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            <span class="share-name">کپی</span>
-          </button>
-          <button class="share-btn native" data-share="native" title="اشتراک سیستمی">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-            <span class="share-name">اشتراک</span>
-          </button>
+          <button class="share-btn telegram" data-share="telegram"><svg viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg><span>تلگرام</span></button>
+          <button class="share-btn whatsapp" data-share="whatsapp"><svg viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span>واتساپ</span></button>
+          <button class="share-btn eitaa" data-share="eitaa"><svg viewBox="0 0 24 24" fill="#ef7f1a"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg><span>ایتا</span></button>
+          <button class="share-btn bale" data-share="bale"><svg viewBox="0 0 24 24" fill="#00a86b"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3.5 8.5l-5 5c-.2.2-.5.3-.7.3s-.5-.1-.7-.3l-2.5-2.5c-.4-.4-.4-1 0-1.4s1-.4 1.4 0l1.8 1.8 4.3-4.3c.4-.4 1-.4 1.4 0s.4 1 0 1.4z"/></svg><span>بله</span></button>
+          <button class="share-btn twitter" data-share="twitter"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span>توییتر</span></button>
+          <button class="share-btn email" data-share="email"><svg viewBox="0 0 24 24" fill="#64748b"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>ایمیل</span></button>
+          <button class="share-btn copy" id="modalCopyBtn"><svg viewBox="0 0 24 24" fill="var(--accent-blue)"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg><span>کپی لینک</span></button>
         </div>
-        <div class="modal-actions">
-          <a class="btn btn-primary" id="modalSourceBtn" target="_blank" rel="noopener">🔗 مشاهده در منبع</a>
-          <button class="btn" id="modalStarBtn">⭐ ذخیره</button>
+        <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="btn btn-primary" id="modalSourceBtn" target="_blank" rel="noopener" style="flex:1;justify-content:center;">🔗 مشاهده در منبع</a>
         </div>
       </div>
     </div>
@@ -665,1127 +355,324 @@
 </div>
 
 <script>
-const VERSION = '6.4';
-// آدرس پروژه جدید شما
-const SUPABASE_URL = 'https://lzfzmsidjggghkdrmgaz.supabase.co/functions/v1/rapid-processor';
-const VIEWS_API = 'https://lzfzmsidjggghkdrmgaz.supabase.co/functions/v1/views';
-const INITIAL_COUNT = 10;
-const DISPLAY_STEP = 10;
-const DISPLAY_INTERVAL = 5000;
+/* ==================== CONFIG ==================== */
+const VERSION = '8.1';
+const SUPABASE_URL = 'https://kemwkxuwhqgqqfyfpbmm.supabase.co/functions/v1/rapid-processor';
+const VIEWS_API = 'https://kemwkxuwhgqqfyfpbmm.supabase.co/functions/v1/views';
+const MANUAL_NEWS_API = 'https://kemwkxuwhgqqfyfpbmm.supabase.co/functions/v1/manual-news';
+const INITIAL_COUNT = 10; const DISPLAY_STEP = 10; const DISPLAY_INTERVAL = 5000;
 const TRENDING_VIEW_THRESHOLD = 1000;
-const VIEWS_CACHE_KEY = 'lreporter_views_v1';
-const CACHE_KEY = 'lreporter_cache_v6';
-const CACHE_TTL = 1000 * 60 * 60 * 6;
-const READ_KEY = 'lreporter_read_v6';
-const SAVED_KEY = 'lreporter_saved_v6';
-const LAST_DAY_KEY = 'lreporter_lastday_v6';
-const FONT_KEY = 'lreporter_font_v6';
 
+/* ==================== STATE ==================== */
 let newsViews = {};
 let displayLimit = INITIAL_COUNT;
 let displayTimer = null;
 let allNews = [];
-let activeCategory = 'همه';
 let activeMode = 'all';
+let activeCategory = 'همه';
 let searchQuery = '';
 let currentNews = null;
 let isLoading = false;
-let countdownTimer = null;
-let clockTimer = null;
 let readLinks = new Set();
 let savedLinks = new Set();
+let ttsSpeaking = false, ttsPaused = false, ttsQueue = [], ttsCurrentIndex = 0;
 
 const APP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a3a"/><stop offset="1" stop-color="#050a1a"/></linearGradient><linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient><linearGradient id="lGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d0d8e8"/></linearGradient><radialGradient id="globeShine" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stop-color="#4fb8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#0066cc" stop-opacity="0"/></radialGradient><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="512" height="512" rx="115" fill="url(#bgGrad)"/><rect x="4" y="4" width="504" height="504" rx="112" fill="none" stroke="#1e90ff" stroke-width="3" opacity="0.6"/><circle cx="320" cy="200" r="115" fill="url(#globeGrad)" filter="url(#glow)" opacity="0.95"/><circle cx="320" cy="200" r="115" fill="url(#globeShine)"/><g filter="url(#glow)"><path d="M 100 130 L 175 130 L 175 330 L 260 330 L 260 385 L 100 385 Z" fill="url(#lGrad)"/></g><path d="M 175 330 L 260 330 L 260 385 L 175 385 Z" fill="#e8302a"/></svg>`;
 const ICON_URL = 'data:image/svg+xml,' + encodeURIComponent(APP_ICON_SVG);
 
-const CATEGORIES = {
-  'جنگ':    ['جنگ', 'حمله', 'موشک', 'آتش‌بس', 'غزه', 'اوکراین', 'انفجار', 'نظامی', 'پدافند', 'رزمایش'],
-  'سیاسی':  ['دولت', 'رئیس‌جمهور', 'وزیر', 'مجلس', 'انتخابات', 'سفیر', 'سیاسی', 'رهبر', 'دیپلماسی'],
-  'اقتصاد': ['اقتصاد', 'دلار', 'قیمت', 'بورس', 'طلا', 'نفت', 'بازار', 'تورم', 'ارز', 'بانک', 'سکه'],
-  'ورزش':   ['ورزش', 'فوتبال', 'بازی', 'تیم', 'لیگ', 'المپیک', 'والیبال', 'کشتی', 'مربی'],
-  'فناوری': ['فناوری', 'هوش مصنوعی', 'تکنولوژی', 'موبایل', 'اینترنت', 'ربات', 'فضا'],
-  'سلامت':  ['سلامت', 'بیماری', 'درمان', 'واکسن', 'بیمارستان', 'دارو', 'کرونا'],
-  'فرهنگ':  ['فرهنگ', 'هنر', 'سینما', 'فیلم', 'موسیقی', 'کتاب', 'جشنواره'],
-  'حوادث':  ['حادثه', 'تصادف', 'آتش‌سوزی', 'زلزله', 'قتل', 'پلیس']
-};
-
-/* ==================== Storage ==================== */
+/* ==================== STORAGE & UTILS ==================== */
 function safeParse(str, fallback) { try { return JSON.parse(str); } catch { return fallback; } }
-
-(function loadStorage() {
-  readLinks = new Set(safeParse(localStorage.getItem(READ_KEY) || '[]', []));
-  savedLinks = new Set(safeParse(localStorage.getItem(SAVED_KEY) || '[]', []));
-  const savedFont = localStorage.getItem(FONT_KEY);
+(function initStorage() {
+  readLinks = new Set(safeParse(localStorage.getItem('lrep_read_v8') || '[]', []));
+  savedLinks = new Set(safeParse(localStorage.getItem('lrep_saved_v8') || '[]', []));
+  newsViews = safeParse(localStorage.getItem('lrep_views_v8') || '{}', {});
+  const savedFont = localStorage.getItem('lrep_font_v8');
   if (savedFont) document.documentElement.style.setProperty('--base-font-size', savedFont + 'px');
-  newsViews = safeParse(localStorage.getItem(VIEWS_CACHE_KEY) || '{}', {}) || {};
+  const savedTheme = localStorage.getItem('lrep_theme_v8');
+  if (savedTheme === 'light') { document.documentElement.setAttribute('data-theme', 'light'); document.getElementById('themeBtn').textContent = '☀️'; }
 })();
 
-function saveRead() { try { localStorage.setItem(READ_KEY, JSON.stringify([...readLinks].slice(-3000))); } catch {} }
-function saveSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify([...savedLinks].slice(-1000))); } catch {} }
-function saveViewsCache() { try { localStorage.setItem(VIEWS_CACHE_KEY, JSON.stringify(newsViews)); } catch {} }
-
+function saveRead() { try { localStorage.setItem('lrep_read_v8', JSON.stringify([...readLinks].slice(-3000))); } catch {} }
+function saveSaved() { try { localStorage.setItem('lrep_saved_v8', JSON.stringify([...savedLinks].slice(-1000))); } catch {} }
 function markAsRead(link) { if (!link || readLinks.has(link)) return false; readLinks.add(link); saveRead(); return true; }
-function toggleSaved(link) {
-  if (!link) return false;
-  if (savedLinks.has(link)) { savedLinks.delete(link); saveSaved(); return false; }
-  savedLinks.add(link); saveSaved(); return true;
-}
+function toggleSaved(link) { if (!link) return false; if (savedLinks.has(link)) { savedLinks.delete(link); saveSaved(); return false; } savedLinks.add(link); saveSaved(); return true; }
 
-/* ==================== Utils ==================== */
 function fetchWithTimeout(url, ms = 10000, opts = {}) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
+  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), ms);
   return fetch(url, { signal: ctrl.signal, ...opts }).finally(() => clearTimeout(t));
 }
-
-function escapeHtml(str) {
-  if (str == null) return '';
-  return String(str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-function escapeAttr(str) { return escapeHtml(str); }
-
-function detectCategory(text) {
-  if (!text) return 'عمومی';
-  const t = text.toLowerCase();
-  for (const [cat, words] of Object.entries(CATEGORIES)) {
-    if (words.some(w => t.includes(w.toLowerCase()))) return cat;
-  }
-  return 'عمومی';
-}
-
+function escapeHtml(str) { if (str == null) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function formatTime(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return '';
+  if (!dateStr) return ''; const d = new Date(dateStr); if (isNaN(d.getTime())) return '';
   const diff = (Date.now() - d.getTime()) / 1000;
-  if (diff < 60) return 'همین الان';
-  if (diff < 3600) return Math.floor(diff / 60) + ' دقیقه';
-  if (diff < 86400) return Math.floor(diff / 3600) + ' ساعت';
-  if (diff < 604800) return Math.floor(diff / 86400) + ' روز';
+  if (diff < 60) return 'همین الان'; if (diff < 3600) return Math.floor(diff / 60) + ' دقیقه پیش';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' ساعت پیش'; if (diff < 604800) return Math.floor(diff / 86400) + ' روز پیش';
   return d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' });
 }
-
-function estimateReadTime(textLength) {
-  return `📖 ${Math.max(1, Math.ceil((textLength || 0) / 1000))} دقیقه`;
-}
-
-function showToast(message, duration = 3500) {
+function showToast(message, duration = 3000) {
   const toast = document.createElement('div');
-  toast.className = 'toast'; toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => { toast.classList.add('out'); setTimeout(() => toast.remove(), 400); }, duration);
+  toast.style.cssText = `position:fixed;bottom:30px;right:30px;background:var(--glass-bg);backdrop-filter:blur(10px);border:1px solid var(--accent-blue);color:var(--text-main);padding:14px 24px;border-radius:16px;z-index:9999;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,0.5);animation:slideIn 0.4s`;
+  toast.textContent = message; document.body.appendChild(toast);
+  setTimeout(() => { toast.style.animation = 'slideOut 0.4s forwards'; setTimeout(() => toast.remove(), 400); }, duration);
 }
 
-/* ==================== Views ==================== */
+/* ==================== VIEWS ==================== */
 async function fetchAllViews() {
-  try {
-    const res = await fetchWithTimeout(VIEWS_API, 10000);
-    if (!res.ok) return;
-    const data = await res.json();
-    if (data && typeof data === 'object' && !Array.isArray(data)) {
-      newsViews = { ...newsViews, ...data };
-      saveViewsCache();
-    }
-  } catch (e) { console.warn('fetchAllViews:', e); }
+  try { const res = await fetchWithTimeout(VIEWS_API, 10000); if (res.ok) { const data = await res.json(); if (data && typeof data === 'object') { newsViews = { ...newsViews, ...data }; localStorage.setItem('lrep_views_v8', JSON.stringify(newsViews)); } } } catch {}
 }
-
 async function incrementView(link) {
-  if (!link) return 0;
-  newsViews[link] = (newsViews[link] || 0) + 1;
-  saveViewsCache();
-  updateViewsUI(link);
-  try {
-    const res = await fetchWithTimeout(VIEWS_API, 8000, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ link })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && typeof data.count === 'number') {
-        newsViews[link] = data.count;
-        saveViewsCache();
-        updateViewsUI(link);
-        return data.count;
-      }
-    }
-  } catch (e) { console.warn('incrementView:', e); }
+  if (!link) return 0; newsViews[link] = (newsViews[link] || 0) + 1; updateViewsUI(link);
+  try { const res = await fetchWithTimeout(VIEWS_API, 8000, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ link }) }); if (res.ok) { const data = await res.json(); if (data && typeof data.count === 'number') { newsViews[link] = data.count; updateViewsUI(link); return data.count; } } } catch {}
   return newsViews[link] || 0;
 }
-
 function getViewCount(link) { return newsViews[link] || 0; }
 function isHotNews(link) { return getViewCount(link) >= TRENDING_VIEW_THRESHOLD; }
-
-function formatViews(n) {
-  n = Number(n) || 0;
-  if (n < 1) return '۰';
-  if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
-  if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'K';
-  return n.toLocaleString('fa-IR');
-}
-
-function viewsBadgeHtml(link) {
-  const v = getViewCount(link);
-  if (v < 1) return '';
-  const hot = v >= TRENDING_VIEW_THRESHOLD;
-  return `<span class="views-tag${hot ? ' hot' : ''}">👁 ${formatViews(v)}${hot ? ' 🔥' : ''}</span>`;
-}
-
+function formatViews(n) { n = Number(n) || 0; if (n < 1) return '۰'; if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M'; if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'K'; return n.toLocaleString('fa-IR'); }
+function viewsBadgeHtml(link) { const v = getViewCount(link); if (v < 1) return ''; const hot = v >= TRENDING_VIEW_THRESHOLD; return `<span class="views-tag${hot ? ' hot' : ''}">👁 ${formatViews(v)}${hot ? ' 🔥' : ''}</span>`; }
 function updateViewsUI(link) {
   const html = viewsBadgeHtml(link);
-  document.querySelectorAll(`.card[data-link="${CSS.escape(link)}"]`).forEach(card => {
-    const top = card.querySelector('.card-top');
-    if (!top) return;
-    const old = top.querySelector('.views-tag');
-    if (old) old.remove();
-    if (html) top.insertAdjacentHTML('beforeend', html);
-  });
-  if (currentNews && currentNews.link === link) {
-    const meta = document.getElementById('modalMeta');
-    if (meta) {
-      const old = meta.querySelector('.views-tag');
-      if (old) old.remove();
-      if (html) meta.insertAdjacentHTML('beforeend', html);
-    }
-  }
+  document.querySelectorAll(`.card[data-link="${CSS.escape(link)}"]`).forEach(card => { const top = card.querySelector('.card-top'); if (top) { const old = top.querySelector('.views-tag'); if (old) old.remove(); if (html) top.insertAdjacentHTML('beforeend', html); } });
+  if (currentNews && currentNews.link === link) { const meta = document.getElementById('modalMeta'); if (meta) { const old = meta.querySelector('.views-tag'); if (old) old.remove(); if (html) meta.insertAdjacentHTML('beforeend', html); } }
 }
 
-/* ==================== PWA ==================== */
-(function setupPWA() {
-  const appleIcon = document.getElementById('appleIcon');
-  const logoImg = document.getElementById('logoImg');
-  if (appleIcon) appleIcon.href = ICON_URL;
-  if (logoImg) logoImg.src = ICON_URL;
-  const manifest = {
-    name: 'Lreporter', short_name: 'Lreporter',
-    description: 'پایگاه خبری Lreporter',
-    start_url: '/Lnews2/', // 👈 مسیر درست برای GitHub Pages
-    scope: '/Lnews2/',     // 👈 مسیر درست برای GitHub Pages
-    display: 'standalone', orientation: 'portrait',
-    background_color: '#0a0e1a', theme_color: '#1e90ff',
-    lang: 'fa', dir: 'rtl',
-    icons: [
-      { src: ICON_URL, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-      { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
-      { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
-    ]
-  };
-  try {
-    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-    document.getElementById('manifestLink').href = URL.createObjectURL(blob);
-  } catch {}
-})();
-
-/* ==================== Date/Weather ==================== */
+/* ==================== DATE & WEATHER ==================== */
 function updatePersianDateTime() {
-  const now = new Date();
-  const d = document.getElementById('persianDate');
-  const t = document.getElementById('clockTime');
-  if (d) d.textContent = now.toLocaleDateString('fa-IR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  if (t) t.textContent = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const now = new Date(); document.getElementById('persianDate').textContent = now.toLocaleDateString('fa-IR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('clockTime').textContent = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
-
 async function loadWeather() {
-  try {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current=temperature_2m,weather_code&timezone=Asia/Tehran';
-    const res = await fetchWithTimeout(url, 8000);
-    if (!res.ok) throw 0;
-    const data = await res.json();
-    const cur = data.current;
-    document.getElementById('weatherTemp').textContent = `${Math.round(cur.temperature_2m)}°C`;
-    const codes = { 0: 'صاف ☀️', 1: 'صاف 🌤️', 2: 'نیمه ابری ⛅', 3: 'ابری ☁️', 61: 'باران 🌧️', 80: 'رگبار 🌦️', 95: 'رعد ⛈️' };
-    document.getElementById('weatherDesc').textContent = codes[cur.weather_code] || `کد ${cur.weather_code}`;
-  } catch {
-    document.getElementById('weatherTemp').textContent = '—';
-    document.getElementById('weatherDesc').textContent = '—';
-  }
+  try { const url = 'https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current=temperature_2m,weather_code&timezone=Asia/Tehran'; const res = await fetchWithTimeout(url, 8000); if (!res.ok) throw 0; const data = await res.json(); document.getElementById('weatherTemp').textContent = `${Math.round(data.current.temperature_2m)}°C`; const codes = { 0: 'صاف ☀️', 1: 'صاف 🌤️', 2: 'نیمه ابری ⛅', 3: 'ابری ☁️', 61: 'باران 🌧️', 80: 'رگبار 🌦️', 95: 'رعد ⛈️' }; document.getElementById('weatherDesc').textContent = codes[data.current.weather_code] || `کد ${data.current.weather_code}`; } catch { document.getElementById('weatherTemp').textContent = '—'; document.getElementById('weatherDesc').textContent = '—'; }
 }
 
-/* ==================== TTS ==================== */
-let ttsSpeaking = false, ttsPaused = false, ttsQueue = [], ttsCurrentIndex = 0;
-
-function cleanTextForTTS(text) {
-  if (!text) return '';
-  return text
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/[«»""'']/g, '')
-    .replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '')
-    .replace(/https?:\/\/\S+/g, '')
-    .replace(/[\w-]+@[\w-]+\.\w+/g, '')
-    .replace(/[#@]/g, '')
-    .replace(/\s+/g, ' ').trim();
+function startCountdown() {
+  const el = document.getElementById('countdown'); if (!el) return;
+  setInterval(() => {
+    const now = new Date(); const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
+    const diff = midnight - now; const h = Math.floor(diff / 1000 / 3600); const m = Math.floor((diff / 1000 % 3600) / 60);
+    el.textContent = h > 0 ? `⏰ ${h}:${String(m).padStart(2,'0')}` : `⏰ ${m}د`;
+  }, 30000);
 }
 
-function splitTextIntoChunks(text, maxLength = 200) {
-  const sentences = text.split(/[.!؟?\n]+/).filter(s => s.trim().length > 0);
-  const chunks = [];
-  let currentChunk = '';
-  for (const sentence of sentences) {
-    const trimmed = sentence.trim();
-    if (!trimmed) continue;
-    if ((currentChunk + ' ' + trimmed).length <= maxLength) {
-      currentChunk = currentChunk ? currentChunk + '. ' + trimmed : trimmed;
-    } else {
-      if (currentChunk) chunks.push(currentChunk + '.');
-      if (trimmed.length > maxLength) {
-        const words = trimmed.split(' ');
-        let subChunk = '';
-        for (const word of words) {
-          if ((subChunk + ' ' + word).length <= maxLength) {
-            subChunk = subChunk ? subChunk + ' ' + word : word;
-          } else { if (subChunk) chunks.push(subChunk); subChunk = word; }
-        }
-        if (subChunk) currentChunk = subChunk;
-      } else currentChunk = trimmed;
-    }
-  }
-  if (currentChunk) chunks.push(currentChunk + '.');
-  return chunks;
-}
-
+/* ==================== TTS (اصلاح شده) ==================== */
 function getPersianVoice() {
-  const voices = speechSynthesis.getVoices();
-  return voices.find(v => v.lang === 'fa-IR') ||
-         voices.find(v => v.lang.startsWith('fa')) ||
-         voices.find(v => v.lang.startsWith('ar')) ||
-         voices[0];
+  if (!window.speechSynthesis) return null;
+  const voices = window.speechSynthesis.getVoices();
+  return voices.find(v => v.lang === 'fa-IR') || voices.find(v => v.lang.startsWith('fa')) || voices.find(v => v.lang.startsWith('ar')) || voices[0];
 }
-
+function cleanTextForTTS(text) { return text ? text.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[«»""'']/g, '').replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim() : ''; }
+function splitTextIntoChunks(text, maxLength = 200) {
+  const sentences = text.split(/[.!؟?\n]+/).filter(s => s.trim().length > 0); const chunks = []; let currentChunk = '';
+  for (const sentence of sentences) { const trimmed = sentence.trim(); if (!trimmed) continue; if ((currentChunk + ' ' + trimmed).length <= maxLength) { currentChunk = currentChunk ? currentChunk + '. ' + trimmed : trimmed; } else { if (currentChunk) chunks.push(currentChunk + '.'); if (trimmed.length > maxLength) { const words = trimmed.split(' '); let subChunk = ''; for (const word of words) { if ((subChunk + ' ' + word).length <= maxLength) { subChunk = subChunk ? subChunk + ' ' + word : word; } else { if (subChunk) chunks.push(subChunk); subChunk = word; } } if (subChunk) currentChunk = subChunk; } else currentChunk = trimmed; } }
+  if (currentChunk) chunks.push(currentChunk + '.'); return chunks;
+}
 function setupTTS() {
-  const playBtn = document.getElementById('ttsPlayBtn');
-  const pauseBtn = document.getElementById('ttsPauseBtn');
-  const stopBtn = document.getElementById('ttsStopBtn');
-
+  const playBtn = document.getElementById('ttsPlayBtn'); const pauseBtn = document.getElementById('ttsPauseBtn'); const stopBtn = document.getElementById('ttsStopBtn');
   playBtn.onclick = () => {
     if (!currentNews) return;
-    if (ttsSpeaking) {
-      if (ttsPaused) {
-        speechSynthesis.resume(); ttsPaused = false;
-        playBtn.textContent = '🔊 در حال خواندن...';
-      } else {
-        speechSynthesis.pause(); ttsPaused = true;
-        playBtn.textContent = '▶ ادامه';
-      }
-      return;
-    }
-    const rawText = currentNews.plain || currentNews.title || '';
-    const cleanText = cleanTextForTTS(rawText);
-    if (cleanText.length < 10) { showToast('متنی برای خواندن نیست'); return; }
-    ttsQueue = splitTextIntoChunks(cleanText.slice(0, 5000), 200);
-    ttsCurrentIndex = 0;
-    if (!ttsQueue.length) { showToast('متنی برای خواندن نیست'); return; }
-    ttsSpeaking = true; ttsPaused = false;
-    playBtn.classList.add('speaking');
-    playBtn.textContent = '🔊 در حال خواندن...';
-    pauseBtn.style.display = 'inline-flex';
-    stopBtn.style.display = 'inline-flex';
-    speakNextChunk();
+    if (ttsSpeaking) { if (ttsPaused) { window.speechSynthesis.resume(); ttsPaused = false; playBtn.textContent = '🔊 در حال خواندن...'; } else { window.speechSynthesis.pause(); ttsPaused = true; playBtn.textContent = '▶ ادامه'; } return; }
+    let textToRead = currentNews.plain || '';
+    if (!textToRead && currentNews.content) { const temp = document.createElement('div'); temp.innerHTML = currentNews.content; textToRead = temp.textContent || temp.innerText || ''; }
+    if (!textToRead) textToRead = currentNews.title || '';
+    const cleanText = cleanTextForTTS(textToRead);
+    if (cleanText.length < 5) { showToast('متنی برای خواندن وجود ندارد'); return; }
+    ttsQueue = splitTextIntoChunks(cleanText.slice(0, 5000), 200); ttsCurrentIndex = 0; ttsSpeaking = true; ttsPaused = false;
+    playBtn.textContent = '🔊 در حال خواندن...'; pauseBtn.style.display = 'inline-flex'; stopBtn.style.display = 'inline-flex'; speakNextChunk();
   };
-
-  pauseBtn.onclick = () => {
-    if (ttsPaused) {
-      speechSynthesis.resume(); ttsPaused = false;
-      pauseBtn.textContent = '⏸ توقف';
-      playBtn.textContent = '🔊 در حال خواندن...';
-    } else {
-      speechSynthesis.pause(); ttsPaused = true;
-      pauseBtn.textContent = '▶ ادامه';
-      playBtn.textContent = '⏸ متوقف';
-    }
-  };
-
-  stopBtn.onclick = () => {
-    speechSynthesis.cancel();
-    ttsSpeaking = false; ttsPaused = false;
-    ttsQueue = []; ttsCurrentIndex = 0;
-    playBtn.classList.remove('speaking');
-    playBtn.textContent = '🔊 خواندن';
-    pauseBtn.textContent = '⏸ توقف';
-    pauseBtn.style.display = 'none';
-    stopBtn.style.display = 'none';
-  };
-
+  pauseBtn.onclick = () => { if (ttsPaused) { window.speechSynthesis.resume(); ttsPaused = false; pauseBtn.textContent = '⏸ توقف'; playBtn.textContent = '🔊 در حال خواندن...'; } else { window.speechSynthesis.pause(); ttsPaused = true; pauseBtn.textContent = '▶ ادامه'; playBtn.textContent = '⏸ متوقف'; } };
+  stopBtn.onclick = () => { window.speechSynthesis.cancel(); ttsSpeaking = false; ttsPaused = false; ttsQueue = []; ttsCurrentIndex = 0; playBtn.textContent = '🔊 خواندن'; pauseBtn.style.display = 'none'; stopBtn.style.display = 'none'; };
   function speakNextChunk() {
-    if (ttsCurrentIndex >= ttsQueue.length) {
-      ttsSpeaking = false; ttsPaused = false;
-      playBtn.classList.remove('speaking');
-      playBtn.textContent = '🔊 خواندن';
-      pauseBtn.style.display = 'none';
-      stopBtn.style.display = 'none';
-      showToast('✅ خواندن تمام شد');
-      return;
-    }
-    const chunk = ttsQueue[ttsCurrentIndex++];
-    const u = new SpeechSynthesisUtterance(chunk);
-    u.lang = 'fa-IR'; u.rate = 0.9; u.pitch = 1; u.volume = 1;
-    const voice = getPersianVoice();
-    if (voice) u.voice = voice;
-    u.onend = () => {
-      if (!ttsSpeaking) return;
-      setTimeout(() => { if (ttsSpeaking && !ttsPaused) speakNextChunk(); }, 100);
-    };
-    u.onerror = (e) => {
-      if (e.error === 'interrupted' || e.error === 'canceled') return;
-      if (ttsSpeaking) setTimeout(() => speakNextChunk(), 100);
-    };
-    speechSynthesis.speak(u);
+    if (ttsCurrentIndex >= ttsQueue.length) { ttsSpeaking = false; ttsPaused = false; playBtn.textContent = '🔊 خواندن'; pauseBtn.style.display = 'none'; stopBtn.style.display = 'none'; showToast('✅ خواندن تمام شد'); return; }
+    const chunk = ttsQueue[ttsCurrentIndex]; if (!chunk || !chunk.trim()) { ttsCurrentIndex++; speakNextChunk(); return; }
+    const u = new SpeechSynthesisUtterance(chunk); u.lang = 'fa-IR'; u.rate = 0.9; const voice = getPersianVoice(); if (voice) u.voice = voice;
+    u.onend = () => { if (!ttsSpeaking) return; ttsCurrentIndex++; if (!ttsPaused) setTimeout(speakNextChunk, 100); };
+    u.onerror = (e) => { console.warn('TTS error:', e); if (!ttsSpeaking) return; ttsCurrentIndex++; if (!ttsPaused) setTimeout(speakNextChunk, 100); };
+    window.speechSynthesis.speak(u);
   }
 }
 
-/* ==================== Trend ==================== */
-function calculateTrendScore(news) {
-  const ts = new Date(news.date).getTime();
-  if (!ts || isNaN(ts)) return 0;
-  const age = (Date.now() - ts) / 1000 / 3600;
-  const recency = 1 / (1 + age * 0.1);
-  const length = Math.min(1, (news.textLength || 0) / 1000);
-  const hasImage = news.image ? 1 : 0;
-  const isRecent = age < 2 ? 1.5 : 1;
-  return (recency * 0.5 + length * 0.2 + hasImage * 0.15 + isRecent * 0.15) * 100;
-}
-
-/* ⭐ فقط خبرهای داغ (>= ۱۰۰۰ بازدید) */
+/* ==================== CORE LOGIC ==================== */
 function getTrendingNews(limit = 30, sourceList = null) {
   const base = sourceList || allNews;
-  return [...base]
-    .map(n => ({ ...n, views: getViewCount(n.link), trendScore: calculateTrendScore(n) }))
-    .filter(n => n.views >= TRENDING_VIEW_THRESHOLD)
-    .sort((a, b) => {
-      if (b.views !== a.views) return b.views - a.views;
-      return b.trendScore - a.trendScore;
-    })
-    .slice(0, limit);
+  return [...base].map(n => ({ ...n, views: getViewCount(n.link) })).filter(n => n.views >= TRENDING_VIEW_THRESHOLD).sort((a, b) => b.views - a.views).slice(0, limit);
 }
-
 function findRelatedNews(current, list) {
   return list.filter(n => n.link !== current.link).map(n => {
-    let score = 0;
-    if (n.category === current.category) score += 3;
-    if (n.source === current.source) score += 1;
-    const t1 = current.title.toLowerCase().split(' ');
-    const t2 = n.title.toLowerCase().split(' ');
+    let score = 0; if (n.category === current.category) score += 3; if (n.source === current.source) score += 1;
+    const t1 = current.title.toLowerCase().split(' '); const t2 = n.title.toLowerCase().split(' ');
     score += t1.filter(w => w.length > 3 && t2.includes(w)).length;
     return { ...n, _score: score };
   }).sort((a, b) => b._score - a._score).slice(0, 4);
 }
 
-/* ==================== Cache ==================== */
-function saveCache(data) {
-  try {
-    const small = data.slice(0, 500).map(n => ({ ...n, content: (n.content || '').slice(0, 10000) }));
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ time: Date.now(), data: small }));
-  } catch {}
-}
-function loadCache() {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    const { time, data } = JSON.parse(raw);
-    if (!data || Date.now() - time > CACHE_TTL) return null;
-    return data;
-  } catch { return null; }
-}
-
-/* ==================== Loading ==================== */
-function setLiveBadge(loading) {
-  const b = document.getElementById('liveBadge');
-  if (!b) return;
-  if (loading) { b.classList.add('loading'); b.innerHTML = '<span class="dot"></span> در حال دریافت'; }
-  else { b.classList.remove('loading'); b.innerHTML = '<span class="dot"></span> زنده'; }
-}
-
-function finishLoading() {
-  isLoading = false;
-  setLiveBadge(false);
-  const bar = document.getElementById('progressBar');
-  if (bar) { bar.classList.remove('active'); bar.style.transform = 'scaleX(1)'; setTimeout(() => { bar.style.transform = 'scaleX(0)'; }, 400); }
-  const rBtn = document.getElementById('refreshBtn');
-  if (rBtn) rBtn.classList.remove('spinning');
-}
-
 async function loadAll() {
-  if (isLoading) return;
-  if (checkDayChanged()) { resetDailyNews(true); return; }
-  isLoading = true;
-  setLiveBadge(true);
-  const bar = document.getElementById('progressBar');
-  if (bar) { bar.classList.remove('active'); void bar.offsetWidth; bar.classList.add('active'); }
-
+  if (isLoading) return; isLoading = true;
+  const badge = document.getElementById('liveBadge'); badge.classList.add('loading'); badge.innerHTML = '<span class="dot"></span> دریافت...';
   try {
-    if (!allNews.length) {
-      const cached = loadCache();
-      if (cached && cached.length) {
-        allNews = cached;
-        displayLimit = INITIAL_COUNT;
-        buildFilters(); render();
-        const st = document.getElementById('status');
-        if (st) st.textContent = 'از حافظه • به‌روزرسانی...';
-      }
-    }
-
-    const st = document.getElementById('status');
-    if (st) st.textContent = '📡 دریافت از سرور...';
-
-    const res = await fetchWithTimeout(SUPABASE_URL, 30000);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const news = await res.json();
-    if (!Array.isArray(news)) throw new Error('پاسخ نامعتبر');
-
+    const [resNews, resManual] = await Promise.allSettled([fetchWithTimeout(SUPABASE_URL, 30000), fetchWithTimeout(MANUAL_NEWS_API, 10000)]);
     const knownLinks = new Set(allNews.map(n => n.link));
-    let added = 0;
-    for (const item of news) {
-      if (!item || !item.link || !item.title) continue;
-      if (knownLinks.has(item.link)) continue;
-      if (!item.category) item.category = detectCategory(item.title + ' ' + (item.plain || ''));
-      
-      // 🔥 تبدیل عکس‌های HTTP به HTTPS برای جلوگیری از بلاک شدن
-      if (item.image && item.image.startsWith('http://')) {
-        item.image = item.image.replace('http://', 'https://');
-      }
-      
-      allNews.push(item);
-      knownLinks.add(item.link);
-      added++;
-    }
-
+    if (resNews.status === 'fulfilled' && resNews.value.ok) { const news = await resNews.value.json(); if (Array.isArray(news)) { for (const item of news) { if (item.link && item.title && !knownLinks.has(item.link)) { allNews.push(item); knownLinks.add(item.link); } } } }
+    if (resManual.status === 'fulfilled' && resManual.value.ok) { const mnews = await resManual.value.json(); if (Array.isArray(mnews)) { for (const item of mnews) { if (item.link && item.title && !knownLinks.has(item.link)) { allNews.push(item); knownLinks.add(item.link); } } } }
     allNews.sort((a, b) => (new Date(b.date).getTime() || 0) - (new Date(a.date).getTime() || 0));
-    if (allNews.length > 2000) allNews = allNews.slice(0, 2000);
-
-    await fetchAllViews();
-    saveCache(allNews);
-    buildFilters();
-    render();
-
-    if (allNews.length === 0) showEmptyState();
-    else {
-      const now = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-      if (st) st.textContent = `آخرین: ${now} ${added ? `(+${added})` : ''}`;
-      startProgressiveDisplay();
-    }
-  } catch (err) {
-    console.error('loadAll:', err);
-    const st = document.getElementById('status');
-    if (st) st.textContent = '⚠️ خطا در دریافت';
-    if (!allNews.length) showEmptyState();
-  } finally {
-    finishLoading();
-  }
+    await fetchAllViews(); buildFilters(); render();
+    document.getElementById('status').textContent = `آخرین بروزرسانی: ${new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}`;
+    startProgressiveDisplay();
+  } catch (err) { document.getElementById('status').textContent = '⚠️ خطا در دریافت'; } finally { isLoading = false; badge.classList.remove('loading'); badge.innerHTML = '<span class="dot"></span> زنده'; }
 }
 
-/* ⭐ هر ۵ ثانیه ۱۰ خبر اضافه می‌شه */
 function startProgressiveDisplay() {
   if (displayTimer) return;
   displayTimer = setInterval(() => {
-    const total = getFilteredList().length;
-    if (displayLimit >= total) {
-      clearInterval(displayTimer);
-      displayTimer = null;
-      return;
-    }
-    displayLimit += DISPLAY_STEP;
-    buildFilters();
-    render();
+    if (displayLimit >= getFilteredList().length) { clearInterval(displayTimer); displayTimer = null; return; }
+    displayLimit += DISPLAY_STEP; render();
   }, DISPLAY_INTERVAL);
 }
 
-function showEmptyState() {
-  document.getElementById('content').innerHTML = `
-    <div class="empty">
-      <div class="title">⚠️ هیچ خبری دریافت نشد</div>
-      <div style="margin-top:16px"><button class="btn btn-primary" onclick="loadAll()">🔄 تلاش مجدد</button></div>
-    </div>`;
-}
-
-function checkDayChanged() {
-  const today = new Date().toDateString();
-  const last = localStorage.getItem(LAST_DAY_KEY);
-  if (last && last !== today) return true;
-  if (!last) localStorage.setItem(LAST_DAY_KEY, today);
-  return false;
-}
-
-function resetDailyNews(silent = false) {
-  allNews = []; activeCategory = 'همه'; activeMode = 'all'; searchQuery = '';
-  displayLimit = INITIAL_COUNT;
-  if (displayTimer) { clearInterval(displayTimer); displayTimer = null; }
-  const si = document.getElementById('searchInput');
-  if (si) si.value = '';
-  try { localStorage.removeItem(CACHE_KEY); } catch {}
-  document.getElementById('content').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
-  document.getElementById('filters').innerHTML = '';
-  const st = document.getElementById('status');
-  if (st) st.textContent = '🌅 روز جدید...';
-  localStorage.setItem(LAST_DAY_KEY, new Date().toDateString());
-  if (!silent) showToast('روز جدید');
-  isLoading = false;
-  updateViewModeButtons();
-  loadAll();
-}
-
-function startCountdown() {
-  const el = document.getElementById('countdown');
-  if (!el) return;
-  if (countdownTimer) clearInterval(countdownTimer);
-  const tick = () => {
-    const now = new Date();
-    const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
-    const diff = midnight - now;
-    const h = Math.floor(diff / 1000 / 3600);
-    const m = Math.floor((diff / 1000 % 3600) / 60);
-    if (h > 0) el.textContent = `⏰ ${h}:${String(m).padStart(2, '0')}`;
-    else el.textContent = `⏰ ${m}د`;
-  };
-  tick();
-  countdownTimer = setInterval(tick, 30000);
-}
-
-/* ==================== Filters & List ==================== */
 function buildFilters() {
   const showingCount = Math.min(displayLimit, allNews.length);
   const display = allNews.slice(0, showingCount);
-  const counts = {};
-  display.forEach(n => counts[n.category] = (counts[n.category] || 0) + 1);
+  const counts = {}; display.forEach(n => counts[n.category] = (counts[n.category] || 0) + 1);
   const cats = ['همه', ...Object.keys(counts).sort((a, b) => counts[b] - counts[a])];
-  const box = document.getElementById('filters');
-
+  const box = document.getElementById('filtersWrap');
   box.innerHTML = cats.map(c => {
-    const label = c === 'همه'
-      ? `همه (${showingCount.toLocaleString('fa-IR')})`
-      : `${c} (${(counts[c] || 0).toLocaleString('fa-IR')})`;
-    return `<button class="${c === activeCategory ? 'active' : ''}" data-cat="${escapeAttr(c)}">${escapeHtml(label)}</button>`;
+    const label = c === 'همه' ? `همه (${showingCount.toLocaleString('fa-IR')})` : `${c} (${(counts[c] || 0).toLocaleString('fa-IR')})`;
+    return `<button class="filter-btn ${c === activeCategory ? 'active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(label)}</button>`;
   }).join('');
-
-  box.querySelectorAll('button').forEach(btn => {
-    btn.onclick = () => {
-      activeCategory = btn.dataset.cat;
-      buildFilters();
-      render();
-    };
-  });
-}
-
-function updateViewModeButtons() {
-  document.querySelectorAll('.viewmode-btn').forEach(btn =>
-    btn.classList.toggle('active', btn.dataset.mode === activeMode)
-  );
-  const showingCount = Math.min(displayLimit, allNews.length);
-  const visible = allNews.slice(0, showingCount);
-  const hotCount = allNews.filter(n => isHotNews(n.link)).length;
-
-  document.getElementById('cntAll').textContent = showingCount.toLocaleString('fa-IR');
-  document.getElementById('cntUnread').textContent = visible.filter(n => !readLinks.has(n.link)).length.toLocaleString('fa-IR');
-  document.getElementById('cntSaved').textContent = savedLinks.size.toLocaleString('fa-IR');
-  document.getElementById('cntTrending').textContent = hotCount.toLocaleString('fa-IR');
-
-  const savedBadge = document.getElementById('savedBadge');
-  if (savedLinks.size > 0) { savedBadge.style.display = 'block'; savedBadge.textContent = savedLinks.size.toLocaleString('fa-IR'); }
-  else savedBadge.style.display = 'none';
+  box.querySelectorAll('button').forEach(btn => btn.onclick = () => { activeCategory = btn.dataset.cat; buildFilters(); render(); });
 }
 
 function getFilteredList() {
   let list = allNews;
   if (activeMode === 'unread') list = list.filter(n => !readLinks.has(n.link));
   else if (activeMode === 'saved') list = list.filter(n => savedLinks.has(n.link));
-
+  else if (activeMode === 'trending') return getTrendingNews(30, list);
   if (activeCategory !== 'همه') list = list.filter(n => n.category === activeCategory);
-
-  if (searchQuery.trim()) {
-    const q = searchQuery.trim().toLowerCase();
-    list = list.filter(n =>
-      (n.title || '').toLowerCase().includes(q) ||
-      (n.plain || '').toLowerCase().includes(q) ||
-      (n.source || '').toLowerCase().includes(q)
-    );
-  }
-
-  if (activeMode === 'trending') return getTrendingNews(30, list);
+  if (searchQuery.trim()) { const q = searchQuery.trim().toLowerCase(); list = list.filter(n => (n.title || '').toLowerCase().includes(q) || (n.plain || '').toLowerCase().includes(q)); }
   return list;
 }
 
-/* ==================== Render ==================== */
 function render() {
-  const list = getFilteredList();
-  const box = document.getElementById('content');
-
+  const list = getFilteredList(); const box = document.getElementById('content');
   if (!list.length) {
-    let msg = '📭 خبری پیدا نشد';
-    if (activeMode === 'unread' && allNews.length) msg = '🎉 همه رو خوندی!';
-    else if (activeMode === 'saved' && !savedLinks.size) msg = '⭐ هنوز چیزی ذخیره نکردی';
-    else if (activeMode === 'trending') {
-      msg = `<div class="title">🔥 هنوز خبری داغ نشده</div>
-        <div style="margin-top:8px;font-size:0.875rem;line-height:2">
-          هر خبری که به <b>${TRENDING_VIEW_THRESHOLD.toLocaleString('fa-IR')}</b> بازدید برسه، اینجا نمایش داده می‌شه.
-        </div>`;
-    }
-    box.innerHTML = `<div class="empty">${msg}</div>`;
-    updateViewModeButtons(); updateUnreadCount();
-    return;
+    let msg = '📭 خبری یافت نشد';
+    if (activeMode === 'trending') msg = `🔥 هنوز خبری به ${TRENDING_VIEW_THRESHOLD} بازدید نرسیده است.`;
+    box.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);font-size:1.1rem;">${msg}</div>`; updateUI(); return;
   }
-
-  const total = list.length;
-  const showing = Math.min(displayLimit, total);
-  const display = list.slice(0, showing);
-
+  const showing = Math.min(displayLimit, list.length); const display = list.slice(0, showing);
   box.innerHTML = display.map((n, i) => {
-    const time = formatTime(n.date);
-    const isRead = readLinks.has(n.link);
-    const isSaved = savedLinks.has(n.link);
-    const readTime = estimateReadTime(n.textLength || 0);
-    const vHtml = viewsBadgeHtml(n.link);
-    const img = n.image
-      ? `<div class="card-img-wrap"><img class="card-img" src="${escapeAttr(n.image)}" loading="lazy" alt="" onerror="this.parentElement.style.display='none'"></div>`
-      : '';
-
-    let trendBadge = '';
-    if (activeMode === 'trending') {
-      trendBadge = '<span class="trend-badge hot">🔥 داغ</span>';
-    }
-
-    return `<article class="card${isRead ? ' read' : ''}${isSaved ? ' saved' : ''}" data-link="${escapeAttr(n.link)}" data-card-idx="${i}">
-      <button class="star-btn${isSaved ? ' saved' : ''}" data-star="${i}" aria-label="ذخیره">${isSaved ? '★' : '☆'}</button>
-      ${img}
-      <div class="card-body">
-        <div class="card-top">
-          <span class="source-tag">${escapeHtml(n.source)}</span>
-          <span class="cat-tag">${escapeHtml(n.category || 'عمومی')}</span>
-          ${trendBadge}${vHtml}${isRead ? '<span class="read-tag">✓ خوانده</span>' : ''}
+    const isRead = readLinks.has(n.link); const isSaved = savedLinks.has(n.link); const isManual = n._manual === true; const vHtml = viewsBadgeHtml(n.link);
+    const img = n.image ? `<div class="card-img-wrap"><img class="card-img" src="${escapeHtml(n.image)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : '';
+    return `
+      <article class="card ${isRead ? 'read' : ''} ${isSaved ? 'saved' : ''} ${isManual ? 'manual' : ''}" data-link="${escapeHtml(n.link)}" data-idx="${i}">
+        <button class="star-btn ${isSaved ? 'saved' : ''}" data-star="${i}">${isSaved ? '★' : '☆'}</button>
+        ${img}
+        <div class="card-body">
+          <div class="card-top"><span class="source-tag ${isManual ? 'manual' : ''}">${escapeHtml(n.source)}</span>${vHtml}</div>
+          <h2>${escapeHtml(n.title)}</h2><p>${escapeHtml(n.summary || '')}</p>
+          <div class="card-footer"><span>🕐 ${formatTime(n.date)}</span><span style="background:var(--glass-border);padding:4px 10px;border-radius:10px;">📖 ${Math.max(1, Math.ceil((n.textLength||0)/1000))} دقیقه</span></div>
         </div>
-        <h2>${escapeHtml(n.title)}</h2>
-        <p>${escapeHtml(n.summary || '')}</p>
-        <div class="card-footer">
-          <span>🕐 ${escapeHtml(time)}</span>
-          <span class="time-tag">${readTime}</span>
-        </div>
-      </div>
-    </article>`;
+      </article>
+    `;
   }).join('');
-
-  if (showing < total) {
-    const remaining = total - showing;
-    const nextBatch = Math.min(DISPLAY_STEP, remaining);
-    box.innerHTML += `<div class="load-more"><button id="loadMoreBtn" class="pulse">⏳ ${nextBatch} خبر بعدی <span style="font-size:11px;opacity:0.7">(${showing.toLocaleString('fa-IR')}/${total.toLocaleString('fa-IR')})</span></button></div>`;
-    const btn = document.getElementById('loadMoreBtn');
-    if (btn) btn.onclick = () => { displayLimit += DISPLAY_STEP; buildFilters(); render(); };
-    if (!displayTimer) startProgressiveDisplay();
-  } else {
-    if (displayTimer) { clearInterval(displayTimer); displayTimer = null; }
-  }
-
-  window.__currentList = display;
-  updateViewModeButtons();
-  updateUnreadCount();
+  if (showing < list.length) box.innerHTML += `<div style="grid-column:1/-1;text-align:center;padding:20px;"><div class="btn" onclick="displayLimit+=10;render()">نمایش بیشتر ⏳</div></div>`;
+  window.__currentList = display; updateUI();
 }
 
-function updateUnreadCount() {
-  const unread = allNews.filter(n => !readLinks.has(n.link)).length;
-  const el = document.getElementById('unreadCount');
-  if (el) el.textContent = unread > 0 ? unread.toLocaleString('fa-IR') : '✓';
+function updateUI() {
+  document.getElementById('cntAll').textContent = Math.min(displayLimit, allNews.length).toLocaleString('fa-IR');
+  document.getElementById('cntUnread').textContent = allNews.filter(n => !readLinks.has(n.link)).length.toLocaleString('fa-IR');
+  document.getElementById('cntSaved').textContent = savedLinks.size.toLocaleString('fa-IR');
+  document.getElementById('cntTrending').textContent = allNews.filter(n => isHotNews(n.link)).length.toLocaleString('fa-IR');
+  document.getElementById('unreadCount').textContent = allNews.filter(n => !readLinks.has(n.link)).length.toLocaleString('fa-IR');
+  document.getElementById('savedBadge').style.display = savedLinks.size > 0 ? 'block' : 'none';
+  document.getElementById('savedBadge').textContent = savedLinks.size;
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === activeMode));
 }
 
-/* ==================== Event Delegation ==================== */
-document.getElementById('content').addEventListener('click', (e) => {
-  const starBtn = e.target.closest('.star-btn');
-  if (starBtn) {
-    e.preventDefault();
-    e.stopPropagation();
-    const idx = +starBtn.dataset.star;
-    const list = window.__currentList || [];
-    const news = list[idx];
-    if (!news) return;
-    const nowSaved = toggleSaved(news.link);
-    showToast(nowSaved ? '⭐ ذخیره شد' : 'حذف شد');
-    starBtn.classList.toggle('saved', nowSaved);
-    starBtn.textContent = nowSaved ? '★' : '☆';
-    const card = starBtn.closest('.card');
-    if (card) card.classList.toggle('saved', nowSaved);
-    updateViewModeButtons();
-    return;
-  }
-
-  const card = e.target.closest('.card');
-  if (card) {
-    e.preventDefault();
-    const idx = +card.dataset.cardIdx;
-    openModal(idx);
-  }
-});
-
-/* ==================== Modal ==================== */
-function openModal(index) {
-  const news = (window.__currentList || [])[index];
-  if (!news) return;
-  currentNews = news;
-
-  const wasUnread = markAsRead(news.link);
-  if (wasUnread) { updateUnreadCount(); updateViewModeButtons(); }
-
-  const hero = document.getElementById('modalHero');
-  if (news.image) {
-    hero.src = news.image;
-    hero.style.display = 'block';
-    hero.onerror = () => { hero.style.display = 'none'; };
-  } else hero.style.display = 'none';
-
+/* ==================== MODAL & EVENTS ==================== */
+function openModal(idx) {
+  const news = window.__currentList[idx]; if (!news) return; currentNews = news;
+  markAsRead(news.link); updateUI();
+  const hero = document.getElementById('modalHero'); if (news.image) { hero.src = news.image; hero.style.display = 'block'; } else hero.style.display = 'none';
   document.getElementById('modalTitle').textContent = news.title;
-
-  const vNow = getViewCount(news.link);
-  const vHot = vNow >= TRENDING_VIEW_THRESHOLD;
-  const vBadge = vNow > 0
-    ? `<span class="views-tag${vHot ? ' hot' : ''}">👁 ${formatViews(vNow)}${vHot ? ' 🔥' : ''}</span>`
-    : '';
-  document.getElementById('modalMeta').innerHTML =
-    `<span class="source-tag">${escapeHtml(news.source)}</span>` +
-    `<span class="cat-tag">${escapeHtml(news.category || 'عمومی')}</span>` +
-    `<span class="cat-tag">🕐 ${escapeHtml(formatTime(news.date))}</span>` +
-    vBadge;
-
-  document.getElementById('modalBody').innerHTML = cleanContent(news.content || news.plain || '');
-
-  const isShort = (news.textLength || 0) < 400;
-  const srcBtn = document.getElementById('modalSourceBtn');
-  srcBtn.href = news.link;
-  srcBtn.textContent = `🔗 ${isShort ? 'خواندن کامل' : 'مشاهده در'} ${news.source}`;
-
-  updateModalStar();
-
-  const related = findRelatedNews(news, allNews);
-  const relSection = document.getElementById('relatedSection');
-  const relGrid = document.getElementById('relatedGrid');
+  document.getElementById('modalMeta').innerHTML = `<span class="source-tag ${news._manual ? 'manual' : ''}">${escapeHtml(news.source)}</span><span style="background:var(--glass-border);padding:4px 10px;border-radius:10px;font-size:0.8rem;">🕐 ${formatTime(news.date)}</span>${viewsBadgeHtml(news.link)}`;
+  document.getElementById('modalBody').innerHTML = news.content || news.plain || '<p>متنی موجود نیست</p>';
+  
+  const related = findRelatedNews(news, allNews); const relSection = document.getElementById('relatedSection'); const relGrid = document.getElementById('relatedGrid');
   if (related.length) {
     relSection.style.display = 'block';
-    relGrid.innerHTML = related.map(r =>
-      `<div class="related-item" data-related-link="${escapeAttr(r.link)}">
-        <span class="ri-icon">📰</span>
-        <div class="ri-body">
-          <div class="ri-title">${escapeHtml(r.title)}</div>
-          <div class="ri-meta">${escapeHtml(r.source)} • ${escapeHtml(formatTime(r.date))}</div>
-        </div>
-      </div>`
-    ).join('');
-    relGrid.querySelectorAll('[data-related-link]').forEach(el => {
-      el.onclick = () => openRelatedNews(el.dataset.relatedLink);
-    });
+    relGrid.innerHTML = related.map(r => `<div class="related-item" data-rel-link="${escapeHtml(r.link)}"><span>📰</span><div><div class="ri-title">${escapeHtml(r.title)}</div><div class="ri-meta">${escapeHtml(r.source)} • ${formatTime(r.date)}</div></div></div>`).join('');
+    relGrid.querySelectorAll('[data-rel-link]').forEach(el => el.onclick = () => { const n = allNews.find(x => x.link === el.dataset.relLink); if (n) { closeModal(); setTimeout(() => { window.__currentList.unshift(n); openModal(0); }, 300); } });
   } else relSection.style.display = 'none';
 
-  document.getElementById('ttsControls').style.display = (news.plain || '').length > 50 ? 'flex' : 'none';
-  speechSynthesis.cancel();
-  ttsSpeaking = false; ttsPaused = false;
-  document.getElementById('ttsPlayBtn').classList.remove('speaking');
-  document.getElementById('ttsPlayBtn').textContent = '🔊 خواندن';
-  document.getElementById('ttsPauseBtn').style.display = 'none';
-  document.getElementById('ttsStopBtn').style.display = 'none';
-
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('modalBox').scrollTop = 0;
-
+  const srcBtn = document.getElementById('modalSourceBtn'); if (news._manual && (!news.link || news.link.startsWith('manual:'))) srcBtn.style.display = 'none'; else { srcBtn.style.display = 'flex'; srcBtn.href = news.link; }
+  document.getElementById('modal').classList.add('open'); document.body.style.overflow = 'hidden';
+  document.getElementById('modalStar').textContent = savedLinks.has(news.link) ? '★' : '☆';
+  document.getElementById('modalStar').classList.toggle('saved', savedLinks.has(news.link));
   incrementView(news.link);
 }
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; window.speechSynthesis.cancel(); document.getElementById('ttsPlayBtn').textContent = '🔊 خواندن'; document.getElementById('ttsPauseBtn').style.display = 'none'; document.getElementById('ttsStopBtn').style.display = 'none'; }
 
-function openRelatedNews(link) {
-  const idx = (window.__currentList || []).findIndex(n => n.link === link);
-  if (idx >= 0) { openModal(idx); return; }
-  const news = allNews.find(n => n.link === link);
-  if (!news) return;
-  currentNews = news;
-  markAsRead(news.link);
-  const hero = document.getElementById('modalHero');
-  if (news.image) { hero.src = news.image; hero.style.display = 'block'; }
-  else hero.style.display = 'none';
-  document.getElementById('modalTitle').textContent = news.title;
-  const vNow = getViewCount(news.link);
-  const vHot = vNow >= TRENDING_VIEW_THRESHOLD;
-  const vBadge = vNow > 0 ? `<span class="views-tag${vHot ? ' hot' : ''}">👁 ${formatViews(vNow)}${vHot ? ' 🔥' : ''}</span>` : '';
-  document.getElementById('modalMeta').innerHTML =
-    `<span class="source-tag">${escapeHtml(news.source)}</span>` +
-    `<span class="cat-tag">${escapeHtml(news.category || 'عمومی')}</span>${vBadge}`;
-  document.getElementById('modalBody').innerHTML = cleanContent(news.content || news.plain || '');
-  document.getElementById('relatedSection').style.display = 'none';
-  incrementView(news.link);
-}
+document.getElementById('content').addEventListener('click', (e) => {
+  const star = e.target.closest('.star-btn');
+  if (star) { e.stopPropagation(); const idx = +star.dataset.star; const saved = toggleSaved(window.__currentList[idx].link); showToast(saved ? '⭐ ذخیره شد' : 'حذف شد'); star.classList.toggle('saved', saved); star.textContent = saved ? '★' : '☆'; updateUI(); return; }
+  const card = e.target.closest('.card'); if (card) openModal(+card.dataset.idx);
+});
+document.querySelectorAll('.nav-btn').forEach(btn => btn.onclick = () => { activeMode = btn.dataset.mode; displayLimit = INITIAL_COUNT; buildFilters(); render(); });
+document.getElementById('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value; displayLimit = INITIAL_COUNT; render(); });
+document.getElementById('refreshBtn').onclick = () => loadAll();
+document.getElementById('modalClose').onclick = closeModal; document.getElementById('modal').onclick = (e) => { if (e.target.id === 'modal') closeModal(); };
+document.getElementById('modalStar').onclick = () => { if (!currentNews) return; const saved = toggleSaved(currentNews.link); showToast(saved ? '⭐ ذخیره شد' : 'حذف شد'); document.getElementById('modalStar').textContent = saved ? '★' : '☆'; document.getElementById('modalStar').classList.toggle('saved', saved); render(); };
+document.getElementById('modalCopyBtn').onclick = () => { if (currentNews) navigator.clipboard.writeText(currentNews.link).then(() => showToast('📋 کپی شد')); };
 
-function updateModalStar() {
-  if (!currentNews) return;
-  const isSaved = savedLinks.has(currentNews.link);
-  const star = document.getElementById('modalStar');
-  star.textContent = isSaved ? '★' : '☆';
-  star.classList.toggle('saved', isSaved);
-  const btn = document.getElementById('modalStarBtn');
-  btn.textContent = isSaved ? '★ حذف' : '⭐ ذخیره';
-  btn.classList.toggle('star-active', isSaved);
-}
-
-function cleanContent(html) {
-  if (!html) return '<p>محتوایی موجود نیست.</p>';
-  let out = String(html);
-  out = out.replace(/<script[\s\S]*?<\/script>/gi, '')
-           .replace(/<style[\s\S]*?<\/style>/gi, '')
-           .replace(/<iframe[\s\S]*?<\/iframe>/gi, '');
-  if (!/<[a-z][\s\S]*>/i.test(out)) {
-    return out.split(/\n+/).filter(p => p.trim()).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('');
-  }
-  out = out.replace(/<a /gi, '<a target="_blank" rel="noopener" ')
-           .replace(/<img /gi, '<img loading="lazy" ');
-  return out;
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.body.style.overflow = '';
-  speechSynthesis.cancel();
-  ttsSpeaking = false; ttsPaused = false;
-  currentNews = null;
-}
-
-/* ==================== Share ==================== */
-function copyLink(url) {
-  navigator.clipboard.writeText(url).then(() => showToast('📋 کپی شد')).catch(() => prompt('لینک:', url));
-}
-
-function shareTo(platform) {
-  if (!currentNews) return;
-  const url = currentNews.link, title = currentNews.title;
-  const text = `${title}\n\n${url}`;
-  const enc = encodeURIComponent;
-  let shareUrl = '', openNew = true;
-  switch (platform) {
-    case 'telegram': shareUrl = `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`; break;
-    case 'whatsapp': shareUrl = `https://wa.me/?text=${enc(text)}`; break;
-    case 'eitaa': shareUrl = `https://eitaa.com/share/url?url=${enc(url)}`; break;
-    case 'bale': shareUrl = `https://web.bale.ai/?text=${enc(text)}`; break;
-    case 'soroush': shareUrl = `https://splus.ir/share?url=${enc(url)}&text=${enc(title)}`; break;
-    case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(title)}`; break;
-    case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`; break;
-    case 'linkedin': shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`; break;
-    case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(title)}`; break;
-    case 'pinterest': shareUrl = `https://pinterest.com/pin/create/button/?url=${enc(url)}&description=${enc(title)}`; break;
-    case 'email': shareUrl = `mailto:?subject=${enc(title)}&body=${enc(text)}`; openNew = false; break;
-    case 'sms': shareUrl = `sms:?body=${enc(text)}`; openNew = false; break;
-    case 'native':
-      if (navigator.share) { navigator.share({ title, text: title, url }).catch(() => {}); return; }
-      copyLink(url); return;
-    default: return;
-  }
-  if (openNew) window.open(shareUrl, '_blank', 'noopener,width=600,height=600');
-  else location.href = shareUrl;
-}
-
-/* ==================== Stats ==================== */
-function openStats() {
-  document.getElementById('statsPanel').classList.add('open');
-  const content = document.getElementById('statsContent');
-  const sourceCounts = {};
-  allNews.forEach(n => sourceCounts[n.source] = (sourceCounts[n.source] || 0) + 1);
-  const maxSourceCount = Math.max(1, ...Object.values(sourceCounts));
-  const totalRead = allNews.filter(n => readLinks.has(n.link)).length;
-  const totalSaved = allNews.filter(n => savedLinks.has(n.link)).length;
-  const totalViews = Object.values(newsViews).reduce((a, b) => a + (Number(b) || 0), 0);
-  const hotCount = allNews.filter(n => isHotNews(n.link)).length;
-
-  let html = `
-    <div class="stat-row"><span class="lbl">کل</span><span class="val">${allNews.length.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">خوانده</span><span class="val">${totalRead.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">ذخیره</span><span class="val">${totalSaved.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">👁 مجموع بازدید</span><span class="val">${totalViews.toLocaleString('fa-IR')}</span></div>
-    <div class="stat-row"><span class="lbl">🔥 خبرهای داغ (≥۱۰۰۰)</span><span class="val">${hotCount.toLocaleString('fa-IR')}</span></div>
-    <div style="margin-top:16px;margin-bottom:8px;font-size:0.8125rem;font-weight:700;color:var(--accent)">📡 منابع</div>
-  `;
-  Object.entries(sourceCounts).sort((a, b) => b[1] - a[1]).forEach(([src, cnt]) => {
-    html += `<div class="stat-row" style="flex-direction:column;align-items:stretch;gap:4px">
-      <div style="display:flex;justify-content:space-between">
-        <span class="lbl">${escapeHtml(src)}</span>
-        <span class="val">${cnt.toLocaleString('fa-IR')}</span>
-      </div>
-      <div class="stat-bar"><div class="fill" style="width:${(cnt / maxSourceCount * 100).toFixed(1)}%"></div></div>
-    </div>`;
-  });
-  content.innerHTML = html;
-}
-
-/* ==================== 📻 رادیو ==================== */
-const radioPanel = document.getElementById('radioPanel');
-const radioBtn = document.getElementById('radioBtn');
-const radioClose = document.getElementById('radioClose');
-const radioPlayBtn = document.getElementById('radioPlayBtn');
-const radioStopBtn = document.getElementById('radioStopBtn');
-const radioStation = document.getElementById('radioStation');
-const radioStatus = document.getElementById('radioStatus');
-let radioAudio = null;
-
-radioBtn.onclick = () => radioPanel.classList.toggle('open');
-radioClose.onclick = () => radioPanel.classList.remove('open');
-
-radioPlayBtn.onclick = () => {
-  const url = radioStation.value;
-  if (radioAudio) { radioAudio.pause(); radioAudio = null; }
-  radioAudio = new Audio(url);
-  radioAudio.volume = 0.8;
-  
-  radioStatus.textContent = '⏳ در حال اتصال به رادیو...';
-  radioStatus.style.color = 'var(--warn)';
-  radioPlayBtn.disabled = true;
-
-  radioAudio.play().then(() => {
-    radioStatus.textContent = '🔴 در حال پخش...';
-    radioStatus.style.color = 'var(--success)';
-    radioPlayBtn.disabled = false;
-  }).catch(err => {
-    radioStatus.textContent = '❌ خطا در پخش (ممکن است فیلتر باشد)';
-    radioStatus.style.color = 'var(--danger)';
-    radioPlayBtn.disabled = false;
-    showToast('خطا در پخش رادیو');
-  });
-};
-
-radioStopBtn.onclick = () => {
-  if (radioAudio) { radioAudio.pause(); radioAudio = null; }
-  radioStatus.textContent = '⏹ متوقف شد';
-  radioStatus.style.color = 'var(--text-dim)';
-};
-
-/* ==================== Event Bindings ==================== */
-document.getElementById('modalClose').onclick = closeModal;
-document.getElementById('modal').onclick = (e) => { if (e.target.id === 'modal') closeModal(); };
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-document.getElementById('modalStar').onclick = () => {
-  if (!currentNews) return;
-  const nowSaved = toggleSaved(currentNews.link);
-  showToast(nowSaved ? '⭐ ذخیره شد' : 'حذف شد');
-  updateModalStar();
-  render();
-};
-document.getElementById('modalStarBtn').onclick = () => {
-  if (!currentNews) return;
-  const nowSaved = toggleSaved(currentNews.link);
-  showToast(nowSaved ? '⭐ ذخیره شد' : 'حذف شد');
-  updateModalStar();
-  render();
-};
-document.getElementById('modalCopyBtn').onclick = () => { if (currentNews) copyLink(currentNews.link); };
-
-document.querySelectorAll('[data-share]').forEach(btn => { btn.onclick = () => shareTo(btn.dataset.share); });
-
-document.querySelectorAll('.viewmode-btn').forEach(btn => {
+document.querySelectorAll('[data-share]').forEach(btn => {
   btn.onclick = () => {
-    activeMode = btn.dataset.mode;
-    displayLimit = INITIAL_COUNT;
-    updateViewModeButtons();
-    render();
+    if (!currentNews) return; const url = encodeURIComponent(currentNews.link); const text = encodeURIComponent(currentNews.title); let shareUrl = '';
+    const p = btn.dataset.share;
+    if (p === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+    if (p === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`;
+    if (p === 'eitaa') shareUrl = `https://eitaa.com/share/url?url=${url}`;
+    if (p === 'bale') shareUrl = `https://web.bale.ai/?text=${text}%20${url}`;
+    if (p === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    if (p === 'email') shareUrl = `mailto:?subject=${text}&body=${url}`;
+    if (shareUrl) window.open(shareUrl, '_blank');
   };
 });
 
-document.getElementById('savedBtn').onclick = () => {
-  activeMode = 'saved';
-  displayLimit = INITIAL_COUNT;
-  updateViewModeButtons();
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+document.getElementById('themeBtn').onclick = () => { const html = document.documentElement; const isLight = html.getAttribute('data-theme') === 'light'; html.setAttribute('data-theme', isLight ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️'; localStorage.setItem('lrep_theme_v8', isLight ? 'dark' : 'light'); };
+document.getElementById('settingsBtn').onclick = () => document.getElementById('settingsModal').classList.add('open');
+document.getElementById('settingsClose').onclick = () => document.getElementById('settingsModal').classList.remove('open');
+document.getElementById('fontPlus').onclick = () => { const cur = parseFloat(getComputedStyle(document.documentElement).fontSize); const next = Math.min(cur + 2, 24); document.documentElement.style.setProperty('--base-font-size', next + 'px'); localStorage.setItem('lrep_font_v8', next); document.getElementById('fontVal').textContent = next.toLocaleString('fa-IR'); };
+document.getElementById('fontMinus').onclick = () => { const cur = parseFloat(getComputedStyle(document.documentElement).fontSize); const next = Math.max(cur - 2, 12); document.documentElement.style.setProperty('--base-font-size', next + 'px'); localStorage.setItem('lrep_font_v8', next); document.getElementById('fontVal').textContent = next.toLocaleString('fa-IR'); };
+
+document.getElementById('statsBtn').onclick = () => {
+  document.getElementById('statsModal').classList.add('open');
+  const totalRead = allNews.filter(n => readLinks.has(n.link)).length; const totalSaved = allNews.filter(n => savedLinks.has(n.link)).length;
+  const totalViews = Object.values(newsViews).reduce((a, b) => a + (Number(b) || 0), 0); const hotCount = allNews.filter(n => isHotNews(n.link)).length;
+  document.getElementById('statsContent').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;padding:10px;background:var(--glass-bg);border-radius:10px;"><span>کل اخبار</span><b>${allNews.length.toLocaleString('fa-IR')}</b></div>
+      <div style="display:flex;justify-content:space-between;padding:10px;background:var(--glass-bg);border-radius:10px;"><span>خوانده شده</span><b>${totalRead.toLocaleString('fa-IR')}</b></div>
+      <div style="display:flex;justify-content:space-between;padding:10px;background:var(--glass-bg);border-radius:10px;"><span>ذخیره شده</span><b>${totalSaved.toLocaleString('fa-IR')}</b></div>
+      <div style="display:flex;justify-content:space-between;padding:10px;background:var(--glass-bg);border-radius:10px;"><span>👁 مجموع بازدید</span><b>${totalViews.toLocaleString('fa-IR')}</b></div>
+      <div style="display:flex;justify-content:space-between;padding:10px;background:var(--glass-bg);border-radius:10px;"><span>🔥 داغ (≥۱۰۰۰)</span><b>${hotCount.toLocaleString('fa-IR')}</b></div>
+    </div>
+  `;
 };
+document.getElementById('statsClose').onclick = () => document.getElementById('statsModal').classList.remove('open');
 
-document.getElementById('settingsBtn').onclick = () => {
-  document.getElementById('settingsPanel').classList.add('open');
-  updateFontDisplay();
-};
-document.getElementById('settingsClose').onclick = () => document.getElementById('settingsPanel').classList.remove('open');
-document.getElementById('statsBtn').onclick = openStats;
-document.getElementById('statsClose').onclick = () => document.getElementById('statsPanel').classList.remove('open');
+/* ==================== INIT ==================== */
+document.getElementById('logoImg').src = ICON_URL;
+document.getElementById('appleIcon').href = ICON_URL;
+document.getElementById('fontVal').textContent = parseFloat(getComputedStyle(document.documentElement).fontSize).toLocaleString('fa-IR');
 
-document.getElementById('fontPlus').onclick = () => {
-  const cur = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const next = Math.min(cur + 2, 24);
-  document.documentElement.style.setProperty('--base-font-size', next + 'px');
-  localStorage.setItem(FONT_KEY, next);
-  updateFontDisplay();
-};
-document.getElementById('fontMinus').onclick = () => {
-  const cur = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const next = Math.max(cur - 2, 12);
-  document.documentElement.style.setProperty('--base-font-size', next + 'px');
-  localStorage.setItem(FONT_KEY, next);
-  updateFontDisplay();
-};
-function updateFontDisplay() {
-  document.getElementById('fontVal').textContent =
-    Math.round(parseFloat(getComputedStyle(document.documentElement).fontSize)).toLocaleString('fa-IR');
-}
+updatePersianDateTime(); setInterval(updatePersianDateTime, 1000); loadWeather(); startCountdown(); setupTTS();
+loadAll(); setInterval(loadAll, 5 * 60 * 1000);
 
-let searchTimer;
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    searchQuery = e.target.value;
-    displayLimit = INITIAL_COUNT;
-    render();
-  }, 250);
-});
-
-document.getElementById('themeBtn').onclick = () => {
-  const html = document.documentElement;
-  const isLight = html.getAttribute('data-theme') === 'light';
-  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
-  document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('theme', isLight ? 'dark' : 'light');
-};
-
-(function initTheme() {
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    document.getElementById('themeBtn').textContent = '☀️';
-  }
-})();
-
-document.getElementById('refreshBtn').onclick = (e) => {
-  const btn = e.currentTarget;
-  if (btn.classList.contains('spinning')) return;
-  btn.classList.add('spinning');
-  loadAll().finally(() => setTimeout(() => btn.classList.remove('spinning'), 400));
-};
-
-/* ==================== Init ==================== */
-console.log(`%c📰 Lreporter v${VERSION}`, 'background:#1e90ff;color:#fff;padding:4px 12px;border-radius:20px;font-weight:bold');
-
-startCountdown();
-updatePersianDateTime();
-clockTimer = setInterval(updatePersianDateTime, 1000);
-loadWeather();
-setupTTS();
-
-if (checkDayChanged()) resetDailyNews(false);
-else loadAll();
-
-setInterval(loadAll, 5 * 60 * 1000);
-setInterval(loadWeather, 30 * 60 * 1000);
-
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) {
-    if (checkDayChanged()) { resetDailyNews(); return; }
-    if (Date.now() - (window.__lastUpdate || 0) > 5 * 60 * 1000) { loadAll(); window.__lastUpdate = Date.now(); }
-    updatePersianDateTime();
-  }
-});
-window.__lastUpdate = Date.now();
-
-window.addEventListener('online', () => { console.log('🌐 آنلاین'); loadAll(); });
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  setTimeout(() => {
-    if (deferredPrompt && confirm('Lreporter رو مثل اپ نصب کنی؟')) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(choice => {
-        if (choice.outcome === 'accepted') showToast('📱 نصب شد');
-        deferredPrompt = null;
-      });
-    }
-  }, 8000);
-});
+// PWA
+try {
+  const manifest = { name: 'Lreporter', short_name: 'Lreporter', start_url: location.pathname || '/', display: 'standalone', background_color: '#050810', theme_color: '#3b82f6', icons: [{ src: ICON_URL, sizes: '192x192', type: 'image/svg+xml' }, { src: ICON_URL, sizes: '512x512', type: 'image/svg+xml' }] };
+  document.getElementById('manifestLink').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/json' }));
+} catch {}
 </script>
-
 </body>
 </html>
